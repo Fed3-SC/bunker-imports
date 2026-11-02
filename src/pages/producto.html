@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Perfume Exclusivo | Bunker Imports</title>
+  <meta name="description" id="pageMetaDesc" content="Descubrí esta fragancia 100% original en Bunker Imports. Envíos asegurados a todo el país y cuotas sin interés.">
+  
+  <meta property="og:title" id="ogTitle" content="Bunker Imports - Perfume Original">
+  <meta property="og:description" id="ogDesc" content="Perfumes árabes y de diseñador 100% originales con garantía y batch code verificable.">
+  <meta property="og:type" content="product">
+
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+</head>
+<body>
+
+<!-- ─── ANNOUNCEMENT BAR ─────────────────────────────────── -->
+<div class="announcement-bar" role="banner" aria-label="Avisos">
+  <div class="announcement-track">
+    <div class="announcement-item">PERFUMES ÁRABES Y DE DISEÑADOR</div>
+    <div class="announcement-item">100% ORIGINALES · BATCH CODE VERIFICABLE</div>
+    <div class="announcement-item">HASTA 3 CUOTAS SIN INTERÉS</div>
+    <div class="announcement-item">ENVÍOS A TODO EL PAÍS</div>
+    <div class="announcement-item">ATENCIÓN PERSONALIZADA POR WHATSAPP</div>
+    <div class="announcement-item">PERFUMES ÁRABES Y DE DISEÑADOR</div>
+    <div class="announcement-item">100% ORIGINALES · BATCH CODE VERIFICABLE</div>
+    <div class="announcement-item">HASTA 3 CUOTAS SIN INTERÉS</div>
+  </div>
+</div>
+
+<!-- ─── NAVBAR ───────────────────────────────────────────── -->
+<header id="navbar" class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="../../index.html" class="navbar-logo" aria-label="Bunker Imports - Inicio">
+      <svg class="navbar-logo-svg" viewBox="0 0 160 56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g transform="translate(2,2)">
+          <circle cx="24" cy="26" r="22" fill="none" stroke="#C9A45C" stroke-width="1.5"/>
+          <path d="M24 8 L35 13 L35 26 C35 32 29.5 38 24 41 C18.5 38 13 32 13 26 L13 13 Z" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+          <text x="20" y="32" font-family="Montserrat, sans-serif" font-weight="700" font-size="13" fill="#C9A45C">B</text>
+        </g>
+        <text x="55" y="22" font-family="Montserrat, sans-serif" font-weight="800" font-size="11" fill="#C9A45C" letter-spacing="3">BUNKER</text>
+        <text x="55" y="36" font-family="Montserrat, sans-serif" font-weight="300" font-size="8" fill="#A0A0A0" letter-spacing="5">IMPORTS</text>
+      </svg>
+    </a>
+
+    <nav class="navbar-nav" role="navigation" aria-label="Navegación principal">
+      <a href="../../index.html" class="nav-link">Inicio</a>
+      <a href="perfumes.html" class="nav-link active">Perfumes</a>
+      <a href="marcas.html" class="nav-link">Marcas</a>
+      <a href="categoria.html?slug=arabes" class="nav-link">Árabes</a>
+      <a href="categoria.html?slug=disenador" class="nav-link">Diseñador</a>
+      <a href="ofertas.html" class="nav-link">Ofertas</a>
+      <a href="nosotros.html" class="nav-link">Nosotros</a>
+    </nav>
+
+    <div class="navbar-actions">
+      <button class="navbar-action-btn search-action" data-search-open title="Buscar" aria-label="Buscar perfumes">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <a href="favoritos.html" class="navbar-action-btn" title="Favoritos" aria-label="Mis favoritos" style="position:relative">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="badge fav-count" style="display:none">0</span>
+      </a>
+      <button class="navbar-action-btn cart-action" data-cart-open title="Carrito" aria-label="Carrito de compras" style="position:relative">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="badge cart-count" style="display:none">0</span>
+      </button>
+      <button id="hamburger" class="navbar-hamburger" aria-label="Menú" aria-expanded="false">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ─── MOBILE NAV ────────────────────────────────────────── -->
+<nav id="mobileNav" class="mobile-nav" role="navigation" aria-label="Menú móvil">
+  <div class="mobile-nav-inner">
+    <a href="../../index.html" class="mobile-nav-link">Inicio <span>→</span></a>
+    <a href="perfumes.html" class="mobile-nav-link">Perfumes <span>→</span></a>
+    <a href="marcas.html" class="mobile-nav-link">Marcas <span>→</span></a>
+    <a href="categoria.html?slug=arabes" class="mobile-nav-link">Árabes <span>→</span></a>
+    <a href="categoria.html?slug=disenador" class="mobile-nav-link">Diseñador <span>→</span></a>
+    <a href="ofertas.html" class="mobile-nav-link">Ofertas <span>→</span></a>
+    <a href="nosotros.html" class="mobile-nav-link">Nosotros <span>→</span></a>
+    <a href="faq.html" class="mobile-nav-link">Preguntas Frecuentes <span>→</span></a>
+    <a href="contacto.html" class="mobile-nav-link">Contacto <span>→</span></a>
+    <div style="padding:24px 0">
+      <a href="favoritos.html" class="btn btn-outline w-full" style="margin-bottom:12px">Mis Favoritos ♡</a>
+      <a href="carrito.html" class="btn btn-primary w-full">Ver Carrito</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── SEARCH OVERLAY ────────────────────────────────────── -->
+<div id="searchOverlay" class="search-overlay" role="search" aria-label="Búsqueda">
+  <div class="search-header">
+    <div class="search-input-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" class="search-input" placeholder="¿Qué perfume estás buscando?" autocomplete="off">
+    </div>
+    <button class="search-close" aria-label="Cerrar búsqueda">Cerrar ✕</button>
+  </div>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<!-- ─── CART DRAWER ───────────────────────────────────────── -->
+<div id="cartBackdrop" class="cart-backdrop" aria-hidden="true"></div>
+<aside id="cartDrawer" class="cart-drawer" role="complementary" aria-label="Carrito de compras">
+  <div class="cart-header">
+    <div class="cart-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+      Mi Carrito
+      <span id="cartCountBadge" class="cart-count-badge">0</span>
+    </div>
+    <button id="cartClose" class="cart-close" aria-label="Cerrar carrito">✕</button>
+  </div>
+  <div id="cartItems" class="cart-items"></div>
+  <div id="cartFooter" class="cart-footer"></div>
+</aside>
+
+<!-- ─── MAIN PRODUCT SECTION ──────────────────────────────── -->
+<main id="main" role="main" style="padding: var(--space-xl) 0 var(--space-4xl);">
+  <div class="container">
+
+    <!-- BREADCRUMBS -->
+    <div class="breadcrumbs" id="breadcrumbsNav">
+      <a href="../../index.html">Inicio</a>
+      <span class="sep">/</span>
+      <a href="perfumes.html">Perfumes</a>
+      <span class="sep">/</span>
+      <span id="breadcrumbCurrent">Cargando...</span>
+    </div>
+
+    <!-- PRODUCT DETAIL LAYOUT -->
+    <div class="product-layout">
+
+      <!-- LEFT: GALLERY -->
+      <div class="product-gallery">
+        <div class="product-main-img" style="position:relative;">
+          <img id="mainProductImg" src="../images/cat-arabes.jpg" alt="Perfume" loading="eager">
+          <div id="productBadges" class="product-card-badges" style="top:16px;left:16px;"></div>
+          <button id="favBtn" class="product-card-fav" style="top:16px;right:16px;" title="Guardar en favoritos">♡</button>
+        </div>
+        <div class="product-thumbnails">
+          <div class="product-thumb active">
+            <img id="thumb1" src="../images/cat-arabes.jpg" alt="Vista principal">
+          </div>
+          <div class="product-thumb">
+            <img id="thumb2" src="../images/hero.jpg" alt="Packaging">
+          </div>
+        </div>
+
+        <!-- AUTHENTICITY BADGE BOX -->
+        <div style="margin-top:24px;background:var(--black-card);border:1px solid rgba(201,164,92,0.25);border-radius:var(--radius-md);padding:16px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+            <span style="font-size:1.3rem;color:var(--gold-primary);">🛡️</span>
+            <div>
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-primary);">Garantía Bunker Imports</div>
+              <div style="font-size:0.75rem;color:var(--white-warm);">100% Original con Batch Code Verificable</div>
+            </div>
+          </div>
+          <p style="font-size:0.75rem;color:var(--white-subtle);line-height:1.5;">
+            Importación directa de origen. Cada frasco incluye su código de lote grabado en el frasco y la caja para verificar autenticidad en CheckFresh o CosmeticsWizard.
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT: INFO & BUY -->
+      <div class="product-info-panel">
+        <div id="productBrand" class="product-info-brand">Lattafa</div>
+        <h1 id="productTitle" class="product-info-name">9PM Pour Homme</h1>
+
+        <div class="product-rating">
+          <span class="stars">★★★★★</span>
+          <span id="ratingScore" class="rating-score">4.9</span>
+          <span id="ratingReviews" class="rating-count">(48 opiniones verificadas)</span>
+        </div>
+
+        <!-- PRECIO -->
+        <div class="product-price-wrap" style="flex-direction:column;align-items:flex-start;gap:6px;">
+          <div style="display:flex;align-items:baseline;gap:12px;">
+            <span id="productPrice" class="product-price-current">$89.000</span>
+            <span id="productComparePrice" style="font-size:1.1rem;text-decoration:line-through;color:var(--white-faint);">$105.000</span>
+            <span id="productDiscountBadge" class="badge-tag badge-sale">-15%</span>
+          </div>
+          <div id="productInstallments" style="font-size:0.85rem;color:var(--gold-light);font-weight:600;">
+            3 cuotas sin interés de $29.667
+          </div>
+          <div style="font-size:0.8rem;color:var(--green-success);background:rgba(74,156,106,0.1);padding:4px 10px;border-radius:4px;border:1px solid rgba(74,156,106,0.25);margin-top:4px;">
+            💵 <strong>10% OFF EXTRA</strong> pagando con transferencia: <span id="transferPrice">$80.100</span>
+          </div>
+        </div>
+
+        <p id="productShortDesc" class="product-description" style="margin-bottom: var(--space-lg);">
+          Manzana canela, lavanda dulce y fondo avainillado seductor. El rey indiscutido de las salidas nocturnas.
+        </p>
+
+        <!-- SIZES -->
+        <div class="size-selector">
+          <span class="size-label">Tamaño disponible:</span>
+          <div class="size-options" id="sizeOptions"></div>
+        </div>
+
+        <!-- STOCK -->
+        <div class="stock-indicator stock-in">
+          <span class="stock-dot"></span>
+          <span id="stockStatus">En stock · Despacho inmediato dentro de las 24 hs</span>
+        </div>
+
+        <!-- QUANTITY & CTA -->
+        <div class="quantity-selector">
+          <span class="qty-selector-label">Cantidad:</span>
+          <div class="qty-controls">
+            <button class="qty-control-btn" id="btnMinus" aria-label="Menos">−</button>
+            <span class="qty-display" id="qtyVal">1</span>
+            <button class="qty-control-btn" id="btnPlus" aria-label="Más">+</button>
+          </div>
+        </div>
+
+        <div class="product-ctas" style="flex-direction:column;gap:12px;">
+          <button id="addToCartBtn" class="btn btn-primary btn-lg w-full" style="padding:16px;">
+            <span>🛒</span> Agregar al carrito
+          </button>
+          <a id="buyWhatsAppBtn" href="#" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg w-full" style="padding:16px;">
+            <span>💬</span> Comprar directo por WhatsApp
+          </a>
+        </div>
+
+        <!-- SHIPPING CALCULATOR -->
+        <div style="margin-top:24px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-md);padding:16px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;font-weight:700;color:var(--white-warm);margin-bottom:12px;">
+            <span>🚚</span> Calcular costo y tiempo de envío
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="cpInput" class="form-input" placeholder="Tu código postal (ej: 1425)" style="flex:1;font-size:0.85rem;padding:8px 12px;">
+            <button id="calcCpBtn" class="btn btn-outline btn-sm">Calcular</button>
+          </div>
+          <div id="cpResult" style="margin-top:12px;font-size:0.8rem;color:var(--gold-light);display:none;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRODUCT TABS: PIRÁMIDE OLFATIVA, DETALLES, OPINIONES -->
+    <div class="product-tabs" style="margin-top:var(--space-4xl);">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="tab-pyramid">Pirámide Olfativa</button>
+        <button class="tab-btn" data-tab="tab-specs">Ficha Técnica & Rendimiento</button>
+        <button class="tab-btn" data-tab="tab-reviews">Opiniones Verificadas (<span id="tabReviewsCount">48</span>)</button>
+        <button class="tab-btn" data-tab="tab-guarantee">Garantía & Autenticidad</button>
+      </div>
+
+      <div class="tab-content">
+        <!-- TAB 1: PIRAMIDE -->
+        <div id="tab-pyramid" class="tab-pane active">
+          <div class="notes-pyramid">
+            <div class="note-layer">
+              <div class="note-layer-icon">🍋</div>
+              <div class="note-layer-label">Notas de Salida</div>
+              <div style="font-size:0.75rem;color:var(--white-subtle);margin-bottom:12px;">Primeros 15 - 30 minutos</div>
+              <div class="note-tags" id="topNotes"></div>
+            </div>
+            <div class="note-layer">
+              <div class="note-layer-icon">🌸</div>
+              <div class="note-layer-label">Notas de Corazón</div>
+              <div style="font-size:0.75rem;color:var(--white-subtle);margin-bottom:12px;">Desarrollo central (2 a 6 horas)</div>
+              <div class="note-tags" id="heartNotes"></div>
+            </div>
+            <div class="note-layer">
+              <div class="note-layer-icon">🪵</div>
+              <div class="note-layer-label">Notas de Fondo</div>
+              <div style="font-size:0.75rem;color:var(--white-subtle);margin-bottom:12px;">Fijación en piel (8 a 14 horas)</div>
+              <div class="note-tags" id="baseNotes"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: SPECS -->
+        <div id="tab-specs" class="tab-pane">
+          <div style="background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);padding:var(--space-xl);">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;">
+              <div>
+                <span class="form-label">Duración / Longevidad</span>
+                <p id="specLongevity" style="font-weight:600;color:var(--white-warm);font-size:0.95rem;margin-top:4px;">10 - 14 horas</p>
+              </div>
+              <div>
+                <span class="form-label">Proyección / Estela</span>
+                <p id="specSillage" style="font-weight:600;color:var(--white-warm);font-size:0.95rem;margin-top:4px;">Pesada (primeras 4 horas)</p>
+              </div>
+              <div>
+                <span class="form-label">Familia Olfativa</span>
+                <p id="specFamily" style="font-weight:600;color:var(--white-warm);font-size:0.95rem;margin-top:4px;">Amaderado Oriental</p>
+              </div>
+              <div>
+                <span class="form-label">Ocasión Recomendada</span>
+                <p id="specOccasion" style="font-weight:600;color:var(--white-warm);font-size:0.95rem;margin-top:4px;">Noche, Citas, Eventos</p>
+              </div>
+              <div>
+                <span class="form-label">Concentración</span>
+                <p id="specConcentration" style="font-weight:600;color:var(--white-warm);font-size:0.95rem;margin-top:4px;">Eau de Parfum (EDP)</p>
+              </div>
+              <div>
+                <span class="form-label">Origen</span>
+                <p id="specOrigin" style="font-weight:600;color:var(--white-warm);font-size:0.95rem;margin-top:4px;">Emiratos Árabes Unidos</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: REVIEWS -->
+        <div id="tab-reviews" class="tab-pane">
+          <div style="background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);padding:var(--space-xl);">
+            <div style="display:flex;align-items:center;gap:20px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--black-border);flex-wrap:wrap;">
+              <div>
+                <div style="font-size:3rem;font-weight:800;color:var(--gold-primary);line-height:1;" id="reviewBigScore">4.9</div>
+                <div class="stars">★★★★★</div>
+              </div>
+              <div style="font-size:0.85rem;color:var(--white-muted);">
+                <p><strong>100% de clientes satisfechos</strong></p>
+                <p style="color:var(--white-subtle);">Todas las opiniones provienen de compradores verificados en Argentina.</p>
+              </div>
+            </div>
+
+            <div id="reviewsList" style="display:flex;flex-direction:column;gap:16px;"></div>
+          </div>
+        </div>
+
+        <!-- TAB 4: GUARANTEE -->
+        <div id="tab-guarantee" class="tab-pane">
+          <div style="background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);padding:var(--space-xl);line-height:1.7;color:var(--white-muted);">
+            <h3 style="color:var(--gold-primary);font-size:1.1rem;margin-bottom:12px;">Compromiso Bunker Imports: 100% Autenticidad</h3>
+            <p style="margin-bottom:12px;">En Bunker Imports no comercializamos réplicas, testers sin caja, ni imitaciones grado 1:1. Todos nuestros productos provienen de canales oficiales y distribuidores directos de Dubai, Francia, Italia y Estados Unidos.</p>
+            <ul style="list-style:disc;margin-left:20px;margin-bottom:16px;">
+              <li><strong>Batch code visible y verificable</strong> tanto en el envase como en la base de la botella.</li>
+              <li><strong>Empaque cerrado de origen</strong> con celofán termosellado de fábrica.</li>
+              <li><strong>Garantía de satisfacción:</strong> si el producto presenta alguna falla de atomizador de fábrica, te lo cambiamos inmediatamente.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED PRODUCTS -->
+    <div style="margin-top:var(--space-4xl);">
+      <div class="section-header" style="text-align:left;margin-bottom:var(--space-xl);">
+        <span class="section-label">Para tu colección</span>
+        <h2 class="section-title">Fragancias <strong>Relacionadas</strong></h2>
+      </div>
+      <div id="relatedGrid" class="products-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));"></div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo-wrap">
+          <svg width="130" height="42" viewBox="0 0 160 56" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(2,2)">
+              <circle cx="24" cy="26" r="22" fill="none" stroke="#C9A45C" stroke-width="1.5"/>
+              <path d="M24 8 L35 13 L35 26 C35 32 29.5 38 24 41 C18.5 38 13 32 13 26 L13 13 Z" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+              <text x="20" y="32" font-family="Montserrat, sans-serif" font-weight="700" font-size="13" fill="#C9A45C">B</text>
+            </g>
+            <text x="55" y="22" font-family="Montserrat, sans-serif" font-weight="800" font-size="11" fill="#C9A45C" letter-spacing="3">BUNKER</text>
+            <text x="55" y="36" font-family="Montserrat, sans-serif" font-weight="300" font-size="8" fill="#A0A0A0" letter-spacing="5">IMPORTS</text>
+          </svg>
+        </div>
+        <p class="footer-tagline">Perfumes árabes y de diseñador 100% originales garantizados con batch code verificable.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com/bunkerimports" target="_blank" rel="noopener" class="social-btn" title="Instagram">IG</a>
+          <a id="footerWALink" href="#" target="_blank" rel="noopener" class="social-btn" title="WhatsApp">WA</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Fragancias</div>
+        <div class="footer-links">
+          <a href="perfumes.html" class="footer-link">Todos los perfumes</a>
+          <a href="categoria.html?slug=arabes" class="footer-link">Perfumes Árabes</a>
+          <a href="categoria.html?slug=disenador" class="footer-link">Perfumes de Diseñador</a>
+          <a href="categoria.html?slug=masculino" class="footer-link">Línea Masculina</a>
+          <a href="categoria.html?slug=femenino" class="footer-link">Línea Femenina</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Marcas</div>
+        <div class="footer-links">
+          <a href="marca.html?slug=lattafa" class="footer-link">Lattafa</a>
+          <a href="marca.html?slug=armaf" class="footer-link">Armaf</a>
+          <a href="marca.html?slug=afnan" class="footer-link">Afnan</a>
+          <a href="marca.html?slug=rasasi" class="footer-link">Rasasi</a>
+          <a href="marca.html?slug=armani" class="footer-link">Giorgio Armani</a>
+          <a href="marca.html?slug=valentino" class="footer-link">Valentino</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Ayuda & Compra</div>
+        <div class="footer-links">
+          <a href="nosotros.html" class="footer-link">Garantía de Originalidad</a>
+          <a href="faq.html" class="footer-link">Preguntas Frecuentes</a>
+          <a href="contacto.html" class="footer-link">Showroom & Ubicación</a>
+          <a href="carrito.html" class="footer-link">Mi Carrito</a>
+          <a id="footerWhatsApp" href="#" target="_blank" rel="noopener" class="footer-link">Asesoría WhatsApp</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Novedades VIP</div>
+        <p style="font-size:0.8rem;color:var(--white-subtle);margin-bottom:12px;">Recibí lanzamientos de Dubai y cupones exclusivos.</p>
+        <form class="newsletter-form" style="margin:0;">
+          <input type="email" class="newsletter-input" placeholder="Tu correo electrónico" required>
+          <button type="submit" class="btn btn-primary btn-sm">Unirse</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2024 Bunker Imports. Perfumería Premium · 100% Originales.</p>
+      <div class="footer-legal-links">
+        <a href="nosotros.html" class="footer-link" style="font-size:0.75rem">Nosotros</a>
+        <a href="faq.html" class="footer-link" style="font-size:0.75rem">Términos y Envíos</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── FLOATING WHATSAPP & BACK TO TOP ───────────────────── -->
+<a id="whatsappFloat" href="#" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Asistencia por WhatsApp">
+  <span class="whatsapp-float-icon">💬</span>
+  <span class="whatsapp-float-text">¿Dudas?<br><strong>WhatsApp</strong></span>
+</a>
+<button id="backToTop" class="back-to-top" aria-label="Volver arriba">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18,15 12,9 6,15"/></svg>
+</button>
+
+<!-- ─── SCRIPTS ───────────────────────────────────────────── -->
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const { DataStore } = window.BunkerData;
+
+  // WhatsApp links
+  const waLink = DataStore.getWhatsAppLink();
+  document.getElementById('whatsappFloat').href = waLink;
+  document.getElementById('footerWALink').href = waLink;
+  document.getElementById('footerWhatsApp').href = waLink;
+
+  // Tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(btn.dataset.tab);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  // Get Product Slug from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const slug = urlParams.get('slug') || 'lattafa-9pm';
+  let product = DataStore.getProductBySlug(slug);
+
+  if (!product) {
+    product = DataStore.getAllProducts()[0];
+  }
+
+  // Populate Product Data
+  document.title = `${product.name} - ${product.brandName} | Bunker Imports`;
+  document.getElementById('pageTitle').textContent = `${product.name} - ${product.brandName} | Bunker Imports`;
+  document.getElementById('pageMetaDesc').content = product.description;
+  document.getElementById('breadcrumbCurrent').textContent = `${product.brandName} ${product.name}`;
+
+  const imgPath = resolveAssetUrl(product.imageFile);
+  document.getElementById('mainProductImg').src = imgPath;
+  document.getElementById('thumb1').src = imgPath;
+
+  document.getElementById('productBrand').innerHTML = `<a href="marca.html?slug=${product.brand}">${product.brandName}</a> · ${product.type}`;
+  document.getElementById('productTitle').textContent = product.name;
+  document.getElementById('ratingScore').textContent = product.rating;
+  document.getElementById('ratingReviews').textContent = `(${product.reviewCount || 48} opiniones verificadas)`;
+  document.getElementById('reviewBigScore').textContent = product.rating;
+  document.getElementById('tabReviewsCount').textContent = product.reviewCount || 48;
+
+  // Price & Installments
+  const currentPriceFormatted = `$${product.price.toLocaleString('es-AR')}`;
+  document.getElementById('productPrice').textContent = currentPriceFormatted;
+
+  if (product.compareAtPrice) {
+    document.getElementById('productComparePrice').textContent = `$${product.compareAtPrice.toLocaleString('es-AR')}`;
+    document.getElementById('productComparePrice').style.display = 'inline';
+    document.getElementById('productDiscountBadge').textContent = `-${product.discount}%`;
+    document.getElementById('productDiscountBadge').style.display = 'inline-block';
+  } else {
+    document.getElementById('productComparePrice').style.display = 'none';
+    document.getElementById('productDiscountBadge').style.display = 'none';
+  }
+
+  const installments = Math.round(product.price / 3);
+  document.getElementById('productInstallments').textContent = `3 cuotas sin interés de $${installments.toLocaleString('es-AR')}`;
+
+  const transferVal = Math.round(product.price * 0.9);
+  document.getElementById('transferPrice').textContent = `$${transferVal.toLocaleString('es-AR')}`;
+
+  document.getElementById('productShortDesc').textContent = product.description;
+
+  // Badges
+  const badgesWrap = document.getElementById('productBadges');
+  const badgeHTML = [];
+  if (product.discount > 0) badgeHTML.push(`<span class="badge-tag badge-sale">-${product.discount}% OFF</span>`);
+  if (product.bestseller) badgeHTML.push(`<span class="badge-tag badge-bestseller">Top Ventas</span>`);
+  badgeHTML.push(`<span class="badge-tag badge-original">100% Original</span>`);
+  badgesWrap.innerHTML = badgeHTML.join('');
+
+  // Favorites button
+  const favBtn = document.getElementById('favBtn');
+  const isFav = Favorites.isFavorite(product.id);
+  if (isFav) favBtn.classList.add('active');
+  favBtn.innerHTML = isFav ? '♥' : '♡';
+  favBtn.addEventListener('click', () => {
+    const nowFav = Favorites.toggle(product.id);
+    favBtn.classList.toggle('active', nowFav);
+    favBtn.innerHTML = nowFav ? '♥' : '♡';
+  });
+
+  // Sizes selector
+  const sizeWrap = document.getElementById('sizeOptions');
+  let selectedSize = product.sizes[0] || '100ml';
+  sizeWrap.innerHTML = product.sizes.map((s, idx) => `
+    <button class="size-option ${idx === 0 ? 'active' : ''}" data-size="${s}">${s}</button>
+  `).join('');
+
+  sizeWrap.querySelectorAll('.size-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sizeWrap.querySelectorAll('.size-option').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedSize = btn.dataset.size;
+    });
+  });
+
+  // Quantity controls
+  let qty = 1;
+  const qtyEl = document.getElementById('qtyVal');
+  document.getElementById('btnMinus').addEventListener('click', () => {
+    if (qty > 1) { qty--; qtyEl.textContent = qty; }
+  });
+  document.getElementById('btnPlus').addEventListener('click', () => {
+    if (qty < 10) { qty++; qtyEl.textContent = qty; }
+  });
+
+  // Add to cart CTA
+  document.getElementById('addToCartBtn').addEventListener('click', () => {
+    Cart.addItem(product, selectedSize, qty);
+  });
+
+  // Buy WhatsApp direct CTA
+  function updateWhatsAppLink() {
+    const waText = `Hola Bunker Imports! Quiero comprar el perfume *${product.name}* de *${product.brandName}* (${selectedSize}) x${qty} unidades por valor de $${(product.price * qty).toLocaleString('es-AR')}. ¿Tienen disponibilidad para envío inmediato?`;
+    document.getElementById('buyWhatsAppBtn').href = `https://wa.me/5491155554321?text=${encodeURIComponent(waText)}`;
+  }
+  updateWhatsAppLink();
+
+  // Shipping calculator
+  document.getElementById('calcCpBtn').addEventListener('click', () => {
+    const cp = document.getElementById('cpInput').value.trim();
+    const res = document.getElementById('cpResult');
+    if (!cp || cp.length < 4) {
+      res.style.display = 'block';
+      res.style.color = 'var(--red-error)';
+      res.textContent = 'Ingresá un código postal válido de 4 dígitos.';
+      return;
+    }
+    res.style.display = 'block';
+    res.style.color = 'var(--white-warm)';
+    const isCapital = cp.startsWith('1');
+    if (isCapital) {
+      res.innerHTML = `
+        <div style="border-top:1px solid var(--black-border);padding-top:8px;">
+          <p style="color:var(--green-success);font-weight:700;">✓ Envío Express CABA/GBA: 24 hs hábiles ($4.500 o ¡GRATIS superando $120.000!)</p>
+          <p style="color:var(--white-subtle);font-size:0.75rem;">Retiro inmediato disponible en Showroom Recoleta (Gratis)</p>
+        </div>
+      `;
+    } else {
+      res.innerHTML = `
+        <div style="border-top:1px solid var(--black-border);padding-top:8px;">
+          <p style="color:var(--gold-light);font-weight:700;">✓ Envío a Domicilio por Andreani / Correo Argentino: 2 a 4 días hábiles</p>
+          <p style="color:var(--white-subtle);font-size:0.75rem;">Seguimiento online en tiempo real con código de tracking</p>
+        </div>
+      `;
+    }
+  });
+
+  // Notes Pyramid
+  const fillNotes = (containerId, notes) => {
+    const el = document.getElementById(containerId);
+    if (el) {
+      el.innerHTML = notes.map(n => `<span class="note-tag">${n}</span>`).join('');
+    }
+  };
+  fillNotes('topNotes', product.notes.top);
+  fillNotes('heartNotes', product.notes.heart);
+  fillNotes('baseNotes', product.notes.base);
+
+  // Specs
+  document.getElementById('specLongevity').textContent = product.longevity || '8 - 12 horas';
+  document.getElementById('specSillage').textContent = product.sillage || 'Moderada a amplia';
+  document.getElementById('specFamily').textContent = product.fragranceFamily || 'Oriental';
+  document.getElementById('specOccasion').textContent = product.occasion.join(', ') || 'Todo el año';
+  document.getElementById('specConcentration').textContent = product.concentration || 'Eau de Parfum';
+
+  // Customer Reviews
+  const reviewsContainer = document.getElementById('reviewsList');
+  if (product.reviews && product.reviews.length > 0) {
+    reviewsContainer.innerHTML = product.reviews.map(r => `
+      <div style="border-bottom:1px solid var(--black-border);padding-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <strong style="color:var(--white-warm);font-size:0.9rem;">${r.author}</strong>
+          <span style="font-size:0.75rem;color:var(--white-subtle);">${r.date}</span>
+        </div>
+        <div class="stars" style="font-size:0.8rem;margin-bottom:6px;">★★★★★</div>
+        <p style="font-size:0.85rem;color:var(--white-muted);line-height:1.5;">${r.comment}</p>
+      </div>
+    `).join('');
+  } else {
+    reviewsContainer.innerHTML = `
+      <div style="border-bottom:1px solid var(--black-border);padding-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <strong style="color:var(--white-warm);font-size:0.9rem;">Gonzalo M. (Palermo)</strong>
+          <span style="font-size:0.75rem;color:var(--white-subtle);">Hace 1 semana</span>
+        </div>
+        <div class="stars" style="font-size:0.8rem;margin-bottom:6px;">★★★★★</div>
+        <p style="font-size:0.85rem;color:var(--white-muted);line-height:1.5;">Aroma exquisito y 100% auténtico. Comprobé el batch code en la base del frasco. Envío súper rápido.</p>
+      </div>
+    `;
+  }
+
+  // Related Products
+  const related = DataStore.getRelatedProducts(product, 4);
+  const relGrid = document.getElementById('relatedGrid');
+  if (relGrid) {
+    relGrid.innerHTML = related.map(p => buildProductCard(p)).join('');
+  }
+
+  RevealObserver.init();
+});
+</script>
+
+</body>
+</html>

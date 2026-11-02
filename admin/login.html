@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso Administrativo | Bunker Imports</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" type="image/x-icon" href="../src/images/favicon.ico">
+</head>
+<body style="background: radial-gradient(circle at center, #150E24 0%, #08080C 100%); display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;">
+
+  <div style="background:var(--admin-card); border:1px solid rgba(201,164,92,0.3); border-radius:var(--radius-lg); padding:40px; max-width:440px; width:100%; box-shadow: 0 24px 60px rgba(0,0,0,0.8), 0 0 40px rgba(91,42,134,0.15); position:relative;">
+    
+    <!-- BRAND LOGO -->
+    <div style="text-align:center; margin-bottom:32px;">
+      <svg width="60" height="60" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 12px;">
+        <circle cx="24" cy="24" r="22" fill="none" stroke="#C9A45C" stroke-width="2"/>
+        <path d="M24 10 L34 15 L34 26 C34 32 29 38 24 40 C19 38 14 32 14 26 L14 15 Z" fill="none" stroke="#C9A45C" stroke-width="1.8"/>
+        <text x="19" y="29" font-family="Montserrat, sans-serif" font-weight="700" font-size="14" fill="#C9A45C">B</text>
+      </svg>
+      <div style="font-family:var(--font-heading); font-size:18px; font-weight:800; letter-spacing:0.25em; color:var(--gold-primary);">BUNKER IMPORTS</div>
+      <div style="font-size:11px; font-weight:600; letter-spacing:0.2em; color:var(--text-muted); text-transform:uppercase; margin-top:4px;">Panel de Control Administrativo</div>
+    </div>
+
+    <!-- ERROR BANNER -->
+    <div id="loginError" style="display:none; background:var(--status-red-bg); border:1px solid rgba(231,76,60,0.4); color:var(--status-red); padding:10px 14px; border-radius:var(--radius-sm); font-size:12px; margin-bottom:20px; text-align:center;"></div>
+
+    <!-- LOGIN FORM -->
+    <form id="adminLoginForm" onsubmit="return false;">
+      <div class="admin-form-group">
+        <label class="admin-label" for="adminEmail">Correo Electrónico</label>
+        <input type="email" id="adminEmail" class="admin-input" placeholder="admin@bunkerimports.com" value="admin@bunkerimports.com" required autocomplete="email">
+      </div>
+
+      <div class="admin-form-group">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <label class="admin-label" for="adminPass" style="margin:0;">Contraseña</label>
+          <a href="#" id="forgotPassLink" style="font-size:11px; color:var(--gold-primary);">¿Olvidaste tu contraseña?</a>
+        </div>
+        <div style="position:relative;">
+          <input type="password" id="adminPass" class="admin-input" placeholder="••••••••" value="bunker2026" required autocomplete="current-password" style="padding-right:40px;">
+          <button type="button" id="togglePassBtn" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:14px;">👁️</button>
+        </div>
+      </div>
+
+      <button type="submit" id="btnLogin" class="admin-btn admin-btn-primary w-full" style="width:100%; padding:14px; font-size:13px; font-weight:700; margin-top:8px;">
+        INGRESAR AL PANEL
+      </button>
+    </form>
+
+    <!-- CREDENTIALS HELPER -->
+    <div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--admin-border); font-size:11px; color:var(--text-muted); line-height:1.6; text-align:center;">
+      <strong style="color:var(--gold-primary); display:block; margin-bottom:4px;">🔒 Acceso Restringido</strong>
+      Este panel es de uso confidencial para la administración de Bunker Imports.<br>
+      <span style="color:var(--text-secondary); font-size:10px; margin-top:4px; display:inline-block;">Autenticación segura mediante JWT y credenciales configuradas en el servidor.</span>
+    </div>
+
+  </div>
+
+  <script src="../src/js/api.js"></script>
+  <script src="../src/js/data.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const { AuthService } = window.BunkerData;
+
+    // Si ya está autenticado, ir directo a index.html
+    if (AuthService.isAuthenticated()) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    const form = document.getElementById('adminLoginForm');
+    const emailInp = document.getElementById('adminEmail');
+    const passInp = document.getElementById('adminPass');
+    const errorBox = document.getElementById('loginError');
+    const btnSubmit = document.getElementById('btnLogin');
+
+    // Toggle password visibility
+    document.getElementById('togglePassBtn').addEventListener('click', () => {
+      passInp.type = passInp.type === 'password' ? 'text' : 'password';
+    });
+
+    // Forgot password prompt
+    document.getElementById('forgotPassLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Por protocolo de seguridad, la clave maestra puede restablecerse contactando a soporte de infraestructura o desde la consola de administración.');
+    });
+
+    form.addEventListener('submit', async () => {
+      const email = emailInp.value.trim();
+      const pass = passInp.value;
+
+      errorBox.style.display = 'none';
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = 'AUTENTICANDO...';
+
+      const res = await AuthService.login(email, pass);
+
+      if (res.success) {
+        btnSubmit.textContent = '✓ ACCESO CONCEDIDO';
+        btnSubmit.style.background = 'var(--status-green)';
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 600);
+      } else {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'INGRESAR AL PANEL';
+        errorBox.textContent = res.error || 'Credenciales inválidas';
+        errorBox.style.display = 'block';
+        passInp.focus();
+      }
+    });
+  });
+  </script>
+
+</body>
+</html>

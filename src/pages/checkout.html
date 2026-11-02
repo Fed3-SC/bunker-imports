@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar Compra Segura | Bunker Imports</title>
+  <meta name="description" content="Checkout seguro de Bunker Imports. Completá tus datos de entrega y método de pago con total confidencialidad.">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+</head>
+<body>
+
+<!-- ─── ANNOUNCEMENT BAR ─────────────────────────────────── -->
+<div class="announcement-bar" role="banner" aria-label="Avisos">
+  <div class="announcement-track">
+    <div class="announcement-item">🔒 CHECKOUT SEGURO Y PROTEGIDO · 100% ORIGINALES CON BATCH CODE</div>
+    <div class="announcement-item">ENVÍOS CON SEGURO A TODO EL PAÍS · HASTA 3 CUOTAS SIN INTERÉS</div>
+  </div>
+</div>
+
+<!-- ─── NAVBAR ───────────────────────────────────────────── -->
+<header id="navbar" class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="../../index.html" class="navbar-logo" aria-label="Bunker Imports - Inicio">
+      <svg class="navbar-logo-svg" viewBox="0 0 160 56" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(2,2)">
+          <circle cx="24" cy="26" r="22" fill="none" stroke="#C9A45C" stroke-width="1.5"/>
+          <path d="M24 8 L35 13 L35 26 C35 32 29.5 38 24 41 C18.5 38 13 32 13 26 L13 13 Z" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+          <text x="20" y="32" font-family="Montserrat, sans-serif" font-weight="700" font-size="13" fill="#C9A45C">B</text>
+        </g>
+        <text x="55" y="22" font-family="Montserrat, sans-serif" font-weight="800" font-size="11" fill="#C9A45C" letter-spacing="3">BUNKER</text>
+        <text x="55" y="36" font-family="Montserrat, sans-serif" font-weight="300" font-size="8" fill="#A0A0A0" letter-spacing="5">IMPORTS</text>
+      </svg>
+    </a>
+
+    <div style="font-size:0.8rem;color:var(--gold-primary);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;">
+      <span>🔒 Proceso de Pago Seguro</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─── CHECKOUT CONTENT ─────────────────────────────────── -->
+<main id="main" role="main" style="padding: var(--space-2xl) 0 var(--space-4xl);">
+  <div class="container">
+    <div class="breadcrumbs">
+      <a href="../../index.html">Inicio</a>
+      <span class="sep">/</span>
+      <a href="carrito.html">Carrito</a>
+      <span class="sep">/</span>
+      <span>Checkout</span>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div id="checkoutMainGrid" class="checkout-layout">
+
+      <!-- LEFT: FORMS -->
+      <form id="checkoutForm" onsubmit="return false;">
+
+        <!-- STEP 1: CONTACT -->
+        <div class="checkout-form-section">
+          <h2 class="checkout-section-title">1. Datos Personales & Contacto</h2>
+          <div class="form-grid form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="clientName">Nombre y Apellido *</label>
+              <input type="text" id="clientName" class="form-input" placeholder="Ej: Santiago Pérez" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="clientDni">DNI o CUIT (Para factura) *</label>
+              <input type="text" id="clientDni" class="form-input" placeholder="Ej: 38450123" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="clientPhone">Teléfono / WhatsApp *</label>
+              <input type="tel" id="clientPhone" class="form-input" placeholder="Ej: 11 5555 4321" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="clientEmail">Correo Electrónico *</label>
+              <input type="email" id="clientEmail" class="form-input" placeholder="tu@email.com" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: SHIPPING -->
+        <div class="checkout-form-section">
+          <h2 class="checkout-section-title">2. Método de Entrega</h2>
+          <div class="form-grid" style="gap:12px;margin-bottom:16px;">
+            <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--black-elevated);border:1px solid var(--black-border);border-radius:var(--radius-sm);cursor:pointer;">
+              <input type="radio" name="shippingType" value="andreani" checked>
+              <div style="flex:1;">
+                <div style="font-weight:600;font-size:0.9rem;color:var(--white-warm);">Envío a Domicilio por Andreani / Correo Argentino</div>
+                <div style="font-size:0.75rem;color:var(--white-subtle);">Llega en 2 a 4 días hábiles a cualquier punto del país con código de seguimiento.</div>
+              </div>
+              <span id="shippingCostLabel" style="font-size:0.85rem;font-weight:700;color:var(--green-success);">A calcular</span>
+            </label>
+
+            <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--black-elevated);border:1px solid var(--black-border);border-radius:var(--radius-sm);cursor:pointer;">
+              <input type="radio" name="shippingType" value="express">
+              <div style="flex:1;">
+                <div style="font-weight:600;font-size:0.9rem;color:var(--white-warm);">Envío Moto Express CABA / Primer Cordón GBA</div>
+                <div style="font-size:0.75rem;color:var(--white-subtle);">Entrega prioritaria en 24 a 48 hs hábiles en franja horaria acordada.</div>
+              </div>
+              <span style="font-size:0.85rem;font-weight:700;color:var(--white-warm);">$4.500</span>
+            </label>
+
+            <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--black-elevated);border:1px solid var(--black-border);border-radius:var(--radius-sm);cursor:pointer;">
+              <input type="radio" name="shippingType" value="showroom">
+              <div style="flex:1;">
+                <div style="font-weight:600;font-size:0.9rem;color:var(--white-warm);">Retiro Gratuito en Showroom Recoleta (CABA)</div>
+                <div style="font-size:0.75rem;color:var(--white-subtle);">Av. Libertador 4850. Lunes a Viernes de 10 a 19 hs.</div>
+              </div>
+              <span style="font-size:0.85rem;font-weight:700;color:var(--green-success);">¡GRATIS!</span>
+            </label>
+          </div>
+
+          <!-- ADDRESS FIELDS -->
+          <div id="addressFieldsWrap" class="form-grid form-grid-2">
+            <div class="form-field" style="grid-column: span 2;">
+              <label class="form-label" for="shipAddress">Calle y Altura *</label>
+              <input type="text" id="shipAddress" class="form-input" placeholder="Ej: Av. Santa Fe 2340">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="shipFloor">Piso / Depto / Timbre (Opcional)</label>
+              <input type="text" id="shipFloor" class="form-input" placeholder="Ej: 4to B">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="shipZip">Código Postal *</label>
+              <input type="text" id="shipZip" class="form-input" placeholder="Ej: 1425">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="shipCity">Ciudad / Localidad *</label>
+              <input type="text" id="shipCity" class="form-input" placeholder="Ej: CABA">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="shipProvince">Provincia *</label>
+              <input type="text" id="shipProvince" class="form-input" placeholder="Ej: Buenos Aires">
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: PAYMENT METHOD -->
+        <div class="checkout-form-section">
+          <h2 class="checkout-section-title">3. Forma de Pago</h2>
+          <div class="form-grid" style="gap:12px;">
+            <label style="display:flex;align-items:flex-start;gap:12px;padding:16px;background:var(--black-elevated);border:1px solid rgba(201,164,92,0.4);border-radius:var(--radius-sm);cursor:pointer;">
+              <input type="radio" name="paymentMethod" value="transfer" checked style="margin-top:4px;">
+              <div>
+                <div style="font-weight:700;font-size:0.95rem;color:var(--gold-primary);">
+                  Transferencia Bancaria Directa · 10% DE DESCUENTO
+                </div>
+                <div style="font-size:0.8rem;color:var(--white-muted);margin-top:4px;line-height:1.5;">
+                  Aboná con cualquier banco o billetera virtual (Mercado Pago, Galicia, Santander, etc.).<br>
+                  Los datos de CBU y Alias se mostrarán inmediatamente al confirmar el pedido.
+                </div>
+              </div>
+            </label>
+
+            <label style="display:flex;align-items:flex-start;gap:12px;padding:16px;background:var(--black-elevated);border:1px solid var(--black-border);border-radius:var(--radius-sm);cursor:pointer;">
+              <input type="radio" name="paymentMethod" value="card" style="margin-top:4px;">
+              <div>
+                <div style="font-weight:700;font-size:0.95rem;color:var(--white-warm);">
+                  Tarjetas de Crédito en hasta 3 cuotas sin interés
+                </div>
+                <div style="font-size:0.8rem;color:var(--white-muted);margin-top:4px;">
+                  A través de la pasarela segura de Mercado Pago. Visa, Mastercard, American Express.
+                </div>
+              </div>
+            </label>
+
+            <label style="display:flex;align-items:flex-start;gap:12px;padding:16px;background:var(--black-elevated);border:1px solid var(--black-border);border-radius:var(--radius-sm);cursor:pointer;">
+              <input type="radio" name="paymentMethod" value="cash" style="margin-top:4px;">
+              <div>
+                <div style="font-weight:700;font-size:0.95rem;color:var(--white-warm);">
+                  Efectivo al Retirar en Showroom (Recoleta)
+                </div>
+                <div style="font-size:0.8rem;color:var(--white-subtle);margin-top:4px;">
+                  Reservamos tu fragancia por 48 horas hábiles.
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- STEP 4: NOTES -->
+        <div class="checkout-form-section">
+          <h2 class="checkout-section-title">4. Notas o Aclaraciones (Opcional)</h2>
+          <textarea id="orderNotes" class="form-input" rows="3" placeholder="Ej: Es para un regalo de cumpleaños (incluir bolsa especial), coordinar entrega por la tarde, etc." style="width:100%;resize:vertical;"></textarea>
+        </div>
+
+      </form>
+
+      <!-- RIGHT: SUMMARY -->
+      <div>
+        <div class="order-summary-panel">
+          <h2 class="checkout-section-title">Tu Pedido</h2>
+
+          <!-- ITEMS PREVIEW -->
+          <div id="checkoutItemsList" style="display:flex;flex-direction:column;gap:12px;max-height:300px;overflow-y:auto;padding-right:4px;margin-bottom:16px;"></div>
+
+          <!-- TOTALS -->
+          <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--black-border);padding-top:16px;font-size:0.85rem;">
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:var(--white-muted);">Subtotal</span>
+              <span id="chkSubtotal" style="font-weight:600;">$0</span>
+            </div>
+
+            <div id="chkRowTransferDiscount" style="display:flex;justify-content:space-between;color:var(--green-success);">
+              <span>Descuento Transferencia (10% OFF)</span>
+              <span id="chkTransferDiscount" style="font-weight:700;">-$0</span>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:var(--white-muted);">Costo de Envío</span>
+              <span id="chkShipping" style="font-weight:600;color:var(--green-success);">¡GRATIS!</span>
+            </div>
+
+            <div style="border-top:1px solid var(--black-border);padding-top:12px;margin-top:4px;display:flex;justify-content:space-between;align-items:baseline;">
+              <span style="font-size:1.1rem;font-weight:700;">Total a Pagar</span>
+              <span id="chkTotal" style="font-size:1.6rem;font-weight:800;color:var(--gold-primary);">$0</span>
+            </div>
+
+            <div id="chkInstallmentsNote" style="font-size:0.75rem;color:var(--gold-light);text-align:center;">
+              Hasta 3 cuotas sin interés
+            </div>
+          </div>
+
+          <!-- ACTIONS -->
+          <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;">
+            <button id="btnCompleteWhatsApp" class="btn btn-whatsapp btn-lg w-full" style="padding:16px;">
+              <span>💬</span> Confirmar y Enviar por WhatsApp
+            </button>
+            <button id="btnCompleteOnline" class="btn btn-primary btn-lg w-full" style="padding:16px;">
+              <span>🔒</span> Confirmar Pedido Online
+            </button>
+          </div>
+
+          <div style="margin-top:16px;text-align:center;font-size:0.75rem;color:var(--white-faint);line-height:1.4;">
+            Al confirmar el pedido recibirás el número de orden y seguimiento para tu compra.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div id="checkoutEmpty" class="hidden" style="text-align:center;padding:80px 24px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);max-width:500px;margin:0 auto;">
+      <div style="font-size:3.5rem;margin-bottom:16px;">🛒</div>
+      <h2 style="font-family:var(--font-heading);font-size:1.3rem;margin-bottom:8px;">No hay productos en tu carrito</h2>
+      <p style="font-size:0.85rem;color:var(--white-subtle);margin-bottom:24px;">Agregá fragancias a tu carrito para poder iniciar el proceso de checkout.</p>
+      <a href="perfumes.html" class="btn btn-primary">Ir al catálogo</a>
+    </div>
+
+  </div>
+</main>
+
+<!-- ─── ORDER CONFIRMATION MODAL ──────────────────────────── -->
+<div id="confirmModal" class="cart-backdrop" style="display:flex;align-items:center;justify-content:center;padding:16px;">
+  <div style="background:var(--black-card);border:1px solid var(--gold-primary);border-radius:var(--radius-lg);padding:32px;max-width:540px;width:100%;text-align:center;position:relative;box-shadow:0 12px 40px rgba(0,0,0,0.8);">
+    <div style="font-size:3.5rem;margin-bottom:12px;">🎉</div>
+    <span class="section-label">¡Pedido Confirmado!</span>
+    <h3 style="font-family:var(--font-heading);font-size:1.5rem;color:var(--white-warm);margin-bottom:8px;">Gracias por tu compra en Bunker Imports</h3>
+    <p style="font-size:0.85rem;color:var(--gold-primary);font-weight:700;margin-bottom:16px;">
+      N° de Pedido: <span id="modalOrderId">#BK-94812</span>
+    </p>
+
+    <div id="modalPaymentInstructions" style="background:var(--black-elevated);border:1px solid var(--black-border);border-radius:var(--radius-md);padding:16px;text-align:left;font-size:0.8rem;color:var(--white-muted);margin-bottom:20px;line-height:1.6;">
+      <!-- Filled dynamically based on payment method -->
+    </div>
+
+    <p style="font-size:0.8rem;color:var(--white-subtle);margin-bottom:24px;">
+      Te enviamos los detalles a tu email. También podés enviarnos el comprobante por WhatsApp para despachar hoy mismo.
+    </p>
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a id="modalWhatsAppBtn" href="#" target="_blank" rel="noopener" class="btn btn-whatsapp">
+        <span>💬</span> Notificar por WhatsApp
+      </a>
+      <a href="../../index.html" class="btn btn-outline">Volver al inicio</a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SCRIPTS ───────────────────────────────────────────── -->
+<script src="../js/api.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const { DataStore, CONFIG } = window.BunkerData;
+  const items = Cart.getItems();
+
+  const mainGrid = document.getElementById('checkoutMainGrid');
+  const emptyState = document.getElementById('checkoutEmpty');
+
+  if (items.length === 0) {
+    mainGrid.classList.add('hidden');
+    emptyState.classList.remove('hidden');
+    return;
+  }
+
+  // Render items preview
+  const itemsList = document.getElementById('checkoutItemsList');
+  itemsList.innerHTML = items.map(i => `
+    <div style="display:flex;gap:12px;align-items:center;">
+      <img src="${resolveAssetUrl(i.imageFile)}" alt="${i.name}" style="width:48px;height:48px;object-fit:cover;border-radius:4px;background:var(--black-elevated);">
+      <div style="flex:1;">
+        <div style="font-size:0.8rem;font-weight:600;color:var(--white-warm);">${i.name}</div>
+        <div style="font-size:0.7rem;color:var(--white-subtle);">${i.size || '100ml'} x ${i.qty}</div>
+      </div>
+      <div style="font-size:0.85rem;font-weight:700;color:var(--gold-primary);">$${(i.price * i.qty).toLocaleString('es-AR')}</div>
+    </div>
+  `).join('');
+
+  // Calculations
+  const subtotal = Cart.getSubtotal();
+  const threshold = CONFIG.freeShippingThreshold || 120000;
+
+  function calculateTotals() {
+    const isTransfer = document.querySelector('input[name="paymentMethod"]:checked')?.value === 'transfer';
+    const shippingMethod = document.querySelector('input[name="shippingType"]:checked')?.value || 'andreani';
+
+    let shippingCost = 0;
+    if (shippingMethod === 'express') {
+      shippingCost = 4500;
+    } else if (shippingMethod === 'showroom') {
+      shippingCost = 0;
+    } else {
+      // Andreani
+      shippingCost = subtotal >= threshold ? 0 : 4500;
+    }
+
+    const transferDiscount = isTransfer ? Math.round(subtotal * 0.1) : 0;
+    const total = subtotal - transferDiscount + shippingCost;
+
+    document.getElementById('chkSubtotal').textContent = `$${subtotal.toLocaleString('es-AR')}`;
+
+    if (transferDiscount > 0) {
+      document.getElementById('chkRowTransferDiscount').style.display = 'flex';
+      document.getElementById('chkTransferDiscount').textContent = `-$${transferDiscount.toLocaleString('es-AR')}`;
+    } else {
+      document.getElementById('chkRowTransferDiscount').style.display = 'none';
+    }
+
+    document.getElementById('chkShipping').innerHTML = shippingCost === 0
+      ? '<strong style="color:var(--green-success)">¡GRATIS!</strong>'
+      : `$${shippingCost.toLocaleString('es-AR')}`;
+
+    document.getElementById('chkTotal').textContent = `$${total.toLocaleString('es-AR')}`;
+
+    return { subtotal, transferDiscount, shippingCost, total };
+  }
+
+  // Update totals on payment/shipping change
+  document.querySelectorAll('input[name="paymentMethod"], input[name="shippingType"]').forEach(r => {
+    r.addEventListener('change', calculateTotals);
+  });
+
+  const totals = calculateTotals();
+
+  // Validate form
+  function validateForm() {
+    const name = document.getElementById('clientName').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const email = document.getElementById('clientEmail').value.trim();
+    if (!name || !phone || !email) {
+      Toast.show('Por favor completá Nombre, Teléfono y Correo Electrónico', 'error');
+      return false;
+    }
+    return true;
+  }
+
+  // Gather order data
+  function getOrderData() {
+    const calc = calculateTotals();
+    const pay = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+    const ship = document.querySelector('input[name="shippingType"]:checked')?.value;
+
+    const payLabels = {
+      transfer: 'Transferencia Bancaria (10% OFF)',
+      card: 'Tarjeta en 3 cuotas sin interés',
+      cash: 'Efectivo en Showroom'
+    };
+
+    const shipLabels = {
+      andreani: 'Envío Domicilio Andreani',
+      express: 'Moto Express 24hs',
+      showroom: 'Retiro Showroom Recoleta'
+    };
+
+    return {
+      orderId: 'BK-' + Math.floor(10000 + Math.random() * 90000),
+      name: document.getElementById('clientName').value.trim(),
+      dni: document.getElementById('clientDni').value.trim(),
+      phone: document.getElementById('clientPhone').value.trim(),
+      email: document.getElementById('clientEmail').value.trim(),
+      address: document.getElementById('shipAddress').value.trim() || 'A coordinar',
+      paymentMethod: payLabels[pay] || pay,
+      shippingMethod: shipLabels[ship] || ship,
+      items: items,
+      subtotal: calc.subtotal,
+      discount: calc.transferDiscount,
+      shippingCost: calc.shippingCost,
+      total: calc.total
+    };
+  }
+
+  // Action 1: Complete by WhatsApp
+  document.getElementById('btnCompleteWhatsApp').addEventListener('click', () => {
+    if (!validateForm()) return;
+    const order = getOrderData();
+    // Persistir orden en DataStore unificado (descuenta stock, genera log de inventario y cliente)
+    DataStore.createOrder(order);
+    const link = DataStore.getCheckoutWhatsAppLink(order);
+    Cart.clear();
+    window.open(link, '_blank');
+  });
+
+  // Action 2: Complete Online Modal
+  document.getElementById('btnCompleteOnline').addEventListener('click', () => {
+    if (!validateForm()) return;
+    const order = getOrderData();
+    // Persistir orden en DataStore unificado (descuenta stock, genera log de inventario y cliente)
+    DataStore.createOrder(order);
+
+    document.getElementById('modalOrderId').textContent = '#' + order.orderId;
+
+    const isTransfer = document.querySelector('input[name="paymentMethod"]:checked')?.value === 'transfer';
+    const instr = document.getElementById('modalPaymentInstructions');
+
+    if (isTransfer) {
+      instr.innerHTML = `
+        <strong style="color:var(--gold-primary);">Datos para Transferencia Bancaria (Total con 10% OFF: $${order.total.toLocaleString('es-AR')}):</strong><br>
+        • Banco: Banco Galicia<br>
+        • CBU: 0070012345678901234567<br>
+        • Alias: <strong>BUNKER.IMPORTS</strong><br>
+        • Razón Social: Bunker Imports SRL<br>
+        • CUIT: 30-71829304-9<br>
+        Por favor enviá el comprobante indicando el N° ${order.orderId}.
+      `;
+    } else {
+      instr.innerHTML = `
+        <strong style="color:var(--gold-primary);">Medio de Pago Seleccionado:</strong> ${order.paymentMethod}<br>
+        Total a abonar: <strong>$${order.total.toLocaleString('es-AR')}</strong><br>
+        Un asesor de Bunker Imports se contactará contigo por WhatsApp al ${order.phone} para enviarte el link de pago seguro o coordinar la entrega.
+      `;
+    }
+
+    const waLink = DataStore.getCheckoutWhatsAppLink(order);
+    document.getElementById('modalWhatsAppBtn').href = waLink;
+
+    // Show modal
+    const modal = document.getElementById('confirmModal');
+    modal.classList.add('open');
+
+    Cart.clear();
+  });
+});
+</script>
+
+</body>
+</html>

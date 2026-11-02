@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+.env.production
+!.env.example
+logs/*
+!logs/.gitkeep
+coverage/
+.DS_Store
+Thumbs.db
+*.tmp
+prompt_maestro.md

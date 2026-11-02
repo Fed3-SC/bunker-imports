@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre Nosotros & Garantía de Originalidad | Bunker Imports</title>
+  <meta name="description" content="Conocé la historia de Bunker Imports, la perfumería especializada en fragancias árabes y de diseñador 100% originales en Argentina. Importación directa y batch codes verificables.">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+</head>
+<body>
+
+<!-- ─── ANNOUNCEMENT BAR ─────────────────────────────────── -->
+<div class="announcement-bar" role="banner">
+  <div class="announcement-track">
+    <div class="announcement-item">PERFUMES ÁRABES Y DE DISEÑADOR · 100% ORIGINALES CON BATCH CODE</div>
+    <div class="announcement-item">HASTA 3 CUOTAS SIN INTERÉS · ENVÍOS A TODO EL PAÍS</div>
+  </div>
+</div>
+
+<!-- ─── NAVBAR ───────────────────────────────────────────── -->
+<header id="navbar" class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="../../index.html" class="navbar-logo" aria-label="Bunker Imports - Inicio">
+      <svg class="navbar-logo-svg" viewBox="0 0 160 56" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(2,2)">
+          <circle cx="24" cy="26" r="22" fill="none" stroke="#C9A45C" stroke-width="1.5"/>
+          <path d="M24 8 L35 13 L35 26 C35 32 29.5 38 24 41 C18.5 38 13 32 13 26 L13 13 Z" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+          <text x="20" y="32" font-family="Montserrat, sans-serif" font-weight="700" font-size="13" fill="#C9A45C">B</text>
+        </g>
+        <text x="55" y="22" font-family="Montserrat, sans-serif" font-weight="800" font-size="11" fill="#C9A45C" letter-spacing="3">BUNKER</text>
+        <text x="55" y="36" font-family="Montserrat, sans-serif" font-weight="300" font-size="8" fill="#A0A0A0" letter-spacing="5">IMPORTS</text>
+      </svg>
+    </a>
+
+    <nav class="navbar-nav">
+      <a href="../../index.html" class="nav-link">Inicio</a>
+      <a href="perfumes.html" class="nav-link">Perfumes</a>
+      <a href="marcas.html" class="nav-link">Marcas</a>
+      <a href="categoria.html?slug=arabes" class="nav-link">Árabes</a>
+      <a href="categoria.html?slug=disenador" class="nav-link">Diseñador</a>
+      <a href="ofertas.html" class="nav-link">Ofertas</a>
+      <a href="nosotros.html" class="nav-link active">Nosotros</a>
+    </nav>
+
+    <div class="navbar-actions">
+      <button class="navbar-action-btn search-action" data-search-open title="Buscar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <a href="favoritos.html" class="navbar-action-btn" title="Favoritos">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="badge fav-count" style="display:none">0</span>
+      </a>
+      <button class="navbar-action-btn cart-action" data-cart-open title="Carrito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="badge cart-count" style="display:none">0</span>
+      </button>
+      <button id="hamburger" class="navbar-hamburger" aria-label="Menú">
+        <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ─── MOBILE NAV & DRAWER ───────────────────────────────── -->
+<nav id="mobileNav" class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <a href="../../index.html" class="mobile-nav-link">Inicio <span>→</span></a>
+    <a href="perfumes.html" class="mobile-nav-link">Perfumes <span>→</span></a>
+    <a href="marcas.html" class="mobile-nav-link">Marcas <span>→</span></a>
+    <a href="categoria.html?slug=arabes" class="mobile-nav-link">Árabes <span>→</span></a>
+    <a href="categoria.html?slug=disenador" class="mobile-nav-link">Diseñador <span>→</span></a>
+    <a href="ofertas.html" class="mobile-nav-link">Ofertas <span>→</span></a>
+    <a href="nosotros.html" class="mobile-nav-link active">Nosotros <span>→</span></a>
+  </div>
+</nav>
+
+<div id="searchOverlay" class="search-overlay">
+  <div class="search-header">
+    <div class="search-input-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" class="search-input" placeholder="¿Qué perfume estás buscando?">
+    </div>
+    <button class="search-close">Cerrar ✕</button>
+  </div>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<div id="cartBackdrop" class="cart-backdrop"></div>
+<aside id="cartDrawer" class="cart-drawer">
+  <div class="cart-header">
+    <div class="cart-title">Mi Carrito <span id="cartCountBadge" class="cart-count-badge">0</span></div>
+    <button id="cartClose" class="cart-close">✕</button>
+  </div>
+  <div id="cartItems" class="cart-items"></div>
+  <div id="cartFooter" class="cart-footer"></div>
+</aside>
+
+<!-- ─── MAIN CONTENT ──────────────────────────────────────── -->
+<main id="main" role="main">
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="../../index.html">Inicio</a>
+        <span class="sep">/</span>
+        <span>Nosotros</span>
+      </div>
+      <span class="section-label">Nuestra Identidad</span>
+      <h1 class="section-title">El Búnker de las <strong>Fragancias de Lujo</strong></h1>
+      <p class="section-subtitle" style="margin-left:0;max-width:640px;">
+        Nacimos para democratizar el acceso al verdadero lujo olfativo en Argentina, conectando a los amantes de los perfumes con las casas más prestigiosas de Dubai, Francia e Italia.
+      </p>
+    </div>
+  </section>
+
+  <!-- STORY SECTION -->
+  <section class="section">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:var(--space-3xl);align-items:center;">
+        <div>
+          <span class="section-label">Origen & Pasión</span>
+          <h2 class="section-title" style="font-size:2rem;margin-bottom:16px;">Autenticidad sin concesiones.</h2>
+          <p style="color:var(--white-muted);line-height:1.8;margin-bottom:16px;">
+            En un mercado saturado de réplicas, testers dudosos y fragancias adulteradas, <strong>Bunker Imports</strong> fue fundado con una premisa inquebrantable: <strong>el 100% de nuestros perfumes son originales, sellados de fábrica y con batch code verificable</strong>.
+          </p>
+          <p style="color:var(--white-muted);line-height:1.8;margin-bottom:24px;">
+            Nos especializamos en perfumería árabe por una razón concreta: ofrecen concentraciones de aceites esenciales muy superiores al estándar comercial, logrando una fijación de más de 12 horas y estelas que dejan una huella imborrable donde sea que vayas.
+          </p>
+          <div style="display:flex;gap:20px;">
+            <div>
+              <div style="font-size:2rem;font-weight:800;color:var(--gold-primary);">100%</div>
+              <div style="font-size:0.75rem;color:var(--white-subtle);text-transform:uppercase;">Originales Garantizados</div>
+            </div>
+            <div style="border-left:1px solid var(--black-border);padding-left:20px;">
+              <div style="font-size:2rem;font-weight:800;color:var(--gold-primary);">+5.000</div>
+              <div style="font-size:0.75rem;color:var(--white-subtle);text-transform:uppercase;">Clientes Satisfechos</div>
+            </div>
+            <div style="border-left:1px solid var(--black-border);padding-left:20px;">
+              <div style="font-size:2rem;font-weight:800;color:var(--gold-primary);">24 hs</div>
+              <div style="font-size:0.75rem;color:var(--white-subtle);text-transform:uppercase;">Despacho Express</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--black-border);background:var(--black-card);">
+          <img src="../images/hero.jpg" alt="Showroom Bunker Imports" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="section" style="background:var(--black-card);border-top:1px solid var(--black-border);border-bottom:1px solid var(--black-border);">
+    <div class="container">
+      <div class="section-header" style="text-align:center;">
+        <span class="section-label">Nuestros Pilares</span>
+        <h2 class="section-title">Por qué elegir <strong>Bunker Imports</strong></h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:40px;">
+        <div style="background:var(--black-elevated);border:1px solid var(--black-border);border-radius:var(--radius-md);padding:32px 24px;text-align:center;">
+          <div style="font-size:2.5rem;margin-bottom:16px;">🛡️</div>
+          <h3 style="font-family:var(--font-heading);font-size:1.1rem;color:var(--gold-primary);margin-bottom:12px;">Batch Code Verificable</h3>
+          <p style="font-size:0.85rem;color:var(--white-muted);line-height:1.6;">
+            Cada frasco cuenta con su número de lote grabado en el vidrio y en la caja para que compruebes en tiempo real la fecha y fábrica de producción en CheckFresh.
+          </p>
+        </div>
+
+        <div style="background:var(--black-elevated);border:1px solid var(--black-border);border-radius:var(--radius-md);padding:32px 24px;text-align:center;">
+          <div style="font-size:2.5rem;margin-bottom:16px;">✈️</div>
+          <h3 style="font-family:var(--font-heading);font-size:1.1rem;color:var(--gold-primary);margin-bottom:12px;">Importación Directa</h3>
+          <p style="font-size:0.85rem;color:var(--white-muted);line-height:1.6;">
+            Sin intermediarios que inflen los precios o manipulen la mercadería. Todos los perfumes vienen directamente desde Emiratos Árabes Unidos y Europa.
+          </p>
+        </div>
+
+        <div style="background:var(--black-elevated);border:1px solid var(--black-border);border-radius:var(--radius-md);padding:32px 24px;text-align:center;">
+          <div style="font-size:2.5rem;margin-bottom:16px;">💬</div>
+          <h3 style="font-family:var(--font-heading);font-size:1.1rem;color:var(--gold-primary);margin-bottom:12px;">Asesoría Personalizada</h3>
+          <p style="font-size:0.85rem;color:var(--white-muted);line-height:1.6;">
+            ¿No sabés qué perfume se adapta a tu pH o la ocasión? Nuestro equipo te asesora de manera personalizada por WhatsApp para garantizar tu elección.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2024 Bunker Imports. Perfumería Premium · 100% Originales.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── FLOATING WHATSAPP & BACK TO TOP ───────────────────── -->
+<a id="whatsappFloat" href="#" class="whatsapp-float" target="_blank" rel="noopener">
+  <span class="whatsapp-float-icon">💬</span>
+  <span class="whatsapp-float-text">¿Dudas?<br><strong>WhatsApp</strong></span>
+</a>
+<button id="backToTop" class="back-to-top" aria-label="Volver arriba">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18,15 12,9 6,15"/></svg>
+</button>
+
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('whatsappFloat').href = window.BunkerData.DataStore.getWhatsAppLink();
+});
+</script>
+
+</body>
+</html>

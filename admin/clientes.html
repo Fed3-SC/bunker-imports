@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Clientes — Bunker Imports Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<div class="admin-layout">
+  <aside id="adminSidebar" class="admin-sidebar"></aside>
+
+  <div class="admin-main">
+    <header id="adminTopbar" class="admin-topbar"></header>
+
+    <div class="admin-content">
+
+      <!-- TOP METRIC CARDS -->
+      <div class="admin-grid-4" style="margin-bottom: 24px;">
+        <div class="admin-card admin-metric-card">
+          <div class="admin-metric-label">Clientes Registrados</div>
+          <div id="statTotalClients" class="admin-metric-val">0</div>
+          <div class="admin-metric-sub">Base de compradores activos</div>
+        </div>
+        <div class="admin-card admin-metric-card" style="border-left: 3px solid var(--gold-primary);">
+          <div class="admin-metric-label">Valor Promedio por Cliente</div>
+          <div id="statAvgLTV" class="admin-metric-val" style="color:var(--gold-primary);">$0</div>
+          <div class="admin-metric-sub">Lifetime Value acumulado</div>
+        </div>
+        <div class="admin-card admin-metric-card" style="border-left: 3px solid var(--status-green);">
+          <div class="admin-metric-label">Clientes Recurrentes (>1)</div>
+          <div id="statRepeatClients" class="admin-metric-val" style="color:var(--status-green);">0</div>
+          <div class="admin-metric-sub">Fidelidad y recompra</div>
+        </div>
+        <div class="admin-card admin-metric-card" style="border-left: 3px solid #8e44ad;">
+          <div class="admin-metric-label">Nuevos Este Mes</div>
+          <div id="statNewThisMonth" class="admin-metric-val" style="color:#d7b5f5;">0</div>
+          <div class="admin-metric-sub">Altas de septiembre 2026</div>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="admin-card" style="margin-bottom: 20px;">
+        <div class="admin-filters-bar">
+          <div class="admin-search-wrap">
+            <span class="admin-search-icon">🔍</span>
+            <input type="text" id="clientSearch" class="admin-search-input" placeholder="Buscar por nombre, email, teléfono o DNI...">
+          </div>
+          <button id="btnExportClients" class="admin-btn admin-btn-secondary">📥 Exportar CSV</button>
+        </div>
+      </div>
+
+      <!-- CLIENTS TABLE -->
+      <div class="admin-card admin-table-card">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Contacto</th>
+                <th>DNI / Doc</th>
+                <th>Ciudad / Zona</th>
+                <th>Pedidos</th>
+                <th>Total Gastado</th>
+                <th>Última Compra</th>
+                <th style="text-align: right;">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="clientsTableBody">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CLIENT DETAIL & ORDER HISTORY -->
+<div id="clientDetailModal" class="admin-modal-backdrop">
+  <div class="admin-modal" style="max-width: 600px;">
+    <div class="admin-modal-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div id="modalClientAvatar" class="admin-avatar" style="width:40px;height:40px;font-size:16px;">C</div>
+        <div>
+          <h3 id="modalClientName" class="admin-modal-title">Nombre Cliente</h3>
+          <span id="modalClientReg" style="font-size:11px;color:var(--text-muted);">Cliente desde -</span>
+        </div>
+      </div>
+      <button class="admin-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="admin-modal-body">
+      <!-- SUMMARY STATS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;">
+        <div style="background:var(--admin-hover);padding:12px;border-radius:6px;text-align:center;border:1px solid var(--admin-border);">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Pedidos</div>
+          <div id="mClientOrdersCount" style="font-size:18px;font-weight:800;color:var(--text-main);margin-top:2px;">0</div>
+        </div>
+        <div style="background:var(--admin-hover);padding:12px;border-radius:6px;text-align:center;border:1px solid var(--admin-border);">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Total Gastado</div>
+          <div id="mClientTotalSpent" style="font-size:18px;font-weight:800;color:var(--gold-primary);margin-top:2px;">$0</div>
+        </div>
+        <div style="background:var(--admin-hover);padding:12px;border-radius:6px;text-align:center;border:1px solid var(--admin-border);">
+          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;">Último Pedido</div>
+          <div id="mClientLastOrder" style="font-size:13px;font-weight:700;color:var(--text-main);margin-top:4px;">-</div>
+        </div>
+      </div>
+
+      <!-- PERSONAL INFO -->
+      <div style="background:var(--admin-hover);padding:14px;border-radius:6px;border:1px solid var(--admin-border);margin-bottom:20px;font-size:13px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <span style="color:var(--text-muted);font-size:11px;">Email:</span>
+            <div id="mClientEmail" style="font-weight:600;color:var(--text-main);">email</div>
+          </div>
+          <div>
+            <span style="color:var(--text-muted);font-size:11px;">Teléfono:</span>
+            <div id="mClientPhone" style="font-weight:600;color:var(--text-main);">tel</div>
+          </div>
+          <div>
+            <span style="color:var(--text-muted);font-size:11px;">DNI:</span>
+            <div id="mClientDni" style="font-weight:600;color:var(--text-main);">dni</div>
+          </div>
+          <div>
+            <span style="color:var(--text-muted);font-size:11px;">Ubicación:</span>
+            <div id="mClientCity" style="font-weight:600;color:var(--text-main);">ciudad</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <a id="btnClientWhatsApp" href="#" target="_blank" class="admin-btn" style="background:#25D366;color:#000;font-size:12px;padding:6px 14px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">
+            <span>💬</span> Iniciar Conversación en WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <!-- ORDERS LIST FOR THIS CLIENT -->
+      <div>
+        <h4 style="font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:10px;">Historial de Pedidos</h4>
+        <div id="clientOrdersList" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;">
+          <!-- List of orders -->
+        </div>
+      </div>
+    </div>
+    <div class="admin-modal-footer">
+      <button class="admin-btn admin-btn-secondary" data-modal-close>Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script src="../src/js/data.js"></script>
+<script src="js/admin-core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  AdminCore.init('clientes', 'Gestión de Clientes');
+
+  const { DataStore } = window.BunkerData;
+
+  function updateMetrics() {
+    const clients = DataStore.getAllCustomers();
+    const totalSpent = clients.reduce((acc, c) => acc + (c.totalSpent || 0), 0);
+    const avgLtv = clients.length > 0 ? Math.round(totalSpent / clients.length) : 0;
+    const repeat = clients.filter(c => (c.orderCount || 0) > 1).length;
+
+    document.getElementById('statTotalClients').textContent = clients.length;
+    document.getElementById('statAvgLTV').textContent = '$' + avgLtv.toLocaleString('es-AR');
+    document.getElementById('statRepeatClients').textContent = repeat;
+    document.getElementById('statNewThisMonth').textContent = clients.length;
+  }
+
+  function renderClients() {
+    const tbody = document.getElementById('clientsTableBody');
+    const query = document.getElementById('clientSearch').value.toLowerCase().trim();
+
+    let clients = DataStore.getAllCustomers();
+
+    if (query) {
+      clients = clients.filter(c =>
+        c.name.toLowerCase().includes(query) ||
+        c.email.toLowerCase().includes(query) ||
+        (c.phone && c.phone.includes(query)) ||
+        (c.dni && c.dni.includes(query))
+      );
+    }
+
+    if (clients.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:48px;color:var(--text-muted);">No se encontraron clientes.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = clients.map(c => {
+      const isVip = (c.totalSpent || 0) >= 200000;
+      return `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="admin-avatar" style="width:32px;height:32px;font-size:12px;">${c.name.charAt(0).toUpperCase()}</div>
+              <div>
+                <div style="font-weight:700;color:var(--text-main);">${c.name}</div>
+                ${isVip ? '<span class="admin-badge" style="background:rgba(201,164,92,0.15);color:var(--gold-primary);font-size:9px;">★ CLIENTE VIP</span>' : ''}
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-size:12px;color:var(--text-main);">${c.email}</div>
+            <div style="font-size:11px;color:var(--text-muted);">${c.phone || '-'}</div>
+          </td>
+          <td>
+            <span style="font-size:12px;color:var(--text-muted);">${c.dni || '—'}</span>
+          </td>
+          <td>
+            <span style="font-size:12px;color:var(--text-muted);">${c.city || 'Argentina'}</span>
+          </td>
+          <td>
+            <span class="admin-badge">${c.orderCount || 1} ped.</span>
+          </td>
+          <td>
+            <strong style="font-size:13px;color:var(--gold-primary);">$${(c.totalSpent || 0).toLocaleString('es-AR')}</strong>
+          </td>
+          <td style="font-size:12px;color:var(--text-muted);">
+            ${c.lastOrderDate || '-'}
+          </td>
+          <td style="text-align: right;">
+            <button class="admin-btn admin-btn-secondary" style="padding:5px 12px;font-size:11px;" onclick="viewClientDetail('${c.email}')">
+              👁️ Ver Perfil
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  window.viewClientDetail = (email) => {
+    const clients = DataStore.getAllCustomers();
+    const c = clients.find(x => x.email.toLowerCase() === email.toLowerCase());
+    if (!c) return;
+
+    document.getElementById('modalClientAvatar').textContent = c.name.charAt(0).toUpperCase();
+    document.getElementById('modalClientName').textContent = c.name;
+    document.getElementById('modalClientReg').textContent = `Cliente registrado el ${c.registeredAt || '2026'}`;
+    document.getElementById('mClientOrdersCount').textContent = c.orderCount || 1;
+    document.getElementById('mClientTotalSpent').textContent = '$' + (c.totalSpent || 0).toLocaleString('es-AR');
+    document.getElementById('mClientLastOrder').textContent = c.lastOrderDate || '-';
+
+    document.getElementById('mClientEmail').textContent = c.email;
+    document.getElementById('mClientPhone').textContent = c.phone || 'No registrado';
+    document.getElementById('mClientDni').textContent = c.dni || 'No registrado';
+    document.getElementById('mClientCity').textContent = c.city || 'Argentina';
+
+    const cleanPhone = (c.phone || '').replace(/\D/g, '');
+    document.getElementById('btnClientWhatsApp').href = cleanPhone ? `https://wa.me/${cleanPhone}` : '#';
+
+    // Find orders of this customer
+    const allOrders = DataStore.getAllOrders();
+    const clientOrders = allOrders.filter(o => o.customer?.email?.toLowerCase() === c.email.toLowerCase());
+
+    const ordersList = document.getElementById('clientOrdersList');
+    if (clientOrders.length === 0) {
+      ordersList.innerHTML = `<div style="font-size:12px;color:var(--text-muted);padding:8px 0;">No se encontraron pedidos registrados para este email.</div>`;
+    } else {
+      ordersList.innerHTML = clientOrders.map(o => `
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--admin-hover);padding:10px 14px;border-radius:6px;border:1px solid var(--admin-border);font-size:12px;">
+          <div>
+            <strong style="color:var(--gold-primary);">#${o.id}</strong> · <span style="color:var(--text-muted);">${new Date(o.date).toLocaleDateString('es-AR')}</span>
+            <div style="color:var(--text-muted);font-size:11px;margin-top:2px;">${(o.items || []).map(i => i.name).join(', ')}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:700;color:var(--text-main);">$${(o.total || 0).toLocaleString('es-AR')}</div>
+            <span class="admin-badge" style="font-size:9px;margin-top:2px;">${o.statusLabel || o.status}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    AdminCore.openModal('clientDetailModal');
+  };
+
+  document.getElementById('clientSearch').addEventListener('input', renderClients);
+
+  // CSV Export
+  document.getElementById('btnExportClients').addEventListener('click', () => {
+    const clients = DataStore.getAllCustomers();
+    let csv = 'Nombre,Email,Telefono,DNI,Ciudad,Pedidos,TotalGastado,UltimaCompra,FechaRegistro\n';
+    clients.forEach(c => {
+      csv += `"${c.name}","${c.email}","${c.phone || ''}","${c.dni || ''}","${c.city || ''}",${c.orderCount || 1},${c.totalSpent || 0},"${c.lastOrderDate || ''}","${c.registeredAt || ''}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', `clientes_bunker_imports_${new Date().toISOString().substring(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  updateMetrics();
+  renderClients();
+});
+</script>
+
+</body>
+</html>

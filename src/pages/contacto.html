@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto & Showroom Exclusivo | Bunker Imports</title>
+  <meta name="description" content="Contactate con Bunker Imports. Showroom exclusivo en Recoleta, CABA. Atención directa por WhatsApp para asesoramiento personalizado en fragancias.">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+</head>
+<body>
+
+<!-- ─── ANNOUNCEMENT BAR ─────────────────────────────────── -->
+<div class="announcement-bar" role="banner">
+  <div class="announcement-track">
+    <div class="announcement-item">PERFUMES ÁRABES Y DE DISEÑADOR · 100% ORIGINALES CON BATCH CODE</div>
+    <div class="announcement-item">HASTA 3 CUOTAS SIN INTERÉS · ENVÍOS A TODO EL PAÍS</div>
+  </div>
+</div>
+
+<!-- ─── NAVBAR ───────────────────────────────────────────── -->
+<header id="navbar" class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="../../index.html" class="navbar-logo" aria-label="Bunker Imports - Inicio">
+      <svg class="navbar-logo-svg" viewBox="0 0 160 56" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(2,2)">
+          <circle cx="24" cy="26" r="22" fill="none" stroke="#C9A45C" stroke-width="1.5"/>
+          <path d="M24 8 L35 13 L35 26 C35 32 29.5 38 24 41 C18.5 38 13 32 13 26 L13 13 Z" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+          <text x="20" y="32" font-family="Montserrat, sans-serif" font-weight="700" font-size="13" fill="#C9A45C">B</text>
+        </g>
+        <text x="55" y="22" font-family="Montserrat, sans-serif" font-weight="800" font-size="11" fill="#C9A45C" letter-spacing="3">BUNKER</text>
+        <text x="55" y="36" font-family="Montserrat, sans-serif" font-weight="300" font-size="8" fill="#A0A0A0" letter-spacing="5">IMPORTS</text>
+      </svg>
+    </a>
+
+    <nav class="navbar-nav">
+      <a href="../../index.html" class="nav-link">Inicio</a>
+      <a href="perfumes.html" class="nav-link">Perfumes</a>
+      <a href="marcas.html" class="nav-link">Marcas</a>
+      <a href="categoria.html?slug=arabes" class="nav-link">Árabes</a>
+      <a href="categoria.html?slug=disenador" class="nav-link">Diseñador</a>
+      <a href="ofertas.html" class="nav-link">Ofertas</a>
+      <a href="nosotros.html" class="nav-link">Nosotros</a>
+    </nav>
+
+    <div class="navbar-actions">
+      <button class="navbar-action-btn search-action" data-search-open title="Buscar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <a href="favoritos.html" class="navbar-action-btn" title="Favoritos">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="badge fav-count" style="display:none">0</span>
+      </a>
+      <button class="navbar-action-btn cart-action" data-cart-open title="Carrito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="badge cart-count" style="display:none">0</span>
+      </button>
+      <button id="hamburger" class="navbar-hamburger" aria-label="Menú">
+        <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ─── MOBILE NAV ────────────────────────────────────────── -->
+<nav id="mobileNav" class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <a href="../../index.html" class="mobile-nav-link">Inicio <span>→</span></a>
+    <a href="perfumes.html" class="mobile-nav-link">Perfumes <span>→</span></a>
+    <a href="marcas.html" class="mobile-nav-link">Marcas <span>→</span></a>
+    <a href="categoria.html?slug=arabes" class="mobile-nav-link">Árabes <span>→</span></a>
+    <a href="categoria.html?slug=disenador" class="mobile-nav-link">Diseñador <span>→</span></a>
+    <a href="ofertas.html" class="mobile-nav-link">Ofertas <span>→</span></a>
+    <a href="nosotros.html" class="mobile-nav-link">Nosotros <span>→</span></a>
+  </div>
+</nav>
+
+<!-- ─── SEARCH & CART ─────────────────────────────────────── -->
+<div id="searchOverlay" class="search-overlay">
+  <div class="search-header">
+    <div class="search-input-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" class="search-input" placeholder="¿Qué perfume estás buscando?">
+    </div>
+    <button class="search-close">Cerrar ✕</button>
+  </div>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<div id="cartBackdrop" class="cart-backdrop"></div>
+<aside id="cartDrawer" class="cart-drawer">
+  <div class="cart-header">
+    <div class="cart-title">Mi Carrito <span id="cartCountBadge" class="cart-count-badge">0</span></div>
+    <button id="cartClose" class="cart-close">✕</button>
+  </div>
+  <div id="cartItems" class="cart-items"></div>
+  <div id="cartFooter" class="cart-footer"></div>
+</aside>
+
+<!-- ─── MAIN CONTENT ──────────────────────────────────────── -->
+<main id="main" role="main">
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="../../index.html">Inicio</a>
+        <span class="sep">/</span>
+        <span>Contacto</span>
+      </div>
+      <span class="section-label">Atención Exclusiva</span>
+      <h1 class="section-title">Estamos para <strong>Asesorarte</strong></h1>
+      <p class="section-subtitle" style="margin-left:0;max-width:620px;">
+        Ponete en contacto con nuestros sommeliers de fragancias para recibir orientación en tu próxima elección o consultar el estado de tu pedido.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="shop-layout" style="grid-template-columns: 1fr 1fr; gap:var(--space-3xl); align-items:start;">
+
+        <!-- LEFT: SHOWROOM & INFO -->
+        <div>
+          <div style="background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);padding:32px;margin-bottom:24px;">
+            <span class="section-label">Canal Prioritario</span>
+            <h2 style="font-family:var(--font-heading);font-size:1.4rem;color:var(--white-warm);margin-bottom:12px;">Atención Inmediata por WhatsApp</h2>
+            <p style="font-size:0.85rem;color:var(--white-muted);line-height:1.6;margin-bottom:20px;">
+              Nuestro equipo responde consultas en minutos. Te brindamos fotos reales de stock, orientación de notas olfativas y seguimiento de envíos.
+            </p>
+            <a id="btnContactWA" href="#" target="_blank" rel="noopener" class="btn btn-whatsapp w-full" style="padding:16px;">
+              <span>💬</span> Iniciar Conversación en WhatsApp
+            </a>
+          </div>
+
+          <div style="background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);padding:32px;">
+            <h3 style="font-family:var(--font-heading);font-size:1.1rem;color:var(--gold-primary);margin-bottom:16px;">Showroom & Pick-Up Point</h3>
+            <div style="display:flex;flex-direction:column;gap:16px;font-size:0.85rem;color:var(--white-muted);">
+              <div>
+                <strong style="color:var(--white-warm);display:block;margin-bottom:4px;">📍 Dirección:</strong>
+                Av. del Libertador 4850, Recoleta, Ciudad Autónoma de Buenos Aires.
+              </div>
+              <div>
+                <strong style="color:var(--white-warm);display:block;margin-bottom:4px;">🕒 Horarios de Atención:</strong>
+                Lunes a Viernes de 10:00 a 19:00 hs.<br>
+                Sábados de 11:00 a 16:00 hs.
+              </div>
+              <div>
+                <strong style="color:var(--white-warm);display:block;margin-bottom:4px;">✉️ Correo Electrónico:</strong>
+                contacto@bunkerimports.com
+              </div>
+              <div>
+                <strong style="color:var(--white-warm);display:block;margin-bottom:4px;">📸 Instagram Oficial:</strong>
+                @bunkerimports.ar
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: FORM -->
+        <div style="background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);padding:32px;">
+          <span class="section-label">Mensaje Directo</span>
+          <h2 style="font-family:var(--font-heading);font-size:1.4rem;color:var(--white-warm);margin-bottom:8px;">Envianos tu Consulta</h2>
+          <p style="font-size:0.85rem;color:var(--white-subtle);margin-bottom:24px;">Te responderemos a la brevedad por correo o WhatsApp.</p>
+
+          <form id="contactForm" class="form-grid" style="gap:16px;" onsubmit="return false;">
+            <div class="form-field">
+              <label class="form-label" for="contactName">Nombre Completo *</label>
+              <input type="text" id="contactName" class="form-input" placeholder="Tu nombre" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="contactEmail">Correo Electrónico *</label>
+              <input type="email" id="contactEmail" class="form-input" placeholder="tu@email.com" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="contactPhone">WhatsApp / Teléfono *</label>
+              <input type="tel" id="contactPhone" class="form-input" placeholder="Ej: 11 5555 4321" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="contactFragrance">Perfume de Interés (Opcional)</label>
+              <input type="text" id="contactFragrance" class="form-input" placeholder="Ej: Lattafa 9PM, Acqua di Giò...">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="contactMsg">Mensaje *</label>
+              <textarea id="contactMsg" class="form-input" rows="4" placeholder="Escribí acá tu duda o consulta..." required style="resize:vertical;"></textarea>
+            </div>
+            <button type="submit" id="btnSubmitContact" class="btn btn-primary w-full" style="padding:16px;">
+              Enviar Consulta
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2024 Bunker Imports. Perfumería Premium · 100% Originales.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── FLOATING WHATSAPP & BACK TO TOP ───────────────────── -->
+<a id="whatsappFloat" href="#" class="whatsapp-float" target="_blank" rel="noopener">
+  <span class="whatsapp-float-icon">💬</span>
+  <span class="whatsapp-float-text">¿Dudas?<br><strong>WhatsApp</strong></span>
+</a>
+<button id="backToTop" class="back-to-top" aria-label="Volver arriba">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18,15 12,9 6,15"/></svg>
+</button>
+
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const wa = window.BunkerData.DataStore.getWhatsAppLink();
+  document.getElementById('whatsappFloat').href = wa;
+  document.getElementById('btnContactWA').href = wa;
+
+  document.getElementById('contactForm').addEventListener('submit', () => {
+    const name = document.getElementById('contactName').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const msg = document.getElementById('contactMsg').value.trim();
+
+    if (!name || !email || !msg) {
+      Toast.show('Por favor completá los campos obligatorios', 'error');
+      return;
+    }
+
+    Toast.show('¡Mensaje enviado con éxito! Te responderemos a la brevedad.', 'success');
+    document.getElementById('contactForm').reset();
+  });
+});
+</script>
+
+</body>
+</html>

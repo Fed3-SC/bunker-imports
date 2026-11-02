@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Pedidos — Bunker Imports Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    .order-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .order-status-pending { background: rgba(224, 168, 44, 0.15); color: var(--status-yellow); border: 1px solid rgba(224, 168, 44, 0.3); }
+    .order-status-paid { background: rgba(46, 204, 113, 0.15); color: var(--status-green); border: 1px solid rgba(46, 204, 113, 0.3); }
+    .order-status-preparing { background: rgba(142, 68, 173, 0.2); color: #d7b5f5; border: 1px solid rgba(142, 68, 173, 0.4); }
+    .order-status-ready { background: rgba(52, 152, 219, 0.2); color: #8ec5fc; border: 1px solid rgba(52, 152, 219, 0.4); }
+    .order-status-shipped { background: rgba(201, 164, 92, 0.2); color: var(--gold-primary); border: 1px solid rgba(201, 164, 92, 0.4); }
+    .order-status-delivered { background: rgba(46, 204, 113, 0.25); color: #4eff9e; border: 1px solid rgba(46, 204, 113, 0.5); }
+    .order-status-cancelled { background: rgba(224, 86, 36, 0.15); color: var(--status-red); border: 1px solid rgba(224, 86, 36, 0.3); }
+
+    .nav-tabs-orders {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--admin-border);
+      padding-bottom: 12px;
+      overflow-x: auto;
+    }
+    .order-tab {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .order-tab:hover {
+      color: var(--text-main);
+      background: var(--admin-hover);
+    }
+    .order-tab.active {
+      background: var(--admin-card-bg);
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+    }
+
+    .order-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 600px) {
+      .order-detail-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .order-item-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--admin-border);
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+<div class="admin-layout">
+  <aside id="adminSidebar" class="admin-sidebar"></aside>
+
+  <div class="admin-main">
+    <header id="adminTopbar" class="admin-topbar"></header>
+
+    <div class="admin-content">
+
+      <!-- TOP METRIC CARDS -->
+      <div class="admin-grid-4" style="margin-bottom: 24px;">
+        <div class="admin-card admin-metric-card">
+          <div class="admin-metric-label">Total Facturado</div>
+          <div id="statTotalBilled" class="admin-metric-val" style="color:var(--gold-primary);">$0</div>
+          <div class="admin-metric-sub">Ventas acumuladas</div>
+        </div>
+        <div class="admin-card admin-metric-card" style="border-left: 3px solid var(--status-yellow);">
+          <div class="admin-metric-label">Por Despachar</div>
+          <div id="statPendingShip" class="admin-metric-val" style="color:var(--status-yellow);">0</div>
+          <div class="admin-metric-sub">Pagos / En preparación</div>
+        </div>
+        <div class="admin-card admin-metric-card" style="border-left: 3px solid var(--status-green);">
+          <div class="admin-metric-label">Entregados con Éxito</div>
+          <div id="statDelivered" class="admin-metric-val" style="color:var(--status-green);">0</div>
+          <div class="admin-metric-sub">Clientes satisfechos</div>
+        </div>
+        <div class="admin-card admin-metric-card">
+          <div class="admin-metric-label">Ticket Promedio</div>
+          <div id="statAvgTicket" class="admin-metric-val">$0</div>
+          <div class="admin-metric-sub">Monto medio por orden</div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="nav-tabs-orders">
+        <button class="order-tab active" data-status="all">Todos los Pedidos (<span id="countAll">0</span>)</button>
+        <button class="order-tab" data-status="pending">Pendientes (<span id="countPending">0</span>)</button>
+        <button class="order-tab" data-status="paid">Pagados (<span id="countPaid">0</span>)</button>
+        <button class="order-tab" data-status="preparing">En Preparación (<span id="countPrep">0</span>)</button>
+        <button class="order-tab" data-status="shipped">Enviados (<span id="countShipped">0</span>)</button>
+        <button class="order-tab" data-status="delivered">Entregados (<span id="countDelivered">0</span>)</button>
+        <button class="order-tab" data-status="cancelled">Cancelados (<span id="countCancelled">0</span>)</button>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="admin-card" style="margin-bottom: 20px;">
+        <div class="admin-filters-bar">
+          <div class="admin-search-wrap">
+            <span class="admin-search-icon">🔍</span>
+            <input type="text" id="orderSearch" class="admin-search-input" placeholder="Buscar por Nº Pedido, cliente, email o teléfono...">
+          </div>
+          <button id="btnRefreshOrders" class="admin-btn admin-btn-secondary">↻ Actualizar</button>
+        </div>
+      </div>
+
+      <!-- ORDERS TABLE -->
+      <div class="admin-card admin-table-card">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Nº Pedido</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Productos</th>
+                <th>Total (ARS)</th>
+                <th>Método de Pago</th>
+                <th>Envío</th>
+                <th>Estado</th>
+                <th style="text-align: right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ORDER DETAIL & STATUS UPDATE -->
+<div id="orderDetailModal" class="admin-modal-backdrop">
+  <div class="admin-modal" style="max-width: 680px;">
+    <div class="admin-modal-header">
+      <div>
+        <h3 id="modalOrderNumber" class="admin-modal-title">Pedido #BK-00000</h3>
+        <span id="modalOrderDate" style="font-size:12px;color:var(--text-muted);">Fecha</span>
+      </div>
+      <button class="admin-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="admin-modal-body">
+      <input type="hidden" id="modalOrderId">
+
+      <!-- CLIENT & SHIPPING INFO -->
+      <div class="order-detail-grid">
+        <div style="background:var(--admin-hover);padding:14px;border-radius:6px;border:1px solid var(--admin-border);">
+          <div style="font-size:11px;font-weight:700;color:var(--gold-primary);text-transform:uppercase;margin-bottom:8px;">Datos del Cliente</div>
+          <div id="detClientName" style="font-weight:700;color:var(--text-main);font-size:14px;">Nombre</div>
+          <div id="detClientEmail" style="font-size:12px;color:var(--text-muted);margin-top:2px;">Email</div>
+          <div id="detClientPhone" style="font-size:12px;color:var(--text-muted);margin-top:2px;">Teléfono</div>
+          <div id="detClientDni" style="font-size:12px;color:var(--text-muted);margin-top:2px;">DNI: -</div>
+          <div style="margin-top:10px;">
+            <a id="btnWhatsAppClient" href="#" target="_blank" class="admin-btn" style="background:#25D366;color:#000;font-size:11px;padding:4px 10px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">
+              <span>💬</span> Chat WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <div style="background:var(--admin-hover);padding:14px;border-radius:6px;border:1px solid var(--admin-border);">
+          <div style="font-size:11px;font-weight:700;color:var(--gold-primary);text-transform:uppercase;margin-bottom:8px;">Logística & Pago</div>
+          <div style="font-size:12px;color:var(--text-muted);">Entrega:</div>
+          <div id="detShippingMethod" style="font-weight:600;color:var(--text-main);font-size:13px;">Método</div>
+          <div id="detAddress" style="font-size:12px;color:var(--text-muted);margin-top:2px;">Dirección</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:8px;">Pago:</div>
+          <div id="detPaymentMethod" style="font-weight:600;color:var(--gold-primary);font-size:13px;">Transferencia</div>
+        </div>
+      </div>
+
+      <!-- ITEMS LIST -->
+      <div style="margin-bottom:16px;">
+        <div style="font-size:12px;font-weight:700;color:var(--text-main);margin-bottom:8px;">Fragancias Solicitadas</div>
+        <div id="detItemsList" style="background:var(--admin-hover);border:1px solid var(--admin-border);border-radius:6px;padding:0 14px;">
+          <!-- Item rows -->
+        </div>
+      </div>
+
+      <!-- TOTALS BREAKDOWN -->
+      <div style="display:flex;justify-content:flex-end;margin-bottom:20px;">
+        <div style="width:260px;font-size:13px;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;justify-content:space-between;color:var(--text-muted);">
+            <span>Subtotal:</span>
+            <span id="detSubtotal">$0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;color:var(--status-green);">
+            <span>Descuento:</span>
+            <span id="detDiscount">-$0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;color:var(--text-muted);">
+            <span>Costo de Envío:</span>
+            <span id="detShippingCost">$0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:var(--gold-primary);border-top:1px solid var(--admin-border);padding-top:6px;">
+            <span>Total Pagado:</span>
+            <span id="detTotal">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS SELECTOR -->
+      <div style="background:var(--admin-card-bg);border:1px solid var(--gold-primary);border-radius:6px;padding:16px;">
+        <label for="selectNewStatus" class="admin-label" style="color:var(--gold-primary);">Actualizar Estado del Pedido</label>
+        <div style="display:flex;gap:12px;">
+          <select id="selectNewStatus" class="admin-select" style="flex:1;">
+            <option value="pending">Pendiente de pago</option>
+            <option value="paid">Pago confirmado</option>
+            <option value="preparing">Preparando pedido</option>
+            <option value="ready">Listo para despachar</option>
+            <option value="shipped">Enviado (En camino)</option>
+            <option value="delivered">Entregado</option>
+            <option value="cancelled">Cancelado (Devuelve stock)</option>
+          </select>
+          <button id="btnUpdateStatus" class="admin-btn admin-btn-primary">Guardar Estado</button>
+        </div>
+        <small style="color:var(--text-muted);font-size:11px;display:block;margin-top:6px;">
+          Al cambiar a "Cancelado", los ítems retornan automáticamente al inventario físico.
+        </small>
+      </div>
+
+    </div>
+    <div class="admin-modal-footer">
+      <button class="admin-btn admin-btn-secondary" data-modal-close>Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script src="../src/js/api.js"></script>
+<script src="../src/js/data.js"></script>
+<script src="js/admin-core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  AdminCore.init('pedidos', 'Gestión de Pedidos');
+
+  const { DataStore, AuthService, getAssetPath } = window.BunkerData;
+  let activeFilter = 'all';
+
+  const statusBadges = {
+    pending: '<span class="order-status-badge order-status-pending">⏳ Pendiente</span>',
+    paid: '<span class="order-status-badge order-status-paid">✓ Pago Confirmado</span>',
+    preparing: '<span class="order-status-badge order-status-preparing">📦 Preparando</span>',
+    ready: '<span class="order-status-badge order-status-ready">🏷️ Listo Despacho</span>',
+    shipped: '<span class="order-status-badge order-status-shipped">🚚 Enviado</span>',
+    delivered: '<span class="order-status-badge order-status-delivered">✓ Entregado</span>',
+    cancelled: '<span class="order-status-badge order-status-cancelled">✕ Cancelado</span>'
+  };
+
+  function updateMetrics() {
+    const orders = DataStore.getAllOrders();
+    const billed = orders.filter(o => o.status !== 'cancelled').reduce((acc, o) => acc + (o.total || 0), 0);
+    const toShip = orders.filter(o => o.status === 'paid' || o.status === 'preparing' || o.status === 'ready').length;
+    const delivered = orders.filter(o => o.status === 'delivered').length;
+    const validCount = orders.filter(o => o.status !== 'cancelled').length;
+    const avgTicket = validCount > 0 ? Math.round(billed / validCount) : 0;
+
+    document.getElementById('statTotalBilled').textContent = '$' + billed.toLocaleString('es-AR');
+    document.getElementById('statPendingShip').textContent = toShip;
+    document.getElementById('statDelivered').textContent = delivered;
+    document.getElementById('statAvgTicket').textContent = '$' + avgTicket.toLocaleString('es-AR');
+
+    // Counts for tabs
+    document.getElementById('countAll').textContent = orders.length;
+    document.getElementById('countPending').textContent = orders.filter(o => o.status === 'pending').length;
+    document.getElementById('countPaid').textContent = orders.filter(o => o.status === 'paid').length;
+    document.getElementById('countPrep').textContent = orders.filter(o => o.status === 'preparing').length;
+    document.getElementById('countShipped').textContent = orders.filter(o => o.status === 'shipped').length;
+    document.getElementById('countDelivered').textContent = orders.filter(o => o.status === 'delivered').length;
+    document.getElementById('countCancelled').textContent = orders.filter(o => o.status === 'cancelled').length;
+  }
+
+  function renderOrders() {
+    const tbody = document.getElementById('ordersTableBody');
+    const query = document.getElementById('orderSearch').value.toLowerCase().trim();
+
+    let orders = DataStore.getAllOrders();
+
+    if (activeFilter !== 'all') {
+      orders = orders.filter(o => o.status === activeFilter);
+    }
+
+    if (query) {
+      orders = orders.filter(o =>
+        o.id.toLowerCase().includes(query) ||
+        o.customer?.name.toLowerCase().includes(query) ||
+        o.customer?.email.toLowerCase().includes(query) ||
+        o.customer?.phone.includes(query)
+      );
+    }
+
+    if (orders.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:48px;color:var(--text-muted);">No se encontraron pedidos.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = orders.map(o => {
+      const itemsDesc = (o.items || []).map(i => `${i.qty}x ${i.name}`).join(', ');
+      const dateFormatted = new Date(o.date).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      return `
+        <tr>
+          <td>
+            <strong style="color:var(--gold-primary);font-family:var(--font-heading);font-size:13px;">#${o.id}</strong>
+          </td>
+          <td style="font-size:12px;color:var(--text-muted);white-space:nowrap;">
+            ${dateFormatted}
+          </td>
+          <td>
+            <div style="font-weight:700;color:var(--text-main);">${o.customer?.name || 'Cliente'}</div>
+            <div style="font-size:11px;color:var(--text-muted);">${o.customer?.phone || o.customer?.email}</div>
+          </td>
+          <td>
+            <div style="font-size:12px;color:var(--text-main);max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${itemsDesc}">
+              ${itemsDesc}
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);">${(o.items || []).length} ítem(s)</div>
+          </td>
+          <td>
+            <strong style="font-size:14px;color:var(--text-main);">$${(o.total || 0).toLocaleString('es-AR')}</strong>
+          </td>
+          <td>
+            <span style="font-size:12px;color:var(--text-muted);">${o.paymentMethod || 'Transferencia'}</span>
+          </td>
+          <td>
+            <span style="font-size:12px;color:var(--text-muted);">${o.shippingMethod || 'Andreani'}</span>
+          </td>
+          <td>
+            ${statusBadges[o.status] || `<span class="admin-badge">${o.status}</span>`}
+          </td>
+          <td style="text-align: right;">
+            <button class="admin-btn admin-btn-secondary" style="padding:5px 12px;font-size:11px;" onclick="viewOrder('${o.id}')">
+              👁️ Ver Detalle
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Tab switching
+  document.querySelectorAll('.order-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.order-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeFilter = tab.dataset.status;
+      renderOrders();
+    });
+  });
+
+  document.getElementById('orderSearch').addEventListener('input', renderOrders);
+  document.getElementById('btnRefreshOrders').addEventListener('click', () => {
+    updateMetrics();
+    renderOrders();
+    AdminToast.show('Pedidos actualizados', 'info');
+  });
+
+  // View Order Modal
+  window.viewOrder = (orderId) => {
+    const o = DataStore.getOrderById(orderId);
+    if (!o) return;
+
+    document.getElementById('modalOrderId').value = o.id;
+    document.getElementById('modalOrderNumber').textContent = `Pedido #${o.id}`;
+    document.getElementById('modalOrderDate').textContent = new Date(o.date).toLocaleString('es-AR');
+
+    // Customer
+    document.getElementById('detClientName').textContent = o.customer?.name || 'Cliente';
+    document.getElementById('detClientEmail').textContent = o.customer?.email || 'S/Email';
+    document.getElementById('detClientPhone').textContent = o.customer?.phone || 'S/Tel';
+    document.getElementById('detClientDni').textContent = `DNI: ${o.customer?.dni || 'S/DNI'}`;
+
+    const cleanPhone = (o.customer?.phone || '').replace(/\D/g, '');
+    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Hola ${o.customer?.name}! Te escribimos desde Bunker Imports por tu pedido #${o.id}.`)}`;
+    document.getElementById('btnWhatsAppClient').href = cleanPhone ? waUrl : '#';
+
+    // Shipping & Payment
+    document.getElementById('detShippingMethod').textContent = o.shippingMethod || 'A convenir';
+    document.getElementById('detAddress').textContent = o.customer?.address || 'CABA';
+    document.getElementById('detPaymentMethod').textContent = o.paymentMethod || 'Transferencia';
+
+    // Items
+    const itemsList = document.getElementById('detItemsList');
+    itemsList.innerHTML = (o.items || []).map(i => `
+      <div class="order-item-row">
+        <img src="${getAssetPath(i.imageFile || 'cat-arabes.jpg')}" alt="${i.name}" style="width:36px;height:36px;object-fit:cover;border-radius:4px;border:1px solid var(--admin-border);">
+        <div style="flex:1;">
+          <div style="font-weight:700;color:var(--text-main);font-size:13px;">${i.name}</div>
+          <div style="font-size:11px;color:var(--text-muted);">${i.brand || ''} · ${i.size || '100ml'}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-weight:700;color:var(--text-main);font-size:13px;">$${((i.price || 0) * (i.qty || 1)).toLocaleString('es-AR')}</div>
+          <div style="font-size:11px;color:var(--text-muted);">${i.qty || 1} x $${(i.price || 0).toLocaleString('es-AR')}</div>
+        </div>
+      </div>
+    `).join('');
+
+    // Totals
+    document.getElementById('detSubtotal').textContent = '$' + (o.subtotal || 0).toLocaleString('es-AR');
+    document.getElementById('detDiscount').textContent = '-$' + (o.discount || 0).toLocaleString('es-AR');
+    document.getElementById('detShippingCost').textContent = (o.shippingCost === 0) ? '¡GRATIS!' : '$' + (o.shippingCost || 0).toLocaleString('es-AR');
+    document.getElementById('detTotal').textContent = '$' + (o.total || 0).toLocaleString('es-AR');
+
+    // Status Selector
+    document.getElementById('selectNewStatus').value = o.status;
+
+    AdminCore.openModal('orderDetailModal');
+  };
+
+  // Update Status Button
+  document.getElementById('btnUpdateStatus').addEventListener('click', () => {
+    const id = document.getElementById('modalOrderId').value;
+    const newStatus = document.getElementById('selectNewStatus').value;
+    const user = AuthService.getCurrentUser()?.name || 'Admin';
+
+    DataStore.updateOrderStatus(id, newStatus, user);
+    AdminToast.show(`Pedido #${id} actualizado a "${newStatus}"`, 'success');
+    AdminCore.closeModal('orderDetailModal');
+    updateMetrics();
+    renderOrders();
+  });
+
+  // Initial
+  updateMetrics();
+  renderOrders();
+});
+</script>
+
+</body>
+</html>

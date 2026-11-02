@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Productos | Panel Bunker Imports</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" type="image/x-icon" href="../src/images/favicon.ico">
+</head>
+<body>
+
+<div class="admin-wrapper">
+  <aside id="adminSidebar" class="admin-sidebar"></aside>
+
+  <div class="admin-main">
+    <header id="adminTopbar" class="admin-topbar"></header>
+
+    <main class="admin-content">
+
+      <!-- TOOLBAR & HEADER -->
+      <div class="admin-toolbar">
+        <div style="display:flex; align-items:center; gap:12px; flex:1; flex-wrap:wrap;">
+          <div class="admin-search-wrap">
+            <span class="admin-search-icon">🔍</span>
+            <input type="text" id="searchProductInput" class="admin-search-input" placeholder="Buscar por nombre, marca o SKU...">
+          </div>
+
+          <div class="admin-filter-group">
+            <select id="filterBrandSelect" class="admin-select" style="width:auto; font-size:12px; padding:8px 12px;">
+              <option value="all">Todas las marcas</option>
+            </select>
+
+            <select id="filterCatSelect" class="admin-select" style="width:auto; font-size:12px; padding:8px 12px;">
+              <option value="all">Todas las categorías</option>
+            </select>
+
+            <select id="filterStatusSelect" class="admin-select" style="width:auto; font-size:12px; padding:8px 12px;">
+              <option value="all">Todos los estados</option>
+              <option value="active">Activo</option>
+              <option value="soldout">Agotado</option>
+              <option value="inactive">Inactivo</option>
+            </select>
+          </div>
+        </div>
+
+        <a href="producto-form.html" class="admin-btn admin-btn-primary">
+          <span>+</span> AGREGAR PRODUCTO
+        </a>
+      </div>
+
+      <!-- BULK ACTIONS BAR (HIDDEN BY DEFAULT) -->
+      <div id="bulkActionsBar" style="display:none; background:var(--admin-card); border:1px solid var(--gold-primary); border-radius:var(--radius-sm); padding:10px 16px; margin-bottom:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div style="font-size:12px; color:var(--gold-light); font-weight:600;">
+          <span id="selectedCount">0</span> productos seleccionados
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button id="btnBulkActivate" class="admin-btn admin-btn-sm admin-btn-secondary">Activar</button>
+          <button id="btnBulkDeactivate" class="admin-btn admin-btn-sm admin-btn-secondary">Desactivar</button>
+          <button id="btnBulkPriceModal" class="admin-btn admin-btn-sm admin-btn-secondary">Modificar Precio</button>
+          <button id="btnBulkDelete" class="admin-btn admin-btn-sm admin-btn-danger">Eliminar</button>
+        </div>
+      </div>
+
+      <!-- PRODUCTS TABLE CARD -->
+      <div class="admin-card" style="padding:0; overflow:hidden;">
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:40px; text-align:center;">
+                  <input type="checkbox" id="selectAllCheckbox" class="admin-checkbox">
+                </th>
+                <th>Imagen</th>
+                <th>Producto & SKU</th>
+                <th>Marca</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Estado</th>
+                <th style="text-align:right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- MODAL: MODIFICAR PRECIOS EN LOTE -->
+<div id="bulkPriceModal" class="admin-modal-backdrop">
+  <div class="admin-modal">
+    <div class="admin-modal-header">
+      <h3 class="admin-modal-title">Modificar Precios en Lote</h3>
+      <button class="admin-modal-close" data-modal-close>✕</button>
+    </div>
+    <div class="admin-modal-body">
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+        Aplicar cambio a los <strong id="modalSelectedCount">0</strong> productos seleccionados:
+      </p>
+
+      <div class="admin-form-group">
+        <label class="admin-label">Tipo de modificación</label>
+        <select id="bulkPriceType" class="admin-select">
+          <option value="percent_inc">Aumentar por porcentaje (%)</option>
+          <option value="percent_dec">Disminuir por porcentaje (%)</option>
+          <option value="fixed_set">Establecer precio fijo ($)</option>
+        </select>
+      </div>
+
+      <div class="admin-form-group">
+        <label class="admin-label">Valor</label>
+        <input type="number" id="bulkPriceValue" class="admin-input" placeholder="Ej: 10 para 10%">
+      </div>
+    </div>
+    <div class="admin-modal-footer">
+      <button class="admin-btn admin-btn-secondary" data-modal-close>Cancelar</button>
+      <button id="btnConfirmBulkPrice" class="admin-btn admin-btn-primary">Aplicar Cambios</button>
+    </div>
+  </div>
+</div>
+
+<script src="../src/js/api.js"></script>
+<script src="../src/js/data.js"></script>
+<script src="js/admin-core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  AdminCore.init('productos', 'Gestión de Productos');
+
+  const { DataStore } = window.BunkerData;
+  const brands = DataStore.getAllBrands();
+  const categories = DataStore.getAllCategories();
+  let selectedIds = [];
+
+  // Populate filter dropdowns
+  const brandSelect = document.getElementById('filterBrandSelect');
+  brands.forEach(b => {
+    const opt = document.createElement('option');
+    opt.value = b.slug;
+    opt.textContent = b.name;
+    brandSelect.appendChild(opt);
+  });
+
+  const catSelect = document.getElementById('filterCatSelect');
+  categories.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.slug;
+    opt.textContent = c.name;
+    catSelect.appendChild(opt);
+  });
+
+  function renderTable() {
+    const query = document.getElementById('searchProductInput').value.toLowerCase().trim();
+    const brand = document.getElementById('filterBrandSelect').value;
+    const cat = document.getElementById('filterCatSelect').value;
+    const status = document.getElementById('filterStatusSelect').value;
+
+    let products = DataStore.getAllProducts();
+
+    if (query) {
+      products = products.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.brandName.toLowerCase().includes(query) ||
+        (p.sku && p.sku.toLowerCase().includes(query))
+      );
+    }
+
+    if (brand !== 'all') {
+      products = products.filter(p => p.brand === brand);
+    }
+
+    if (cat !== 'all') {
+      products = products.filter(p => p.category && p.category.includes(cat));
+    }
+
+    if (status !== 'all') {
+      products = products.filter(p => p.status === status);
+    }
+
+    const tbody = document.getElementById('productsTableBody');
+
+    if (products.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="9" style="text-align:center; padding:48px; color:var(--text-muted);">
+            No se encontraron fragancias con los criterios seleccionados.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = products.map(p => {
+      const isSelected = selectedIds.includes(p.id);
+      const isLow = p.stock > 0 && p.stock <= (p.minStock || 3);
+      const isOut = p.stock <= 0;
+      const stockBadgeClass = isOut ? 'status-soldout' : (isLow ? 'status-low' : 'status-active');
+      const stockText = isOut ? '0 (Agotado)' : (isLow ? `${p.stock} (Bajo)` : `${p.stock} un.`);
+
+      const statusMap = {
+        active: { label: 'Activo', class: 'status-active' },
+        soldout: { label: 'Agotado', class: 'status-soldout' },
+        inactive: { label: 'Inactivo', class: 'status-cancelled' }
+      };
+      const st = statusMap[p.status] || { label: p.status, class: 'status-active' };
+
+      return `
+        <tr data-id="${p.id}">
+          <td style="text-align:center;">
+            <input type="checkbox" class="admin-checkbox row-select" data-id="${p.id}" ${isSelected ? 'checked' : ''}>
+          </td>
+          <td>
+            <img class="admin-table-img" src="${getAssetPath(p.imageFile)}" alt="${p.name}">
+          </td>
+          <td>
+            <a href="producto-form.html?id=${p.id}" style="font-weight:700; color:var(--text-primary); display:block; font-size:13px;">${p.name}</a>
+            <span style="font-size:11px; color:var(--text-muted); font-family:monospace;">${p.sku || 'S/SKU'} · ${p.type || 'EDP'}</span>
+          </td>
+          <td><span style="color:var(--gold-primary); font-weight:600;">${p.brandName}</span></td>
+          <td><span style="font-size:12px; color:var(--text-secondary);">${Array.isArray(p.category) ? p.category.join(', ') : p.category}</span></td>
+          <td>
+            <div style="font-weight:700; color:var(--text-primary);">$${p.price.toLocaleString('es-AR')}</div>
+            ${p.compareAtPrice ? `<div style="font-size:11px; text-decoration:line-through; color:var(--text-faint);">$${p.compareAtPrice.toLocaleString('es-AR')}</div>` : ''}
+          </td>
+          <td><span class="status-pill ${stockBadgeClass}">${stockText}</span></td>
+          <td><span class="status-pill ${st.class}">${st.label}</span></td>
+          <td style="text-align:right;">
+            <div style="display:inline-flex; gap:6px;">
+              <a href="producto-form.html?id=${p.id}" class="admin-btn-icon" title="Editar">✏️</a>
+              <button class="admin-btn-icon btn-dup" data-id="${p.id}" title="Duplicar">📋</button>
+              <button class="admin-btn-icon btn-toggle" data-id="${p.id}" title="${p.status === 'active' ? 'Desactivar' : 'Activar'}">
+                ${p.status === 'active' ? '👁️' : '🚫'}
+              </button>
+              <button class="admin-btn-icon btn-del" data-id="${p.id}" title="Eliminar" style="color:var(--status-red);">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    bindTableEvents();
+    updateBulkBar();
+  }
+
+  function bindTableEvents() {
+    // Individual checkbox
+    document.querySelectorAll('.row-select').forEach(chk => {
+      chk.addEventListener('change', (e) => {
+        const id = e.target.dataset.id;
+        if (e.target.checked) {
+          if (!selectedIds.includes(id)) selectedIds.push(id);
+        } else {
+          selectedIds = selectedIds.filter(x => x !== id);
+        }
+        updateBulkBar();
+      });
+    });
+
+    // Duplicate action
+    document.querySelectorAll('.btn-dup').forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.dataset.id;
+        DataStore.duplicateProduct(id, 'Admin');
+        AdminToast.show('Producto duplicado correctamente');
+        renderTable();
+      });
+    });
+
+    // Toggle active/inactive
+    document.querySelectorAll('.btn-toggle').forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.dataset.id;
+        const prod = DataStore.getProductById(id);
+        if (prod) {
+          prod.status = prod.status === 'active' ? 'inactive' : 'active';
+          DataStore.saveProduct(prod, 'Admin');
+          AdminToast.show(`Producto marcado como ${prod.status === 'active' ? 'Activo' : 'Inactivo'}`);
+          renderTable();
+        }
+      });
+    });
+
+    // Delete action
+    document.querySelectorAll('.btn-del').forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.dataset.id;
+        const prod = DataStore.getProductById(id);
+        if (prod && confirm(`¿Seguro que deseas eliminar definitivamente "${prod.name}"? Esta acción no se puede deshacer.`)) {
+          DataStore.deleteProduct(id, 'Admin');
+          AdminToast.show('Producto eliminado del catálogo');
+          selectedIds = selectedIds.filter(x => x !== id);
+          renderTable();
+        }
+      });
+    });
+  }
+
+  function updateBulkBar() {
+    const bar = document.getElementById('bulkActionsBar');
+    const countEl = document.getElementById('selectedCount');
+    const selectAll = document.getElementById('selectAllCheckbox');
+
+    if (selectedIds.length > 0) {
+      bar.style.display = 'flex';
+      countEl.textContent = selectedIds.length;
+    } else {
+      bar.style.display = 'none';
+      if (selectAll) selectAll.checked = false;
+    }
+  }
+
+  // Select all checkbox
+  document.getElementById('selectAllCheckbox').addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+    const checkboxes = document.querySelectorAll('.row-select');
+    selectedIds = [];
+    checkboxes.forEach(c => {
+      c.checked = isChecked;
+      if (isChecked) selectedIds.push(c.dataset.id);
+    });
+    updateBulkBar();
+  });
+
+  // Filter & Search events
+  document.getElementById('searchProductInput').addEventListener('input', renderTable);
+  document.getElementById('filterBrandSelect').addEventListener('change', renderTable);
+  document.getElementById('filterCatSelect').addEventListener('change', renderTable);
+  document.getElementById('filterStatusSelect').addEventListener('change', renderTable);
+
+  // Bulk Actions
+  document.getElementById('btnBulkActivate').addEventListener('click', () => {
+    selectedIds.forEach(id => {
+      const p = DataStore.getProductById(id);
+      if (p) { p.status = 'active'; DataStore.saveProduct(p, 'Admin'); }
+    });
+    AdminToast.show(`${selectedIds.length} productos activados`);
+    renderTable();
+  });
+
+  document.getElementById('btnBulkDeactivate').addEventListener('click', () => {
+    selectedIds.forEach(id => {
+      const p = DataStore.getProductById(id);
+      if (p) { p.status = 'inactive'; DataStore.saveProduct(p, 'Admin'); }
+    });
+    AdminToast.show(`${selectedIds.length} productos desactivados`);
+    renderTable();
+  });
+
+  document.getElementById('btnBulkDelete').addEventListener('click', () => {
+    if (confirm(`¿Eliminar los ${selectedIds.length} productos seleccionados?`)) {
+      selectedIds.forEach(id => DataStore.deleteProduct(id, 'Admin'));
+      AdminToast.show(`${selectedIds.length} productos eliminados`);
+      selectedIds = [];
+      renderTable();
+    }
+  });
+
+  // Bulk price modal
+  document.getElementById('btnBulkPriceModal').addEventListener('click', () => {
+    document.getElementById('modalSelectedCount').textContent = selectedIds.length;
+    AdminCore.openModal('bulkPriceModal');
+  });
+
+  document.getElementById('btnConfirmBulkPrice').addEventListener('click', () => {
+    const type = document.getElementById('bulkPriceType').value;
+    const val = Number(document.getElementById('bulkPriceValue').value);
+    if (!val || val <= 0) {
+      alert('Ingresá un valor válido');
+      return;
+    }
+    DataStore.bulkUpdatePrices(selectedIds, { type, value: val }, 'Admin');
+    AdminCore.closeModal('bulkPriceModal');
+    AdminToast.show('Precios actualizados en lote exitosamente');
+    renderTable();
+  });
+
+  renderTable();
+});
+</script>
+
+</body>
+</html>

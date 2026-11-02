@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Panel Bunker Imports</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" type="image/x-icon" href="../src/images/favicon.ico">
+</head>
+<body>
+
+<div class="admin-wrapper">
+  <!-- SIDEBAR -->
+  <aside id="adminSidebar" class="admin-sidebar"></aside>
+
+  <!-- MAIN -->
+  <div class="admin-main">
+    <header id="adminTopbar" class="admin-topbar"></header>
+
+    <main class="admin-content">
+
+      <!-- ALERT BAR IF LOW STOCK -->
+      <div id="stockAlertBanner" style="display:none; background:rgba(241,196,15,0.1); border:1px solid var(--status-yellow); border-radius:var(--radius-md); padding:14px 18px; margin-bottom:24px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:20px; color:var(--status-yellow);">⚠️</span>
+          <div>
+            <strong style="color:var(--status-yellow); font-size:13px; text-transform:uppercase;">Alerta de Inventario:</strong>
+            <span id="stockAlertText" style="color:var(--text-primary); font-size:13px; margin-left:6px;">Existen productos con stock bajo o agotados.</span>
+          </div>
+        </div>
+        <a href="inventario.html" class="admin-btn admin-btn-sm admin-btn-secondary" style="border-color:var(--status-yellow); color:var(--status-yellow);">
+          Ver Inventario Urgente →
+        </a>
+      </div>
+
+      <!-- KPI METRIC CARDS -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Ventas de Hoy</span>
+            <span class="metric-icon">💵</span>
+          </div>
+          <div class="metric-value" id="kpiSalesToday">$0</div>
+          <div class="metric-footer">
+            <span class="badge-trend-up">↑ +14.2%</span>
+            <span style="color:var(--text-muted);">vs día anterior</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Ventas del Mes</span>
+            <span class="metric-icon">📈</span>
+          </div>
+          <div class="metric-value" id="kpiSalesMonth">$0</div>
+          <div class="metric-footer">
+            <span class="badge-trend-up">↑ +28.5%</span>
+            <span style="color:var(--text-muted);">crecimiento sostenido</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Pedidos Totales</span>
+            <span class="metric-icon">📋</span>
+          </div>
+          <div class="metric-value" id="kpiOrdersCount">0</div>
+          <div class="metric-footer">
+            <span id="kpiPendingOrders" style="color:var(--gold-primary); font-weight:700;">0 pendientes</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Productos en Catálogo</span>
+            <span class="metric-icon">📦</span>
+          </div>
+          <div class="metric-value" id="kpiProductsCount">0</div>
+          <div class="metric-footer">
+            <span style="color:var(--text-muted);" id="kpiActiveBrands">0 casas de perfumería</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Stock Bajo</span>
+            <span class="metric-icon" style="color:var(--status-yellow);">⚠️</span>
+          </div>
+          <div class="metric-value" id="kpiLowStockCount" style="color:var(--status-yellow);">0</div>
+          <div class="metric-footer">
+            <span style="color:var(--text-muted);">Requieren reposición</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Agotados</span>
+            <span class="metric-icon" style="color:var(--status-red);">🚫</span>
+          </div>
+          <div class="metric-value" id="kpiSoldOutCount" style="color:var(--status-red);">0</div>
+          <div class="metric-footer">
+            <span style="color:var(--text-muted);">Sin stock disponible</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Clientes Registrados</span>
+            <span class="metric-icon">👥</span>
+          </div>
+          <div class="metric-value" id="kpiCustomersCount">0</div>
+          <div class="metric-footer">
+            <span style="color:var(--status-green);">Activos</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Ticket Promedio</span>
+            <span class="metric-icon">🏷️</span>
+          </div>
+          <div class="metric-value" id="kpiAvgTicket">$0</div>
+          <div class="metric-footer">
+            <span style="color:var(--text-muted);">Por pedido</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHARTS & PERFORMANCE SECTION -->
+      <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px; margin-bottom:24px;">
+        
+        <!-- SALES CHART -->
+        <div class="admin-card" style="margin:0;">
+          <div class="admin-card-header">
+            <div>
+              <h2 class="admin-card-title">Evolución de Ventas Semanales</h2>
+              <div class="admin-card-subtitle">Ingresos diarios en pesos argentinos</div>
+            </div>
+            <span style="font-size:12px; color:var(--gold-primary); font-weight:700;">Últimos 7 días</span>
+          </div>
+
+          <!-- NATIVE SVG BAR CHART -->
+          <div class="chart-container" id="salesChartBars">
+            <!-- Filled via JS -->
+          </div>
+        </div>
+
+        <!-- CATEGORY DISTRIBUTION -->
+        <div class="admin-card" style="margin:0;">
+          <div class="admin-card-header">
+            <div>
+              <h2 class="admin-card-title">Ventas por Categoría</h2>
+              <div class="admin-card-subtitle">Participación del catálogo</div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:16px; margin-top:12px;">
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                <span style="color:var(--text-primary); font-weight:600;">Perfumes Árabes (Dubai)</span>
+                <span style="color:var(--gold-primary); font-weight:700;">68%</span>
+              </div>
+              <div style="width:100%; height:8px; background:var(--admin-elevated); border-radius:99px; overflow:hidden;">
+                <div style="width:68%; height:100%; background:linear-gradient(90deg, var(--gold-dark), var(--gold-primary)); border-radius:99px;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                <span style="color:var(--text-primary); font-weight:600;">Diseñador Internacional</span>
+                <span style="color:var(--gold-primary); font-weight:700;">24%</span>
+              </div>
+              <div style="width:100%; height:8px; background:var(--admin-elevated); border-radius:99px; overflow:hidden;">
+                <div style="width:24%; height:100%; background:linear-gradient(90deg, var(--purple-accent), #9B59B6); border-radius:99px;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+                <span style="color:var(--text-primary); font-weight:600;">Unisex & Nicho</span>
+                <span style="color:var(--gold-primary); font-weight:700;">8%</span>
+              </div>
+              <div style="width:100%; height:8px; background:var(--admin-elevated); border-radius:99px; overflow:hidden;">
+                <div style="width:8%; height:100%; background:var(--status-blue); border-radius:99px;"></div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px; padding:12px; background:var(--admin-elevated); border-radius:var(--radius-sm); font-size:11px; color:var(--text-muted); line-height:1.4;">
+              💡 <strong>Insight Comercial:</strong> Las fragancias de <strong>Lattafa</strong> y <strong>Armaf</strong> representan el 74% de la facturación global de este mes.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RECENT ORDERS & TOP SELLERS -->
+      <div style="display:grid; grid-template-columns: 3fr 2fr; gap:24px;">
+
+        <!-- RECENT ORDERS -->
+        <div class="admin-card" style="margin:0;">
+          <div class="admin-card-header">
+            <div>
+              <h2 class="admin-card-title">Últimos Pedidos</h2>
+              <div class="admin-card-subtitle">Operaciones recientes de la tienda</div>
+            </div>
+            <a href="pedidos.html" class="admin-btn admin-btn-sm admin-btn-secondary">Ver Todos los Pedidos →</a>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Nº Pedido</th>
+                  <th>Cliente</th>
+                  <th>Total</th>
+                  <th>Pago</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="recentOrdersBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TOP PRODUCTS -->
+        <div class="admin-card" style="margin:0;">
+          <div class="admin-card-header">
+            <div>
+              <h2 class="admin-card-title">Más Vendidos</h2>
+              <div class="admin-card-subtitle">Perfumes estrella del catálogo</div>
+            </div>
+            <a href="productos.html" class="admin-btn admin-btn-sm admin-btn-secondary">Catálogo →</a>
+          </div>
+
+          <div id="topProductsList" style="display:flex; flex-direction:column; gap:12px;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="../src/js/api.js"></script>
+<script src="../src/js/data.js"></script>
+<script src="js/admin-core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  AdminCore.init('dashboard', 'Dashboard General');
+
+  const { DataStore } = window.BunkerData;
+  const products = DataStore.getAllProducts();
+  const orders = DataStore.getAllOrders();
+  const customers = DataStore.getAllCustomers();
+  const brands = DataStore.getAllBrands();
+  const lowStock = DataStore.getLowStockProducts();
+  const soldOut = DataStore.getOutOfStockProducts();
+
+  // Stock Alert Banner
+  if (lowStock.length > 0 || soldOut.length > 0) {
+    const banner = document.getElementById('stockAlertBanner');
+    const text = document.getElementById('stockAlertText');
+    banner.style.display = 'flex';
+    text.innerHTML = `Atención: Hay <strong>${lowStock.length}</strong> productos con stock bajo y <strong>${soldOut.length}</strong> agotados.`;
+  }
+
+  // Calculate KPIs
+  const totalSales = orders.reduce((sum, o) => sum + (o.status !== 'cancelled' ? o.total : 0), 0);
+  const avgTicket = orders.length > 0 ? Math.round(totalSales / orders.length) : 0;
+  const todaySales = orders
+    .filter(o => o.date.startsWith('2026-09-30') && o.status !== 'cancelled')
+    .reduce((sum, o) => sum + o.total, 0);
+
+  document.getElementById('kpiSalesToday').textContent = `$${todaySales.toLocaleString('es-AR')}`;
+  document.getElementById('kpiSalesMonth').textContent = `$${totalSales.toLocaleString('es-AR')}`;
+  document.getElementById('kpiOrdersCount').textContent = orders.length;
+  document.getElementById('kpiPendingOrders').textContent = `${orders.filter(o => o.status === 'pending' || o.status === 'paid').length} activos`;
+  document.getElementById('kpiProductsCount').textContent = products.length;
+  document.getElementById('kpiActiveBrands').textContent = `${brands.length} casas activas`;
+  document.getElementById('kpiLowStockCount').textContent = lowStock.length;
+  document.getElementById('kpiSoldOutCount').textContent = soldOut.length;
+  document.getElementById('kpiCustomersCount').textContent = customers.length;
+  document.getElementById('kpiAvgTicket').textContent = `$${avgTicket.toLocaleString('es-AR')}`;
+
+  // Render Sales Bar Chart (7 days)
+  const chartDays = [
+    { label: 'Jue 24', val: 180000, height: 45 },
+    { label: 'Vie 25', val: 260000, height: 60 },
+    { label: 'Sáb 26', val: 390000, height: 85 },
+    { label: 'Dom 27', val: 310000, height: 70 },
+    { label: 'Lun 28', val: 210000, height: 50 },
+    { label: 'Mar 29', val: 340000, height: 78 },
+    { label: 'Hoy', val: 420000, height: 95 }
+  ];
+
+  const chartContainer = document.getElementById('salesChartBars');
+  chartContainer.innerHTML = chartDays.map(d => `
+    <div class="chart-bar-wrap">
+      <div class="chart-bar" style="height:${d.height}%;" title="${d.label}: $${d.val.toLocaleString('es-AR')}"></div>
+      <span class="chart-label">${d.label}</span>
+    </div>
+  `).join('');
+
+  // Render Recent Orders Table
+  const ordersTbody = document.getElementById('recentOrdersBody');
+  ordersTbody.innerHTML = orders.slice(0, 5).map(o => `
+    <tr>
+      <td><a href="pedidos.html" style="font-weight:700; color:var(--gold-primary);">#${o.id}</a></td>
+      <td>
+        <div style="font-weight:600; color:var(--text-primary);">${o.customer.name}</div>
+        <div style="font-size:11px; color:var(--text-muted);">${o.customer.phone}</div>
+      </td>
+      <td style="font-weight:700; color:var(--text-primary);">$${o.total.toLocaleString('es-AR')}</td>
+      <td style="font-size:11px; color:var(--text-muted);">${o.paymentMethod.split(' ')[0]}</td>
+      <td><span class="status-pill status-${o.status}">${o.statusLabel}</span></td>
+    </tr>
+  `).join('');
+
+  // Render Top Products
+  const topList = document.getElementById('topProductsList');
+  const bestsellers = products.filter(p => p.bestseller || p.featured).slice(0, 4);
+  topList.innerHTML = bestsellers.map((p, idx) => `
+    <div style="display:flex; align-items:center; gap:12px; padding:10px; background:var(--admin-elevated); border-radius:var(--radius-sm); border:1px solid var(--admin-border);">
+      <span style="font-family:var(--font-heading); font-weight:800; font-size:14px; color:var(--gold-primary); width:20px;">#${idx + 1}</span>
+      <img src="${getAssetPath(p.imageFile)}" alt="${p.name}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; background:var(--admin-card);">
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:12px; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</div>
+        <div style="font-size:11px; color:var(--gold-light);">${p.brandName} · $${p.price.toLocaleString('es-AR')}</div>
+      </div>
+      <div style="text-align:right;">
+        <span style="font-size:11px; font-weight:600; color:var(--status-green);">Stock: ${p.stock}</span>
+      </div>
+    </div>
+  `).join('');
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Precios & Rentabilidad — Bunker Imports Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    .bulk-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--admin-card-bg);
+      border: 1px solid var(--gold-primary);
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(201, 164, 92, 0.15);
+      animation: fadeIn 0.2s ease;
+    }
+    .bulk-bar.visible {
+      display: flex;
+    }
+    .margin-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .margin-high {
+      background: rgba(46, 204, 113, 0.15);
+      color: var(--status-green);
+    }
+    .margin-med {
+      background: rgba(224, 168, 44, 0.15);
+      color: var(--status-yellow);
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+<div class="admin-layout">
+  <aside id="adminSidebar" class="admin-sidebar"></aside>
+
+  <div class="admin-main">
+    <header id="adminTopbar" class="admin-topbar"></header>
+
+    <div class="admin-content">
+
+      <!-- TOP METRIC CARDS -->
+      <div class="admin-grid-4" style="margin-bottom: 24px;">
+        <div class="admin-card admin-metric-card">
+          <div class="admin-metric-label">Precio Promedio Catálogo</div>
+          <div id="statAvgPrice" class="admin-metric-val">$0</div>
+          <div class="admin-metric-sub">PVP de perfumes activos</div>
+        </div>
+        <div class="admin-card admin-metric-card">
+          <div class="admin-metric-label">Margen Bruto Promedio</div>
+          <div id="statAvgMargin" class="admin-metric-val" style="color:var(--status-green);">0%</div>
+          <div class="admin-metric-sub">Sobre costo de reposición</div>
+        </div>
+        <div class="admin-card admin-metric-card">
+          <div class="admin-metric-label">Productos con Oferta</div>
+          <div id="statPromoProducts" class="admin-metric-val" style="color:var(--gold-primary);">0</div>
+          <div class="admin-metric-sub">Con precio tachado o % OFF</div>
+        </div>
+        <div class="admin-card admin-metric-card">
+          <div class="admin-metric-label">Cuota Promedio (3 CI)</div>
+          <div id="statAvgInstallment" class="admin-metric-val">$0</div>
+          <div class="admin-metric-sub">Sin interés para el cliente</div>
+        </div>
+      </div>
+
+      <!-- BULK ACTIONS FLOATING BAR -->
+      <div id="bulkBar" class="bulk-bar">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-weight:700;color:var(--gold-primary);" id="selectedCount">0 productos seleccionados</span>
+          <span style="font-size:12px;color:var(--text-muted);">Acciones masivas de precios</span>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button id="btnBulkIncrease" class="admin-btn admin-btn-secondary" style="font-size:12px;">+ Aumento %</button>
+          <button id="btnBulkDecrease" class="admin-btn admin-btn-secondary" style="font-size:12px;">- Descuento %</button>
+          <button id="btnBulkFixed" class="admin-btn admin-btn-primary" style="font-size:12px;">Establecer Precio</button>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="admin-card" style="margin-bottom: 20px;">
+        <div class="admin-filters-bar">
+          <div class="admin-search-wrap">
+            <span class="admin-search-icon">🔍</span>
+            <input type="text" id="priceSearch" class="admin-search-input" placeholder="Buscar producto o marca...">
+          </div>
+          <select id="filterBrand" class="admin-select" style="min-width: 170px;">
+            <option value="">Todas las marcas</option>
+          </select>
+          <select id="filterDiscount" class="admin-select" style="min-width: 170px;">
+            <option value="">Todos los productos</option>
+            <option value="discount">Solo con descuento</option>
+            <option value="nodiscount">Sin descuento</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PRICE TABLE -->
+      <div class="admin-card admin-table-card">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;">
+                  <input type="checkbox" id="selectAllCheckbox" style="accent-color:var(--gold-primary);">
+                </th>
+                <th style="width: 50px;">Img</th>
+                <th>Producto & Marca</th>
+                <th>Precio Venta (ARS)</th>
+                <th>Precio Anterior (Tachado)</th>
+                <th>% Descuento</th>
+                <th>Costo Interno</th>
+                <th>Margen Bruto</th>
+                <th style="text-align: right;">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="priceTableBody">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: SINGLE PRODUCT PRICE EDIT -->
+<div id="editPriceModal" class="admin-modal-backdrop">
+  <div class="admin-modal" style="max-width: 460px;">
+    <div class="admin-modal-header">
+      <h3 id="modalEditTitle" class="admin-modal-title">Editar Precios</h3>
+      <button class="admin-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="admin-modal-body">
+      <input type="hidden" id="editModalProductId">
+
+      <div class="admin-form-group">
+        <label for="inputPrice" class="admin-label">Precio de Venta Actual (ARS) *</label>
+        <div style="position:relative;">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-weight:700;">$</span>
+          <input type="number" id="inputPrice" class="admin-input" style="padding-left:28px;" placeholder="89000">
+        </div>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="inputComparePrice" class="admin-label">Precio Anterior / Tachado (ARS)</label>
+        <div style="position:relative;">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-weight:700;">$</span>
+          <input type="number" id="inputComparePrice" class="admin-input" style="padding-left:28px;" placeholder="Ej: 105000">
+        </div>
+        <small style="color:var(--text-muted);font-size:11px;">Dejar vacío si no está en oferta.</small>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="inputCostPrice" class="admin-label">Costo Interno de Reposición (Solo Admin)</label>
+        <div style="position:relative;">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-weight:700;">$</span>
+          <input type="number" id="inputCostPrice" class="admin-input" style="padding-left:28px;" placeholder="Ej: 45000">
+        </div>
+      </div>
+
+      <div style="background:var(--admin-hover);border:1px solid var(--admin-border);padding:12px;border-radius:6px;font-size:12px;color:var(--text-muted);">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span>3 Cuotas sin interés:</span>
+          <strong id="previewInstallments" style="color:var(--gold-primary);">$0</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span>Pago Transferencia (10% OFF):</span>
+          <strong id="previewTransfer" style="color:var(--status-green);">$0</strong>
+        </div>
+      </div>
+    </div>
+    <div class="admin-modal-footer">
+      <button class="admin-btn admin-btn-secondary" data-modal-close>Cancelar</button>
+      <button id="btnSavePriceModal" class="admin-btn admin-btn-primary">Guardar Precio</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: BULK PRICE ADJUSTMENT -->
+<div id="bulkPriceModal" class="admin-modal-backdrop">
+  <div class="admin-modal" style="max-width: 440px;">
+    <div class="admin-modal-header">
+      <h3 id="bulkModalTitle" class="admin-modal-title">Ajuste Masivo de Precios</h3>
+      <button class="admin-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="admin-modal-body">
+      <p id="bulkModalDesc" style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">
+        Se aplicará la modificación a los productos seleccionados.
+      </p>
+
+      <div class="admin-form-group">
+        <label id="bulkValueLabel" class="admin-label">Porcentaje de Ajuste (%)</label>
+        <input type="number" id="bulkValueInput" class="admin-input" placeholder="Ej: 10" step="1">
+      </div>
+    </div>
+    <div class="admin-modal-footer">
+      <button class="admin-btn admin-btn-secondary" data-modal-close>Cancelar</button>
+      <button id="btnConfirmBulk" class="admin-btn admin-btn-primary">Aplicar a Selección</button>
+    </div>
+  </div>
+</div>
+
+<script src="../src/js/data.js"></script>
+<script src="js/admin-core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  AdminCore.init('precios', 'Gestión de Precios & Rentabilidad');
+
+  const { DataStore, AuthService, getAssetPath } = window.BunkerData;
+  let selectedProductIds = new Set();
+  let currentBulkAction = 'increase'; // increase, decrease, fixed
+
+  // Load brands
+  const brands = DataStore.getAllBrands();
+  const brandSelect = document.getElementById('filterBrand');
+  brands.forEach(b => {
+    const opt = document.createElement('option');
+    opt.value = b.slug;
+    opt.textContent = b.name;
+    brandSelect.appendChild(opt);
+  });
+
+  // Calculate & Update Stats
+  function updateStats() {
+    const products = DataStore.getAllProducts();
+    if (products.length === 0) return;
+
+    const totalPrice = products.reduce((acc, p) => acc + (p.price || 0), 0);
+    const avgPrice = Math.round(totalPrice / products.length);
+
+    let totalMargin = 0;
+    let productsWithCost = 0;
+    products.forEach(p => {
+      const cost = p.costPrice || (p.price * 0.55);
+      if (p.price > 0) {
+        const margin = ((p.price - cost) / p.price) * 100;
+        totalMargin += margin;
+        productsWithCost++;
+      }
+    });
+    const avgMargin = productsWithCost > 0 ? Math.round(totalMargin / productsWithCost) : 0;
+    const promoCount = products.filter(p => (p.compareAtPrice && p.compareAtPrice > p.price) || (p.discount > 0)).length;
+
+    document.getElementById('statAvgPrice').textContent = '$' + avgPrice.toLocaleString('es-AR');
+    document.getElementById('statAvgMargin').textContent = avgMargin + '%';
+    document.getElementById('statPromoProducts').textContent = promoCount;
+    document.getElementById('statAvgInstallment').textContent = '$' + Math.round(avgPrice / 3).toLocaleString('es-AR');
+  }
+
+  // Render Table
+  function renderTable() {
+    const tbody = document.getElementById('priceTableBody');
+    const query = document.getElementById('priceSearch').value.toLowerCase().trim();
+    const brandFilter = document.getElementById('filterBrand').value;
+    const discountFilter = document.getElementById('filterDiscount').value;
+
+    let products = DataStore.getAllProducts();
+
+    if (brandFilter) {
+      products = products.filter(p => p.brand === brandFilter);
+    }
+
+    if (discountFilter === 'discount') {
+      products = products.filter(p => (p.compareAtPrice && p.compareAtPrice > p.price) || (p.discount > 0));
+    } else if (discountFilter === 'nodiscount') {
+      products = products.filter(p => (!p.compareAtPrice || p.compareAtPrice <= p.price) && (!p.discount || p.discount <= 0));
+    }
+
+    if (query) {
+      products = products.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.brandName.toLowerCase().includes(query) ||
+        (p.sku && p.sku.toLowerCase().includes(query))
+      );
+    }
+
+    if (products.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:48px;color:var(--text-muted);">No se encontraron productos.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = products.map(p => {
+      const isSelected = selectedProductIds.has(p.id);
+      const cost = p.costPrice || Math.round(p.price * 0.55);
+      const margin = p.price > 0 ? Math.round(((p.price - cost) / p.price) * 100) : 0;
+      const hasDiscount = p.compareAtPrice && p.compareAtPrice > p.price;
+      const discountPct = hasDiscount ? Math.round(((p.compareAtPrice - p.price) / p.compareAtPrice) * 100) : (p.discount || 0);
+
+      return `
+        <tr class="${isSelected ? 'selected' : ''}">
+          <td style="text-align:center;">
+            <input type="checkbox" class="product-select-chk" data-id="${p.id}" ${isSelected ? 'checked' : ''} style="accent-color:var(--gold-primary);">
+          </td>
+          <td>
+            <img src="${getAssetPath(p.imageFile)}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid var(--admin-border);">
+          </td>
+          <td>
+            <div style="font-weight:700;color:var(--text-main);">${p.name}</div>
+            <div style="font-size:11px;color:var(--gold-primary);">${p.brandName} · ${p.type || 'EDP'}</div>
+          </td>
+          <td>
+            <div style="font-size:15px;font-weight:800;color:var(--text-main);">$${p.price.toLocaleString('es-AR')}</div>
+          </td>
+          <td>
+            ${p.compareAtPrice ? `<span style="font-size:13px;text-decoration:line-through;color:var(--text-muted);">$${p.compareAtPrice.toLocaleString('es-AR')}</span>` : `<span style="color:var(--text-muted);font-size:12px;">—</span>`}
+          </td>
+          <td>
+            ${discountPct > 0 ? `<span class="admin-badge" style="background:rgba(201,164,92,0.15);color:var(--gold-primary);">${discountPct}% OFF</span>` : `<span style="color:var(--text-muted);font-size:12px;">—</span>`}
+          </td>
+          <td>
+            <span style="font-size:13px;color:var(--text-muted);">$${cost.toLocaleString('es-AR')}</span>
+          </td>
+          <td>
+            <span class="margin-tag ${margin >= 40 ? 'margin-high' : 'margin-med'}">${margin}% Bruto</span>
+          </td>
+          <td style="text-align: right;">
+            <button class="admin-btn admin-btn-secondary" style="padding:5px 12px;font-size:11px;" onclick="openPriceModal('${p.id}')">
+              ✏️ Modificar
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    // Attach check events
+    document.querySelectorAll('.product-select-chk').forEach(chk => {
+      chk.addEventListener('change', (e) => {
+        const id = e.target.dataset.id;
+        if (e.target.checked) {
+          selectedProductIds.add(id);
+        } else {
+          selectedProductIds.delete(id);
+        }
+        updateBulkBar();
+      });
+    });
+  }
+
+  // Update Bulk Bar Visibility
+  function updateBulkBar() {
+    const bar = document.getElementById('bulkBar');
+    const countEl = document.getElementById('selectedCount');
+    const selectAll = document.getElementById('selectAllCheckbox');
+
+    countEl.textContent = `${selectedProductIds.size} productos seleccionados`;
+    if (selectedProductIds.size > 0) {
+      bar.classList.add('visible');
+    } else {
+      bar.classList.remove('visible');
+      selectAll.checked = false;
+    }
+  }
+
+  // Select all checkbox
+  document.getElementById('selectAllCheckbox').addEventListener('change', (e) => {
+    const products = DataStore.getAllProducts();
+    if (e.target.checked) {
+      products.forEach(p => selectedProductIds.add(p.id));
+    } else {
+      selectedProductIds.clear();
+    }
+    renderTable();
+    updateBulkBar();
+  });
+
+  // Filter events
+  document.getElementById('priceSearch').addEventListener('input', renderTable);
+  document.getElementById('filterBrand').addEventListener('change', renderTable);
+  document.getElementById('filterDiscount').addEventListener('change', renderTable);
+
+  // Open Edit Modal
+  window.openPriceModal = (productId) => {
+    const p = DataStore.getProductById(productId);
+    if (!p) return;
+
+    document.getElementById('editModalProductId').value = p.id;
+    document.getElementById('modalEditTitle').textContent = `Editar Precios: ${p.name}`;
+    document.getElementById('inputPrice').value = p.price;
+    document.getElementById('inputComparePrice').value = p.compareAtPrice || '';
+    document.getElementById('inputCostPrice').value = p.costPrice || Math.round(p.price * 0.55);
+
+    const updatePreviews = () => {
+      const pr = parseFloat(document.getElementById('inputPrice').value) || 0;
+      document.getElementById('previewInstallments').textContent = '$' + Math.round(pr / 3).toLocaleString('es-AR');
+      document.getElementById('previewTransfer').textContent = '$' + Math.round(pr * 0.9).toLocaleString('es-AR');
+    };
+
+    document.getElementById('inputPrice').oninput = updatePreviews;
+    updatePreviews();
+
+    AdminCore.openModal('editPriceModal');
+  };
+
+  // Save Modal
+  document.getElementById('btnSavePriceModal').addEventListener('click', () => {
+    const id = document.getElementById('editModalProductId').value;
+    const price = parseFloat(document.getElementById('inputPrice').value);
+    const comparePrice = parseFloat(document.getElementById('inputComparePrice').value) || null;
+    const costPrice = parseFloat(document.getElementById('inputCostPrice').value) || 0;
+
+    if (isNaN(price) || price <= 0) {
+      AdminToast.show('Por favor ingresá un precio válido mayor a 0', 'error');
+      return;
+    }
+
+    const prod = DataStore.getProductById(id);
+    if (!prod) return;
+
+    const oldPrice = prod.price;
+    prod.price = price;
+    prod.compareAtPrice = comparePrice;
+    prod.costPrice = costPrice;
+    if (comparePrice && comparePrice > price) {
+      prod.discount = Math.round(((comparePrice - price) / comparePrice) * 100);
+    } else {
+      prod.discount = 0;
+    }
+
+    const user = AuthService.getCurrentUser()?.name || 'Admin';
+    DataStore.saveProduct(prod, user);
+    DataStore.addAuditLog(user, 'ADMIN', 'Actualizó Precio', prod.name, `$${oldPrice} → $${price}`);
+
+    AdminToast.show(`Precio de ${prod.name} actualizado correctamente.`, 'success');
+    AdminCore.closeModal('editPriceModal');
+    updateStats();
+    renderTable();
+  });
+
+  // Bulk actions handlers
+  document.getElementById('btnBulkIncrease').addEventListener('click', () => {
+    currentBulkAction = 'increase';
+    document.getElementById('bulkModalTitle').textContent = 'Aumento Masivo Porcentual';
+    document.getElementById('bulkModalDesc').textContent = `Se incrementará el precio en % a los ${selectedProductIds.size} productos seleccionados.`;
+    document.getElementById('bulkValueLabel').textContent = 'Porcentaje de aumento (%)';
+    document.getElementById('bulkValueInput').placeholder = 'Ej: 10';
+    document.getElementById('bulkValueInput').value = '';
+    AdminCore.openModal('bulkPriceModal');
+  });
+
+  document.getElementById('btnBulkDecrease').addEventListener('click', () => {
+    currentBulkAction = 'decrease';
+    document.getElementById('bulkModalTitle').textContent = 'Descuento Masivo Porcentual';
+    document.getElementById('bulkModalDesc').textContent = `Se reducirá el precio en % a los ${selectedProductIds.size} productos seleccionados.`;
+    document.getElementById('bulkValueLabel').textContent = 'Porcentaje de descuento (%)';
+    document.getElementById('bulkValueInput').placeholder = 'Ej: 15';
+    document.getElementById('bulkValueInput').value = '';
+    AdminCore.openModal('bulkPriceModal');
+  });
+
+  document.getElementById('btnBulkFixed').addEventListener('click', () => {
+    currentBulkAction = 'fixed';
+    document.getElementById('bulkModalTitle').textContent = 'Fijar Precio Idéntico';
+    document.getElementById('bulkModalDesc').textContent = `Se asignará el mismo precio a los ${selectedProductIds.size} productos seleccionados.`;
+    document.getElementById('bulkValueLabel').textContent = 'Nuevo Precio en ARS ($)';
+    document.getElementById('bulkValueInput').placeholder = 'Ej: 99000';
+    document.getElementById('bulkValueInput').value = '';
+    AdminCore.openModal('bulkPriceModal');
+  });
+
+  document.getElementById('btnConfirmBulk').addEventListener('click', () => {
+    const val = parseFloat(document.getElementById('bulkValueInput').value);
+    if (isNaN(val) || val <= 0) {
+      AdminToast.show('Ingresá un valor numérico mayor a 0', 'error');
+      return;
+    }
+
+    const typeMap = {
+      increase: 'percent_inc',
+      decrease: 'percent_dec',
+      fixed: 'fixed_set'
+    };
+
+    const user = AuthService.getCurrentUser()?.name || 'Admin';
+    DataStore.bulkUpdatePrices(Array.from(selectedProductIds), { type: typeMap[currentBulkAction], value: val }, user);
+
+    AdminToast.show(`Precios de ${selectedProductIds.size} productos actualizados con éxito.`, 'success');
+    AdminCore.closeModal('bulkPriceModal');
+    selectedProductIds.clear();
+    updateBulkBar();
+    updateStats();
+    renderTable();
+  });
+
+  // Initial
+  updateStats();
+  renderTable();
+});
+</script>
+
+</body>
+</html>

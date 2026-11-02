@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="formPageTitle">Producto | Panel Bunker Imports</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="icon" type="image/x-icon" href="../src/images/favicon.ico">
+</head>
+<body>
+
+<div class="admin-wrapper">
+  <aside id="adminSidebar" class="admin-sidebar"></aside>
+
+  <div class="admin-main">
+    <header id="adminTopbar" class="admin-topbar"></header>
+
+    <main class="admin-content" style="max-width:1100px;">
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <div>
+          <a href="productos.html" style="font-size:12px; color:var(--gold-primary); display:inline-flex; align-items:center; gap:4px; margin-bottom:6px;">
+            ← Volver al listado de productos
+          </a>
+          <h2 id="pageHeading" class="admin-page-title" style="font-size:22px;">Nuevo Producto</h2>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <a href="productos.html" class="admin-btn admin-btn-secondary">Cancelar</a>
+          <button id="btnSaveTop" class="admin-btn admin-btn-primary">Guardar Producto</button>
+        </div>
+      </div>
+
+      <form id="productForm" onsubmit="return false;">
+
+        <!-- 1. INFORMACIÓN GENERAL -->
+        <div class="admin-card">
+          <h3 class="admin-card-title" style="margin-bottom:18px;">1. Información General</h3>
+          <div class="admin-form-row">
+            <div class="admin-form-group" style="grid-column:span 2;">
+              <label class="admin-label" for="prodName">Nombre del Producto *</label>
+              <input type="text" id="prodName" class="admin-input" placeholder="Ej: 9PM Pour Homme" required>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodSlug">URL / Slug *</label>
+              <input type="text" id="prodSlug" class="admin-input" placeholder="lattafa-9pm">
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <label class="admin-label" for="prodBrand" style="margin:0;">Marca / Casa *</label>
+                <a href="marcas.html" style="font-size:10px; color:var(--gold-primary); font-weight:700;">+ Nueva Marca</a>
+              </div>
+              <select id="prodBrand" class="admin-select" required></select>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodCategory">Categoría Principal *</label>
+              <select id="prodCategory" class="admin-select" required></select>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodSubcategory">Subcategoría</label>
+              <input type="text" id="prodSubcategory" class="admin-input" placeholder="Ej: Fragancias Nocturnas">
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-label" for="prodShortDesc">Descripción Corta</label>
+            <input type="text" id="prodShortDesc" class="admin-input" placeholder="Resumen persuasivo de 1 línea">
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-label" for="prodDescription">Descripción Completa *</label>
+            <textarea id="prodDescription" class="admin-textarea" rows="4" placeholder="Historia de la fragancia, sensaciones olfativas..." required></textarea>
+          </div>
+        </div>
+
+        <!-- 2. PRECIOS & COSTOS -->
+        <div class="admin-card">
+          <h3 class="admin-card-title" style="margin-bottom:18px;">2. Precio & Rentabilidad</h3>
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodPrice">Precio de Venta (ARS) *</label>
+              <input type="number" id="prodPrice" class="admin-input" placeholder="Ej: 89000" required>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodComparePrice">Precio Anterior / Lista (Tachado)</label>
+              <input type="number" id="prodComparePrice" class="admin-input" placeholder="Ej: 105000">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodCostPrice">Costo Interno (Solo Admin)</label>
+              <input type="number" id="prodCostPrice" class="admin-input" placeholder="Ej: 52000">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodDiscount">Porcentaje de Descuento (%)</label>
+              <input type="number" id="prodDiscount" class="admin-input" placeholder="Ej: 15">
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. INVENTARIO -->
+        <div class="admin-card">
+          <h3 class="admin-card-title" style="margin-bottom:18px;">3. Inventario & Control de Stock</h3>
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodSku">Código SKU *</label>
+              <input type="text" id="prodSku" class="admin-input" placeholder="Ej: LAT-9PM-100" required>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodStock">Stock Actual *</label>
+              <input type="number" id="prodStock" class="admin-input" placeholder="Ej: 15" required>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodMinStock">Stock Mínimo (Alerta de reposición)</label>
+              <input type="number" id="prodMinStock" class="admin-input" placeholder="Ej: 3" value="3">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodStatus">Estado del Producto</label>
+              <select id="prodStatus" class="admin-select">
+                <option value="active">Activo (Visible en tienda)</option>
+                <option value="soldout">Agotado (Sin stock)</option>
+                <option value="inactive">Inactivo (Oculto)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. PERFUMERÍA & PIRÁMIDE OLFATIVA -->
+        <div class="admin-card">
+          <h3 class="admin-card-title" style="margin-bottom:18px;">4. Perfumería & Especificaciones</h3>
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodGender">Género</label>
+              <select id="prodGender" class="admin-select">
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
+                <option value="unisex">Unisex / Nicho</option>
+              </select>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodType">Tipo de Concentración</label>
+              <input type="text" id="prodType" class="admin-input" placeholder="Eau de Parfum, Parfum...">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodFamily">Familia Olfativa</label>
+              <select id="prodFamily" class="admin-select"></select>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodSizes">Tamaños Disponibles (Sep. por comas)</label>
+              <input type="text" id="prodSizes" class="admin-input" placeholder="100ml, 200ml" value="100ml">
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodTopNotes">Notas de Salida (Sep. por comas)</label>
+              <input type="text" id="prodTopNotes" class="admin-input" placeholder="Manzana, Canela, Bergamota">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodHeartNotes">Notas de Corazón (Sep. por comas)</label>
+              <input type="text" id="prodHeartNotes" class="admin-input" placeholder="Lavanda, Flor de azahar">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodBaseNotes">Notas de Fondo (Sep. por comas)</label>
+              <input type="text" id="prodBaseNotes" class="admin-input" placeholder="Vainilla, Ámbar, Pachulí">
+            </div>
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodLongevity">Duración / Longevidad</label>
+              <input type="text" id="prodLongevity" class="admin-input" placeholder="Ej: 10 - 14 horas">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodSillage">Proyección / Estela</label>
+              <input type="text" id="prodSillage" class="admin-input" placeholder="Ej: Pesada (primeras 4 horas)">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodOccasion">Ocasiones (Sep. por comas)</label>
+              <input type="text" id="prodOccasion" class="admin-input" placeholder="Noche, Citas, Eventos">
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. IMÁGENES -->
+        <div class="admin-card">
+          <h3 class="admin-card-title" style="margin-bottom:18px;">5. Imágenes del Producto</h3>
+          <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
+            <div style="width:140px; height:140px; border:2px dashed var(--admin-border); border-radius:var(--radius-md); overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--admin-elevated);">
+              <img id="imgPreview" src="../src/images/cat-arabes.jpg" alt="Preview" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <div style="flex:1; min-width:260px;">
+              <div class="admin-form-group">
+                <label class="admin-label" for="prodImageFile">Archivo de Imagen Principal</label>
+                <select id="prodImageFile" class="admin-select">
+                  <option value="cat-arabes.jpg">cat-arabes.jpg (Frasco Árabe Dorado)</option>
+                  <option value="cat-masculino.jpg">cat-masculino.jpg (Frasco Masculino Oscuro)</option>
+                  <option value="cat-disenador.jpg">cat-disenador.jpg (Frasco Diseñador)</option>
+                  <option value="cat-femenino.jpg">cat-femenino.jpg (Frasco Femenino Floral)</option>
+                  <option value="cat-unisex.jpg">cat-unisex.jpg (Frasco Nicho / Unisex)</option>
+                  <option value="hero.jpg">hero.jpg (Frasco Colección de Lujo)</option>
+                </select>
+              </div>
+              <p style="font-size:11px; color:var(--text-muted); line-height:1.4;">
+                Las imágenes se encuentran optimizadas en el directorio del e-commerce para carga inmediata.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. DESTACADOS, TAGS & SEO -->
+        <div class="admin-card">
+          <h3 class="admin-card-title" style="margin-bottom:18px;">6. Posicionamiento, Destacados & Tags</h3>
+
+          <div style="display:flex; gap:24px; flex-wrap:wrap; margin-bottom:20px;">
+            <label class="admin-checkbox-label">
+              <input type="checkbox" id="chkFeatured" class="admin-checkbox">
+              <span>★ Producto Destacado en Home</span>
+            </label>
+            <label class="admin-checkbox-label">
+              <input type="checkbox" id="chkBestseller" class="admin-checkbox">
+              <span>🔥 Top Ventas (Más Vendido)</span>
+            </label>
+            <label class="admin-checkbox-label">
+              <input type="checkbox" id="chkNewArrival" class="admin-checkbox">
+              <span>✨ Nuevo Ingreso</span>
+            </label>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-label" for="prodTags">Etiquetas / Tags de Búsqueda (Sep. por comas)</label>
+            <input type="text" id="prodTags" class="admin-input" placeholder="dulce, noche, árabe, vainilla, seductor">
+          </div>
+
+          <div class="admin-form-row">
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodMetaTitle">Meta Title (SEO)</label>
+              <input type="text" id="prodMetaTitle" class="admin-input" placeholder="Ej: 9PM Lattafa 100% Original en Argentina">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label" for="prodMetaDesc">Meta Description (SEO)</label>
+              <input type="text" id="prodMetaDesc" class="admin-input" placeholder="Ej: Comprá 9PM de Lattafa con batch code verificable...">
+            </div>
+          </div>
+        </div>
+
+        <!-- FOOTER ACTIONS -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:28px;">
+          <a href="productos.html" class="admin-btn admin-btn-secondary">Cancelar</a>
+          <div style="display:flex; gap:12px;">
+            <button type="button" id="btnSaveAndAdd" class="admin-btn admin-btn-secondary">Guardar y Agregar Otro</button>
+            <button type="submit" id="btnSaveBottom" class="admin-btn admin-btn-primary">Guardar Producto</button>
+          </div>
+        </div>
+
+      </form>
+
+    </main>
+  </div>
+</div>
+
+<script src="../src/js/data.js"></script>
+<script src="js/admin-core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  AdminCore.init('productos', 'Formulario de Producto');
+
+  const { DataStore, FRAGRANCE_FAMILIES } = window.BunkerData;
+  const brands = DataStore.getAllBrands();
+  const categories = DataStore.getAllCategories();
+
+  // Populate Brands
+  const brandSelect = document.getElementById('prodBrand');
+  brands.forEach(b => {
+    const opt = document.createElement('option');
+    opt.value = b.slug;
+    opt.textContent = b.name;
+    brandSelect.appendChild(opt);
+  });
+
+  // Populate Categories
+  const catSelect = document.getElementById('prodCategory');
+  categories.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.slug;
+    opt.textContent = c.name;
+    catSelect.appendChild(opt);
+  });
+
+  // Populate Fragrance Families
+  const famSelect = document.getElementById('prodFamily');
+  FRAGRANCE_FAMILIES.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f;
+    opt.textContent = f;
+    famSelect.appendChild(opt);
+  });
+
+  // Image preview change
+  const imgSelect = document.getElementById('prodImageFile');
+  const imgPreview = document.getElementById('imgPreview');
+  imgSelect.addEventListener('change', () => {
+    imgPreview.src = getAssetPath(imgSelect.value);
+  });
+
+  // Auto-slug generator from name
+  const nameInp = document.getElementById('prodName');
+  const slugInp = document.getElementById('prodSlug');
+  nameInp.addEventListener('input', () => {
+    if (!editingId) {
+      slugInp.value = nameInp.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+  });
+
+  // Check if editing
+  const urlParams = new URLSearchParams(window.location.search);
+  const editingId = urlParams.get('id');
+
+  if (editingId) {
+    const p = DataStore.getProductById(editingId);
+    if (p) {
+      document.title = `Editar: ${p.name} | Panel Bunker Imports`;
+      document.getElementById('formPageTitle').textContent = `Editar: ${p.name}`;
+      document.getElementById('pageHeading').textContent = `Editar Producto: ${p.name}`;
+
+      nameInp.value = p.name || '';
+      slugInp.value = p.slug || '';
+      brandSelect.value = p.brand || brands[0].slug;
+      catSelect.value = (Array.isArray(p.category) ? p.category[0] : p.category) || 'arabes';
+      document.getElementById('prodSubcategory').value = p.subcategory || '';
+      document.getElementById('prodShortDesc').value = p.shortDescription || '';
+      document.getElementById('prodDescription').value = p.description || '';
+
+      document.getElementById('prodPrice').value = p.price || '';
+      document.getElementById('prodComparePrice').value = p.compareAtPrice || '';
+      document.getElementById('prodCostPrice').value = p.costPrice || '';
+      document.getElementById('prodDiscount').value = p.discount || '';
+
+      document.getElementById('prodSku').value = p.sku || '';
+      document.getElementById('prodStock').value = p.stock || 0;
+      document.getElementById('prodMinStock').value = p.minStock || 3;
+      document.getElementById('prodStatus').value = p.status || 'active';
+
+      document.getElementById('prodGender').value = p.gender || 'masculino';
+      document.getElementById('prodType').value = p.type || 'Eau de Parfum';
+      famSelect.value = p.fragranceFamily || FRAGRANCE_FAMILIES[0];
+      document.getElementById('prodSizes').value = (p.sizes || []).join(', ');
+
+      document.getElementById('prodTopNotes').value = (p.notes?.top || []).join(', ');
+      document.getElementById('prodHeartNotes').value = (p.notes?.heart || []).join(', ');
+      document.getElementById('prodBaseNotes').value = (p.notes?.base || []).join(', ');
+
+      document.getElementById('prodLongevity').value = p.longevity || '';
+      document.getElementById('prodSillage').value = p.sillage || '';
+      document.getElementById('prodOccasion').value = (p.occasion || []).join(', ');
+
+      imgSelect.value = p.imageFile || 'cat-arabes.jpg';
+      imgPreview.src = getAssetPath(p.imageFile);
+
+      document.getElementById('chkFeatured').checked = !!p.featured;
+      document.getElementById('chkBestseller').checked = !!p.bestseller;
+      document.getElementById('chkNewArrival').checked = !!p.newArrival;
+
+      document.getElementById('prodTags').value = (p.tags || []).join(', ');
+      document.getElementById('prodMetaTitle').value = p.metaTitle || p.name;
+      document.getElementById('prodMetaDesc').value = p.metaDescription || p.shortDescription || '';
+    }
+  }
+
+  function getFormData() {
+    const brandObj = brands.find(b => b.slug === brandSelect.value);
+    const splitArr = (val) => val ? val.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+    return {
+      id: editingId || undefined,
+      name: nameInp.value.trim(),
+      slug: slugInp.value.trim(),
+      brand: brandSelect.value,
+      brandName: brandObj ? brandObj.name : 'Bunker Imports',
+      category: [catSelect.value],
+      subcategory: document.getElementById('prodSubcategory').value.trim(),
+      shortDescription: document.getElementById('prodShortDesc').value.trim(),
+      description: document.getElementById('prodDescription').value.trim(),
+      price: Number(document.getElementById('prodPrice').value),
+      compareAtPrice: Number(document.getElementById('prodComparePrice').value) || null,
+      costPrice: Number(document.getElementById('prodCostPrice').value) || 0,
+      discount: Number(document.getElementById('prodDiscount').value) || 0,
+      sku: document.getElementById('prodSku').value.trim(),
+      stock: Number(document.getElementById('prodStock').value),
+      minStock: Number(document.getElementById('prodMinStock').value) || 3,
+      status: document.getElementById('prodStatus').value,
+      gender: document.getElementById('prodGender').value,
+      type: document.getElementById('prodType').value.trim(),
+      fragranceFamily: famSelect.value,
+      sizes: splitArr(document.getElementById('prodSizes').value),
+      notes: {
+        top: splitArr(document.getElementById('prodTopNotes').value),
+        heart: splitArr(document.getElementById('prodHeartNotes').value),
+        base: splitArr(document.getElementById('prodBaseNotes').value)
+      },
+      longevity: document.getElementById('prodLongevity').value.trim(),
+      sillage: document.getElementById('prodSillage').value.trim(),
+      occasion: splitArr(document.getElementById('prodOccasion').value),
+      imageFile: imgSelect.value,
+      featured: document.getElementById('chkFeatured').checked,
+      bestseller: document.getElementById('chkBestseller').checked,
+      newArrival: document.getElementById('chkNewArrival').checked,
+      tags: splitArr(document.getElementById('prodTags').value),
+      metaTitle: document.getElementById('prodMetaTitle').value.trim(),
+      metaDescription: document.getElementById('prodMetaDesc').value.trim()
+    };
+  }
+
+  function save(keepAdding = false) {
+    if (!nameInp.value.trim() || !document.getElementById('prodPrice').value || !document.getElementById('prodSku').value.trim()) {
+      AdminToast.show('Por favor completá los campos obligatorios (*)', 'error');
+      return;
+    }
+
+    const data = getFormData();
+    DataStore.saveProduct(data, 'Santiago (Admin)');
+    AdminToast.show(editingId ? 'Producto actualizado correctamente' : 'Producto creado exitosamente');
+
+    setTimeout(() => {
+      if (keepAdding) {
+        window.location.href = 'producto-form.html';
+      } else {
+        window.location.href = 'productos.html';
+      }
+    }, 700);
+  }
+
+  document.getElementById('productForm').addEventListener('submit', () => save(false));
+  document.getElementById('btnSaveTop').addEventListener('click', () => save(false));
+  document.getElementById('btnSaveBottom').addEventListener('click', () => save(false));
+  document.getElementById('btnSaveAndAdd').addEventListener('click', () => save(true));
+});
+</script>
+
+</body>
+</html>

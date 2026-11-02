@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Inventario & Stock — Bunker Imports Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    .stock-badge-low {
+      background: rgba(224, 168, 44, 0.15);
+      border: 1px solid rgba(224, 168, 44, 0.4);
+      color: var(--status-yellow);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .stock-badge-out {
+      background: rgba(224, 86, 36, 0.15);
+      border: 1px solid rgba(224, 86, 36, 0.4);
+      color: var(--status-red);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .stock-badge-ok {
+      background: rgba(46, 204, 113, 0.12);
+      border: 1px solid rgba(46, 204, 113, 0.3);
+      color: var(--status-green);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-step {
+      background: var(--admin-card-bg);
+      border: 1px solid var(--admin-border);
+      color: var(--text-main);
+      padding: 3px 7px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-step:hover {
+      background: var(--admin-hover);
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+    }
+    .btn-step.step-neg:hover {
+      border-color: var(--status-red);
+      color: var(--status-red);
+    }
+    .btn-step.step-pos:hover {
+      border-color: var(--status-green);
+      color: var(--status-green);
+    }
+    .nav-tabs-stock {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--admin-border);
+      padding-bottom: 12px;
+      overflow-x: auto;
+    }
+    .stock-tab {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .stock-tab:hover {
+      color: var(--text-main);
+      background: var(--admin-hover);
+    }
+    .stock-tab.active {
+      background: var(--admin-card-bg);
+      border-color: var(--gold-primary);
+      color: var(--gold-primary);
+    }
+    .pill-counter {
+      background: rgba(201, 164, 92, 0.15);
+      color: var(--gold-primary);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .pill-counter.warn {
+      background: rgba(224, 168, 44, 0.2);
+      color: var(--status-yellow);
+    }
+    .pill-counter.danger {
+      background: rgba(224, 86, 36, 0.2);
+      color: var(--status-red);
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+<div class="admin-layout">
+  <aside id="adminSidebar" class="admin-sidebar"></aside>
+
+  <div class="admin-main">
+    <header id="adminTopbar" class="admin-topbar"></header>
+
+    <div class="admin-content">
+
+      <!-- TOP METRIC CARDS -->
+      <div class="admin-grid-4" style="margin-bottom: 24px;">
+        <div class="admin-card admin-metric-card">
+          <div class="admin-metric-label">Unidades Totales</div>
+          <div id="statTotalStock" class="admin-metric-val">0</div>
+          <div class="admin-metric-sub">Fragancias en depósito</div>
+        </div>
+        <div class="admin-card admin-metric-card" style="border-left: 3px solid var(--status-yellow);">
+          <div class="admin-metric-label">Stock Bajo (&le; Mínimo)</div>
+          <div id="statLowStock" class="admin-metric-val" style="color:var(--status-yellow);">0</div>
+          <div class="admin-metric-sub">Requieren reposición urgente</div>
+        </div>
+        <div class="admin-card admin-metric-card" style="border-left: 3px solid var(--status-red);">
+          <div class="admin-metric-label">Agotados (Stock 0)</div>
+          <div id="statOutStock" class="admin-metric-val" style="color:var(--status-red);">0</div>
+          <div class="admin-metric-sub">Marcados sin disponibilidad</div>
+        </div>
+        <div class="admin-card admin-metric-card" style="border-left: 3px solid var(--gold-primary);">
+          <div class="admin-metric-label">Valorización de Depósito</div>
+          <div id="statStockValuation" class="admin-metric-val" style="color:var(--gold-primary);">$0</div>
+          <div class="admin-metric-sub">Costo de inventario actual</div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="nav-tabs-stock">
+        <button class="stock-tab active" data-tab="all">
+          <span>📦 Todos los Productos</span>
+          <span id="tabCountAll" class="pill-counter">0</span>
+        </button>
+        <button class="stock-tab" data-tab="low">
+          <span>⚠️ Stock Bajo</span>
+          <span id="tabCountLow" class="pill-counter warn">0</span>
+        </button>
+        <button class="stock-tab" data-tab="out">
+          <span>🚫 Agotados</span>
+          <span id="tabCountOut" class="pill-counter danger">0</span>
+        </button>
+        <button class="stock-tab" data-tab="history">
+          <span>📜 Historial de Movimientos</span>
+          <span id="tabCountHistory" class="pill-counter">0</span>
+        </button>
+      </div>
+
+      <!-- VIEW: STOCK PRODUCTS TABLE -->
+      <div id="stockProductsView">
+        <div class="admin-card" style="margin-bottom: 20px;">
+          <div class="admin-filters-bar">
+            <div class="admin-search-wrap">
+              <span class="admin-search-icon">🔍</span>
+              <input type="text" id="stockSearch" class="admin-search-input" placeholder="Buscar por producto, marca o SKU...">
+            </div>
+            <select id="filterBrand" class="admin-select" style="min-width: 170px;">
+              <option value="">Todas las marcas</option>
+            </select>
+            <button id="btnRefresh" class="admin-btn admin-btn-secondary" title="Recargar">↻ Actualizar</button>
+          </div>
+        </div>
+
+        <div class="admin-card admin-table-card">
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th style="width: 60px;">Img</th>
+                  <th>Producto & SKU</th>
+                  <th>Marca</th>
+                  <th>Stock Actual</th>
+                  <th>Ajuste Rápido</th>
+                  <th>Stock Mínimo</th>
+                  <th>Estado</th>
+                  <th style="text-align: right;">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="stockTableBody">
+                <!-- Rows injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: INVENTORY MOVEMENTS HISTORY -->
+      <div id="stockHistoryView" class="hidden">
+        <div class="admin-card admin-table-card">
+          <div style="padding: 16px 20px; border-bottom: 1px solid var(--admin-border); display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 14px; font-weight: 700; color: var(--gold-primary);">Registro Inmutable de Movimientos de Depósito</h3>
+            <span style="font-size: 12px; color: var(--text-muted);">Auditoría en tiempo real</span>
+          </div>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Fecha & Hora</th>
+                  <th>Producto</th>
+                  <th>SKU</th>
+                  <th>Movimiento</th>
+                  <th>Nuevo Stock</th>
+                  <th>Motivo / Referencia</th>
+                  <th>Responsable</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <!-- Movements injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: MANUAL STOCK UPDATE -->
+<div id="updateStockModal" class="admin-modal-backdrop">
+  <div class="admin-modal" style="max-width: 440px;">
+    <div class="admin-modal-header">
+      <h3 id="modalProductName" class="admin-modal-title">Actualizar Stock</h3>
+      <button class="admin-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="admin-modal-body">
+      <input type="hidden" id="modalProductId">
+      <div style="margin-bottom: 16px;">
+        <label class="admin-label">Stock Actual</label>
+        <div id="modalCurrentStock" style="font-size: 24px; font-weight: 800; color: var(--gold-primary);">0</div>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="modalNewStockInput" class="admin-label">Nuevo Stock Físico *</label>
+        <input type="number" id="modalNewStockInput" class="admin-input" min="0" placeholder="Ej: 25">
+      </div>
+
+      <div class="admin-form-group">
+        <label for="modalStockReason" class="admin-label">Motivo del Ajuste *</label>
+        <select id="modalStockReason" class="admin-select">
+          <option value="Reposición de importación">Reposición de importación (Dubai / USA)</option>
+          <option value="Conteo de inventario físico">Conteo de inventario físico / Auditoría</option>
+          <option value="Ajuste por merma / rotura">Ajuste por merma o rotura</option>
+          <option value="Muestra para showroom / tester">Muestra para showroom / tester</option>
+          <option value="Devolución de cliente">Devolución de cliente</option>
+          <option value="Otro motivo">Otro motivo</option>
+        </select>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="modalMinStockInput" class="admin-label">Stock Mínimo para Alerta</label>
+        <input type="number" id="modalMinStockInput" class="admin-input" min="0" placeholder="Ej: 2">
+        <small style="color:var(--text-muted);font-size:11px;">Al llegar a esta cantidad el sistema marcará "Stock Bajo".</small>
+      </div>
+    </div>
+    <div class="admin-modal-footer">
+      <button class="admin-btn admin-btn-secondary" data-modal-close>Cancelar</button>
+      <button id="btnSaveStockModal" class="admin-btn admin-btn-primary">Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+
+<script src="../src/js/api.js"></script>
+<script src="../src/js/data.js"></script>
+<script src="js/admin-core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  AdminCore.init('inventario', 'Gestión de Inventario & Stock');
+
+  const { DataStore, AuthService, getAssetPath } = window.BunkerData;
+  let currentTab = 'all';
+
+  // Load brands into select
+  const brands = DataStore.getAllBrands();
+  const brandSelect = document.getElementById('filterBrand');
+  brands.forEach(b => {
+    const opt = document.createElement('option');
+    opt.value = b.slug;
+    opt.textContent = b.name;
+    brandSelect.appendChild(opt);
+  });
+
+  // Render Stats
+  function updateStats() {
+    const products = DataStore.getAllProducts();
+    const totalUnits = products.reduce((acc, p) => acc + (p.stock || 0), 0);
+    const lowStock = DataStore.getLowStockProducts();
+    const outStock = DataStore.getOutOfStockProducts();
+    const valuation = products.reduce((acc, p) => acc + ((p.stock || 0) * (p.costPrice || (p.price * 0.6))), 0);
+
+    document.getElementById('statTotalStock').textContent = totalUnits;
+    document.getElementById('statLowStock').textContent = lowStock.length;
+    document.getElementById('statOutStock').textContent = outStock.length;
+    document.getElementById('statStockValuation').textContent = '$' + Math.round(valuation).toLocaleString('es-AR');
+
+    document.getElementById('tabCountAll').textContent = products.length;
+    document.getElementById('tabCountLow').textContent = lowStock.length;
+    document.getElementById('tabCountOut').textContent = outStock.length;
+    document.getElementById('tabCountHistory').textContent = DataStore.getInventoryMovements().length;
+  }
+
+  // Render Stock Table
+  function renderStockTable() {
+    const tbody = document.getElementById('stockTableBody');
+    const query = document.getElementById('stockSearch').value.toLowerCase().trim();
+    const brandFilter = document.getElementById('filterBrand').value;
+
+    let products = DataStore.getAllProducts();
+
+    if (currentTab === 'low') {
+      products = DataStore.getLowStockProducts();
+    } else if (currentTab === 'out') {
+      products = DataStore.getOutOfStockProducts();
+    }
+
+    if (brandFilter) {
+      products = products.filter(p => p.brand === brandFilter);
+    }
+
+    if (query) {
+      products = products.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.brandName.toLowerCase().includes(query) ||
+        (p.sku && p.sku.toLowerCase().includes(query))
+      );
+    }
+
+    if (products.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8" style="text-align:center;padding:48px;color:var(--text-muted);">
+            <div style="font-size:32px;margin-bottom:8px;">📦</div>
+            No se encontraron productos para el filtro seleccionado.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = products.map(p => {
+      const stock = p.stock || 0;
+      const minStock = p.minStock || 2;
+      let badgeHtml;
+      if (stock === 0) {
+        badgeHtml = `<span class="stock-badge-out">● AGOTADO</span>`;
+      } else if (stock <= minStock) {
+        badgeHtml = `<span class="stock-badge-low">⚠ STOCK BAJO (${stock})</span>`;
+      } else {
+        badgeHtml = `<span class="stock-badge-ok">✓ DISPONIBLE</span>`;
+      }
+
+      return `
+        <tr data-id="${p.id}">
+          <td>
+            <img src="${getAssetPath(p.imageFile)}" alt="${p.name}" style="width:42px;height:42px;object-fit:cover;border-radius:4px;border:1px solid var(--admin-border);">
+          </td>
+          <td>
+            <div style="font-weight:700;color:var(--text-main);">${p.name}</div>
+            <div style="font-size:11px;color:var(--text-muted);">SKU: ${p.sku || 'S/SKU'} · ${p.type || 'EDP'}</div>
+          </td>
+          <td>
+            <span style="font-size:12px;font-weight:600;color:var(--gold-primary);">${p.brandName}</span>
+          </td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:16px;font-weight:800;color:${stock === 0 ? 'var(--status-red)' : (stock <= minStock ? 'var(--status-yellow)' : 'var(--text-main)')};">${stock}</span>
+              <span style="font-size:11px;color:var(--text-muted);">u.</span>
+            </div>
+          </td>
+          <td>
+            <div style="display:flex;align-items:center;gap:3px;">
+              <button class="btn-step step-neg" onclick="quickDelta('${p.id}', -10)">-10</button>
+              <button class="btn-step step-neg" onclick="quickDelta('${p.id}', -5)">-5</button>
+              <button class="btn-step step-neg" onclick="quickDelta('${p.id}', -1)">-1</button>
+              <span style="color:var(--admin-border);padding:0 2px;">|</span>
+              <button class="btn-step step-pos" onclick="quickDelta('${p.id}', 1)">+1</button>
+              <button class="btn-step step-pos" onclick="quickDelta('${p.id}', 5)">+5</button>
+              <button class="btn-step step-pos" onclick="quickDelta('${p.id}', 10)">+10</button>
+            </div>
+          </td>
+          <td>
+            <span style="font-size:12px;color:var(--text-muted);">${minStock} u.</span>
+          </td>
+          <td>
+            ${badgeHtml}
+          </td>
+          <td style="text-align: right;">
+            <button class="admin-btn admin-btn-secondary" style="padding:6px 12px;font-size:12px;" onclick="openStockModal('${p.id}')">
+              ✏️ Ajustar
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Render Movements History Table
+  function renderHistoryTable() {
+    const tbody = document.getElementById('historyTableBody');
+    const movements = DataStore.getInventoryMovements();
+
+    if (movements.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted);">No hay movimientos registrados todavía.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = movements.map(m => {
+      const isPos = m.delta > 0;
+      return `
+        <tr>
+          <td style="font-size:12px;color:var(--text-muted);">${m.date}</td>
+          <td style="font-weight:600;color:var(--text-main);">${m.productName}</td>
+          <td style="font-size:11px;color:var(--text-muted);">${m.sku}</td>
+          <td>
+            <span style="font-weight:700;color:${isPos ? 'var(--status-green)' : 'var(--status-red)'};">
+              ${isPos ? '+' : ''}${m.delta} u.
+            </span>
+          </td>
+          <td>
+            <strong style="color:var(--text-main);">${m.newStock} u.</strong>
+          </td>
+          <td style="font-size:12px;color:var(--text-muted);">${m.reason}</td>
+          <td>
+            <span class="admin-badge" style="font-size:10px;">${m.user}</span>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Tab switching
+  document.querySelectorAll('.stock-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.stock-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentTab = tab.dataset.tab;
+
+      if (currentTab === 'history') {
+        document.getElementById('stockProductsView').classList.add('hidden');
+        document.getElementById('stockHistoryView').classList.remove('hidden');
+        renderHistoryTable();
+      } else {
+        document.getElementById('stockHistoryView').classList.add('hidden');
+        document.getElementById('stockProductsView').classList.remove('hidden');
+        renderStockTable();
+      }
+    });
+  });
+
+  // Filter events
+  document.getElementById('stockSearch').addEventListener('input', renderStockTable);
+  document.getElementById('filterBrand').addEventListener('change', renderStockTable);
+  document.getElementById('btnRefresh').addEventListener('click', () => {
+    updateStats();
+    renderStockTable();
+    AdminToast.show('Inventario actualizado', 'info');
+  });
+
+  // Quick Delta Adjustment
+  window.quickDelta = (productId, delta) => {
+    const prod = DataStore.getProductById(productId);
+    if (!prod) return;
+    const current = prod.stock || 0;
+    const target = Math.max(0, current + delta);
+    const reason = delta > 0 ? `Reposición rápida (+${delta})` : `Ajuste manual (${delta})`;
+    const user = AuthService.getCurrentUser()?.name || 'Admin';
+
+    DataStore.updateStock(productId, target, reason, user);
+    AdminToast.show(`${prod.name}: ${current} → ${target} unidades`, delta > 0 ? 'success' : 'info');
+    updateStats();
+    renderStockTable();
+  };
+
+  // Open Modal
+  window.openStockModal = (productId) => {
+    const prod = DataStore.getProductById(productId);
+    if (!prod) return;
+
+    document.getElementById('modalProductId').value = prod.id;
+    document.getElementById('modalProductName').textContent = `Stock: ${prod.name}`;
+    document.getElementById('modalCurrentStock').textContent = `${prod.stock || 0} unidades`;
+    document.getElementById('modalNewStockInput').value = prod.stock || 0;
+    document.getElementById('modalMinStockInput').value = prod.minStock || 2;
+    AdminCore.openModal('updateStockModal');
+  };
+
+  // Save Modal
+  document.getElementById('btnSaveStockModal').addEventListener('click', () => {
+    const id = document.getElementById('modalProductId').value;
+    const newStock = parseInt(document.getElementById('modalNewStockInput').value, 10);
+    const minStock = parseInt(document.getElementById('modalMinStockInput').value, 10);
+    const reason = document.getElementById('modalStockReason').value;
+
+    if (isNaN(newStock) || newStock < 0) {
+      AdminToast.show('Por favor ingresá una cantidad de stock válida', 'error');
+      return;
+    }
+
+    const prod = DataStore.getProductById(id);
+    if (!prod) return;
+
+    const user = AuthService.getCurrentUser()?.name || 'Admin';
+    prod.minStock = isNaN(minStock) ? 2 : minStock;
+    DataStore.saveProduct(prod, user);
+    DataStore.updateStock(id, newStock, reason, user);
+
+    AdminToast.show(`Stock de ${prod.name} actualizado a ${newStock} unidades.`, 'success');
+    AdminCore.closeModal('updateStockModal');
+    updateStats();
+    renderStockTable();
+  });
+
+  // Initial load
+  updateStats();
+  renderStockTable();
+});
+</script>
+
+</body>
+</html>

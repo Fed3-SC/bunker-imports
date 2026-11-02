@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Marcas — Bunker Imports Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<div class="admin-layout">
+  <aside id="adminSidebar" class="admin-sidebar"></aside>
+
+  <div class="admin-main">
+    <header id="adminTopbar" class="admin-topbar"></header>
+
+    <div class="admin-content">
+
+      <!-- HEADER ACTION -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+        <div>
+          <h2 style="font-family:var(--font-heading);font-size:18px;color:var(--text-main);">Casas de Perfumería & Marcas</h2>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Marcas de perfumería árabe y casas internacionales de diseñador.</p>
+        </div>
+        <button id="btnNewBrand" class="admin-btn admin-btn-primary">
+          <span>+</span> Nueva Marca
+        </button>
+      </div>
+
+      <!-- BRANDS TABLE -->
+      <div class="admin-card admin-table-card">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">Logo</th>
+                <th>Nombre de Marca</th>
+                <th>Slug</th>
+                <th>Tipo / Origen</th>
+                <th>Productos</th>
+                <th>Estado</th>
+                <th style="text-align: right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="brandsTableBody">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CREATE / EDIT BRAND -->
+<div id="brandModal" class="admin-modal-backdrop">
+  <div class="admin-modal" style="max-width: 560px;">
+    <div class="admin-modal-header">
+      <h3 id="brandModalTitle" class="admin-modal-title">Nueva Marca</h3>
+      <button class="admin-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="admin-modal-body">
+      <input type="hidden" id="brandId">
+
+      <div class="admin-form-group">
+        <label for="brandName" class="admin-label">Nombre de la Casa / Marca *</label>
+        <input type="text" id="brandName" class="admin-input" placeholder="Ej: Xerjoff">
+      </div>
+
+      <div class="admin-grid-2">
+        <div class="admin-form-group">
+          <label for="brandSlug" class="admin-label">Slug URL</label>
+          <input type="text" id="brandSlug" class="admin-input" placeholder="xerjoff">
+        </div>
+        <div class="admin-form-group">
+          <label for="brandCategory" class="admin-label">Línea / Origen *</label>
+          <select id="brandCategory" class="admin-select">
+            <option value="arabic">Perfumes Árabes (Dubai / Golfo)</option>
+            <option value="designer">Perfumes de Diseñador (Occidente)</option>
+            <option value="niche">Perfumería Nicho</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="brandCountry" class="admin-label">País y Ciudad de Origen</label>
+        <input type="text" id="brandCountry" class="admin-input" placeholder="Ej: Emiratos Árabes Unidos (Dubai)">
+      </div>
+
+      <div class="admin-form-group">
+        <label for="brandTagline" class="admin-label">Lema o Tagline Corto</label>
+        <input type="text" id="brandTagline" class="admin-input" placeholder="Ej: Alta perfumería oriental contemporánea">
+      </div>
+
+      <div class="admin-form-group">
+        <label for="brandDescription" class="admin-label">Descripción de la Casa</label>
+        <textarea id="brandDescription" class="admin-textarea" rows="3" placeholder="Historia de la marca, materias primas emblemáticas, trayectoria..."></textarea>
+      </div>
+
+      <div class="admin-grid-2">
+        <div class="admin-form-group">
+          <label for="brandImage" class="admin-label">Imagen / Portada</label>
+          <select id="brandImage" class="admin-select">
+            <option value="cat-arabes.jpg">Perfumes Árabes (cat-arabes.jpg)</option>
+            <option value="cat-disenador.jpg">Perfumes Diseñador (cat-disenador.jpg)</option>
+            <option value="cat-masculino.jpg">Masculinos (cat-masculino.jpg)</option>
+            <option value="cat-femenino.jpg">Femeninos (cat-femenino.jpg)</option>
+            <option value="cat-unisex.jpg">Unisex (cat-unisex.jpg)</option>
+            <option value="hero.jpg">Hero Banner (hero.jpg)</option>
+          </select>
+        </div>
+        <div class="admin-form-group">
+          <label for="brandStatus" class="admin-label">Estado</label>
+          <select id="brandStatus" class="admin-select">
+            <option value="active">Activa</option>
+            <option value="inactive">Inactiva (Oculta en tienda)</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+    <div class="admin-modal-footer">
+      <button class="admin-btn admin-btn-secondary" data-modal-close>Cancelar</button>
+      <button id="btnSaveBrand" class="admin-btn admin-btn-primary">Guardar Marca</button>
+    </div>
+  </div>
+</div>
+
+<script src="../src/js/data.js"></script>
+<script src="js/admin-core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  AdminCore.init('marcas', 'Gestión de Marcas');
+
+  const { DataStore, AuthService, getAssetPath } = window.BunkerData;
+
+  function renderBrands() {
+    const tbody = document.getElementById('brandsTableBody');
+    const brands = DataStore.getAllBrands();
+    const products = DataStore.getAllProducts();
+
+    tbody.innerHTML = brands.map(b => {
+      const prodCount = products.filter(p => p.brand === b.slug).length;
+      const typeLabel = b.category === 'arabic' ? 'Árabe (Dubai)' : (b.category === 'designer' ? 'Diseñador' : 'Nicho');
+
+      return `
+        <tr>
+          <td>
+            <img src="${getAssetPath(b.imageFile || 'cat-arabes.jpg')}" alt="${b.name}" style="width:42px;height:42px;object-fit:cover;border-radius:4px;border:1px solid var(--admin-border);">
+          </td>
+          <td>
+            <div style="font-weight:700;color:var(--text-main);">${b.name}</div>
+            <div style="font-size:11px;color:var(--text-muted);">${b.country || ''}</div>
+          </td>
+          <td>
+            <code style="font-size:11px;color:var(--gold-primary);">${b.slug}</code>
+          </td>
+          <td>
+            <span class="admin-badge">${typeLabel}</span>
+          </td>
+          <td>
+            <span style="font-weight:700;color:var(--text-main);">${prodCount}</span> <span style="font-size:11px;color:var(--text-muted);">fragancias</span>
+          </td>
+          <td>
+            <span class="admin-badge ${b.status === 'active' ? 'admin-badge-active' : 'admin-badge-inactive'}">
+              ${b.status === 'active' ? '● Activa' : '○ Inactiva'}
+            </span>
+          </td>
+          <td style="text-align: right;">
+            <div style="display:flex;justify-content:flex-end;gap:6px;">
+              <button class="admin-btn admin-btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="editBrand('${b.id}')">✏️ Editar</button>
+              <button class="admin-btn admin-btn-danger" style="padding:4px 8px;font-size:11px;" onclick="deleteBrand('${b.id}')">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Auto-slug
+  document.getElementById('brandName').addEventListener('input', (e) => {
+    const isNew = !document.getElementById('brandId').value;
+    if (isNew) {
+      document.getElementById('brandSlug').value = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+  });
+
+  // Open Create
+  document.getElementById('btnNewBrand').addEventListener('click', () => {
+    document.getElementById('brandId').value = '';
+    document.getElementById('brandModalTitle').textContent = 'Nueva Marca';
+    document.getElementById('brandName').value = '';
+    document.getElementById('brandSlug').value = '';
+    document.getElementById('brandCategory').value = 'arabic';
+    document.getElementById('brandCountry').value = '';
+    document.getElementById('brandTagline').value = '';
+    document.getElementById('brandDescription').value = '';
+    document.getElementById('brandImage').value = 'cat-arabes.jpg';
+    document.getElementById('brandStatus').value = 'active';
+    AdminCore.openModal('brandModal');
+  });
+
+  // Edit Brand
+  window.editBrand = (brandId) => {
+    const brands = DataStore.getAllBrands();
+    const b = brands.find(x => x.id === brandId);
+    if (!b) return;
+
+    document.getElementById('brandId').value = b.id;
+    document.getElementById('brandModalTitle').textContent = `Editar Marca: ${b.name}`;
+    document.getElementById('brandName').value = b.name;
+    document.getElementById('brandSlug').value = b.slug;
+    document.getElementById('brandCategory').value = b.category || 'arabic';
+    document.getElementById('brandCountry').value = b.country || '';
+    document.getElementById('brandTagline').value = b.tagline || '';
+    document.getElementById('brandDescription').value = b.description || '';
+    document.getElementById('brandImage').value = b.imageFile || 'cat-arabes.jpg';
+    document.getElementById('brandStatus').value = b.status || 'active';
+
+    AdminCore.openModal('brandModal');
+  };
+
+  // Delete Brand
+  window.deleteBrand = (brandId) => {
+    const brands = DataStore.getAllBrands();
+    const b = brands.find(x => x.id === brandId);
+    if (!b) return;
+
+    if (confirm(`¿Estás seguro de eliminar la marca "${b.name}"? Los productos vinculados permanecerán en la base de datos.`)) {
+      const user = AuthService.getCurrentUser()?.name || 'Admin';
+      DataStore.deleteBrand(brandId, user);
+      AdminToast.show(`Marca "${b.name}" eliminada.`, 'info');
+      renderBrands();
+    }
+  };
+
+  // Save Brand
+  document.getElementById('btnSaveBrand').addEventListener('click', () => {
+    const name = document.getElementById('brandName').value.trim();
+    const slug = document.getElementById('brandSlug').value.trim();
+    if (!name || !slug) {
+      AdminToast.show('Por favor completá el Nombre y el Slug de la marca', 'error');
+      return;
+    }
+
+    const brandData = {
+      id: document.getElementById('brandId').value || undefined,
+      name,
+      slug,
+      category: document.getElementById('brandCategory').value,
+      country: document.getElementById('brandCountry').value.trim(),
+      tagline: document.getElementById('brandTagline').value.trim(),
+      description: document.getElementById('brandDescription').value.trim(),
+      imageFile: document.getElementById('brandImage').value,
+      status: document.getElementById('brandStatus').value
+    };
+
+    const user = AuthService.getCurrentUser()?.name || 'Admin';
+    DataStore.saveBrand(brandData, user);
+
+    AdminToast.show(`Marca "${name}" guardada correctamente.`, 'success');
+    AdminCore.closeModal('brandModal');
+    renderBrands();
+  });
+
+  renderBrands();
+});
+</script>
+
+</body>
+</html>

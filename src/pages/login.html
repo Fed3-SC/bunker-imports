@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Cuenta | Bunker Imports</title>
+  <meta name="description" content="Accedé a tu cuenta en Bunker Imports para gestionar tus pedidos, direcciones de entrega y lista de favoritos.">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+</head>
+<body>
+
+<!-- ─── ANNOUNCEMENT BAR ─────────────────────────────────── -->
+<div class="announcement-bar" role="banner">
+  <div class="announcement-track">
+    <div class="announcement-item">PERFUMES ÁRABES Y DE DISEÑADOR · 100% ORIGINALES CON BATCH CODE</div>
+    <div class="announcement-item">HASTA 3 CUOTAS SIN INTERÉS · ENVÍOS A TODO EL PAÍS</div>
+  </div>
+</div>
+
+<!-- ─── NAVBAR ───────────────────────────────────────────── -->
+<header id="navbar" class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="../../index.html" class="navbar-logo" aria-label="Bunker Imports - Inicio">
+      <svg class="navbar-logo-svg" viewBox="0 0 160 56" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(2,2)">
+          <circle cx="24" cy="26" r="22" fill="none" stroke="#C9A45C" stroke-width="1.5"/>
+          <path d="M24 8 L35 13 L35 26 C35 32 29.5 38 24 41 C18.5 38 13 32 13 26 L13 13 Z" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+          <text x="20" y="32" font-family="Montserrat, sans-serif" font-weight="700" font-size="13" fill="#C9A45C">B</text>
+        </g>
+        <text x="55" y="22" font-family="Montserrat, sans-serif" font-weight="800" font-size="11" fill="#C9A45C" letter-spacing="3">BUNKER</text>
+        <text x="55" y="36" font-family="Montserrat, sans-serif" font-weight="300" font-size="8" fill="#A0A0A0" letter-spacing="5">IMPORTS</text>
+      </svg>
+    </a>
+
+    <nav class="navbar-nav">
+      <a href="../../index.html" class="nav-link">Inicio</a>
+      <a href="perfumes.html" class="nav-link">Perfumes</a>
+      <a href="marcas.html" class="nav-link">Marcas</a>
+      <a href="categoria.html?slug=arabes" class="nav-link">Árabes</a>
+      <a href="categoria.html?slug=disenador" class="nav-link">Diseñador</a>
+      <a href="ofertas.html" class="nav-link">Ofertas</a>
+      <a href="nosotros.html" class="nav-link">Nosotros</a>
+    </nav>
+
+    <div class="navbar-actions">
+      <a href="favoritos.html" class="navbar-action-btn" title="Favoritos">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+      <button class="navbar-action-btn cart-action" data-cart-open title="Carrito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ─── CART DRAWER ───────────────────────────────────────── -->
+<div id="cartBackdrop" class="cart-backdrop"></div>
+<aside id="cartDrawer" class="cart-drawer">
+  <div class="cart-header">
+    <div class="cart-title">Mi Carrito <span id="cartCountBadge" class="cart-count-badge">0</span></div>
+    <button id="cartClose" class="cart-close">✕</button>
+  </div>
+  <div id="cartItems" class="cart-items"></div>
+  <div id="cartFooter" class="cart-footer"></div>
+</aside>
+
+<!-- ─── MAIN CONTENT ──────────────────────────────────────── -->
+<main id="main" role="main" style="padding: var(--space-3xl) 0 var(--space-4xl);">
+  <div class="container" style="max-width: 480px;">
+
+    <div style="background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);padding:36px;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+
+      <!-- TABS -->
+      <div style="display:flex;border-bottom:1px solid var(--black-border);margin-bottom:24px;">
+        <button id="tabLoginBtn" class="tab-btn active" style="flex:1;text-align:center;padding-bottom:12px;">Iniciar Sesión</button>
+        <button id="tabRegisterBtn" class="tab-btn" style="flex:1;text-align:center;padding-bottom:12px;">Crear Cuenta</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" class="form-grid" style="gap:16px;" onsubmit="return false;">
+        <div class="form-field">
+          <label class="form-label" for="loginEmail">Correo Electrónico</label>
+          <input type="email" id="loginEmail" class="form-input" placeholder="tu@email.com" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="loginPassword">Contraseña</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--white-muted);">
+            <input type="checkbox" checked> Recordarme
+          </label>
+          <a href="#" style="color:var(--gold-primary);">¿Olvidaste tu clave?</a>
+        </div>
+        <button type="submit" class="btn btn-primary w-full" style="padding:14px;margin-top:8px;">
+          Ingresar al Portal VIP
+        </button>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="registerForm" class="form-grid hidden" style="gap:16px;" onsubmit="return false;">
+        <div class="form-field">
+          <label class="form-label" for="regName">Nombre y Apellido</label>
+          <input type="text" id="regName" class="form-input" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="regEmail">Correo Electrónico</label>
+          <input type="email" id="regEmail" class="form-input" placeholder="tu@email.com" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="regPhone">WhatsApp / Teléfono</label>
+          <input type="tel" id="regPhone" class="form-input" placeholder="Ej: 11 5555 4321" required>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="regPassword">Contraseña</label>
+          <input type="password" id="regPassword" class="form-input" placeholder="Mínimo 6 caracteres" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-full" style="padding:14px;margin-top:8px;">
+          Crear Cuenta & Obtener 10% OFF
+        </button>
+      </form>
+
+      <!-- VIP BENEFITS -->
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--black-border);font-size:0.75rem;color:var(--white-subtle);line-height:1.6;">
+        <strong style="color:var(--gold-primary);display:block;margin-bottom:6px;">Beneficios Club Bunker:</strong>
+        ✓ Seguimiento en tiempo real de tus envíos<br>
+        ✓ Descuento exclusivo del 10% de bienvenida<br>
+        ✓ Acceso prioritario a lanzamientos limitados de Dubai
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2024 Bunker Imports. Perfumería Premium · 100% Originales.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/api.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+  const tabLogin = document.getElementById('tabLoginBtn');
+  const tabRegister = document.getElementById('tabRegisterBtn');
+
+  tabLogin.addEventListener('click', () => {
+    tabLogin.classList.add('active');
+    tabRegister.classList.remove('active');
+    loginForm.classList.remove('hidden');
+    registerForm.classList.add('hidden');
+  });
+
+  tabRegister.addEventListener('click', () => {
+    tabRegister.classList.add('active');
+    tabLogin.classList.remove('active');
+    registerForm.classList.remove('hidden');
+    loginForm.classList.add('hidden');
+  });
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail')?.value;
+    const password = document.getElementById('loginPassword')?.value;
+
+    if (window.BunkerAPI && window.BunkerAPI.auth) {
+      try {
+        await window.BunkerAPI.auth.login(email, password);
+        Toast.show('¡Bienvenido nuevamente a Bunker Imports!', 'success');
+        setTimeout(() => { window.location.href = '../../index.html'; }, 1000);
+        return;
+      } catch (err) {
+        Toast.show(err.message || 'Error al iniciar sesión', 'error');
+        return;
+      }
+    }
+
+    Toast.show('¡Bienvenido nuevamente a Bunker Imports!', 'success');
+    setTimeout(() => { window.location.href = '../../index.html'; }, 1000);
+  });
+
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('regName')?.value;
+    const lastName = document.getElementById('regLastName')?.value || 'Cliente';
+    const email = document.getElementById('regEmail')?.value;
+    const password = document.getElementById('regPassword')?.value;
+    const phone = document.getElementById('regPhone')?.value || '';
+
+    if (window.BunkerAPI && window.BunkerAPI.auth) {
+      try {
+        await window.BunkerAPI.auth.register({ name, lastName, email, password, phone });
+        Toast.show('¡Cuenta creada exitosamente en Bunker Imports! Tu cupón es BUNKER10', 'success');
+        setTimeout(() => { window.location.href = '../../index.html'; }, 1200);
+        return;
+      } catch (err) {
+        Toast.show(err.message || 'Error al registrar la cuenta', 'error');
+        return;
+      }
+    }
+
+    Toast.show('¡Cuenta creada exitosamente! Tu cupón es BUNKER10', 'success');
+    setTimeout(() => { window.location.href = '../../index.html'; }, 1200);
+  });
+});
+</script>
+
+</body>
+</html>

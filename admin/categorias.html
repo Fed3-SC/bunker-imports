@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Categorías — Bunker Imports Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<div class="admin-layout">
+  <aside id="adminSidebar" class="admin-sidebar"></aside>
+
+  <div class="admin-main">
+    <header id="adminTopbar" class="admin-topbar"></header>
+
+    <div class="admin-content">
+
+      <!-- HEADER ACTION -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+        <div>
+          <h2 style="font-family:var(--font-heading);font-size:18px;color:var(--text-main);">Estructura de Categorías del E-Commerce</h2>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">Diseñada para escalar desde perfumería hacia cosmética, cuidado personal y accesorios.</p>
+        </div>
+        <button id="btnNewCategory" class="admin-btn admin-btn-primary">
+          <span>+</span> Nueva Categoría
+        </button>
+      </div>
+
+      <!-- CATEGORIES TABLE -->
+      <div class="admin-card admin-table-card">
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">Img</th>
+                <th>Nombre de Categoría</th>
+                <th>Slug URL</th>
+                <th>Badge / Distintivo</th>
+                <th>Descripción</th>
+                <th>Orden</th>
+                <th>Estado</th>
+                <th style="text-align: right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="catsTableBody">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CATEGORY CREATE / EDIT -->
+<div id="catModal" class="admin-modal-backdrop">
+  <div class="admin-modal" style="max-width: 540px;">
+    <div class="admin-modal-header">
+      <h3 id="catModalTitle" class="admin-modal-title">Nueva Categoría</h3>
+      <button class="admin-modal-close" data-modal-close>&times;</button>
+    </div>
+    <div class="admin-modal-body">
+      <input type="hidden" id="catId">
+
+      <div class="admin-form-group">
+        <label for="catName" class="admin-label">Nombre de la Categoría *</label>
+        <input type="text" id="catName" class="admin-input" placeholder="Ej: Cosmética Facial">
+      </div>
+
+      <div class="admin-grid-2">
+        <div class="admin-form-group">
+          <label for="catSlug" class="admin-label">Slug URL</label>
+          <input type="text" id="catSlug" class="admin-input" placeholder="cosmetica-facial">
+        </div>
+        <div class="admin-form-group">
+          <label for="catBadge" class="admin-label">Badge Destacado</label>
+          <input type="text" id="catBadge" class="admin-input" placeholder="Ej: Nueva Colección">
+        </div>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="catDescription" class="admin-label">Descripción para Catálogo y SEO</label>
+        <textarea id="catDescription" class="admin-textarea" rows="2" placeholder="Breve resumen visible en el encabezado de la categoría..."></textarea>
+      </div>
+
+      <div class="admin-grid-3">
+        <div class="admin-form-group">
+          <label for="catImage" class="admin-label">Imagen</label>
+          <select id="catImage" class="admin-select">
+            <option value="cat-arabes.jpg">Árabes (cat-arabes.jpg)</option>
+            <option value="cat-disenador.jpg">Diseñador (cat-disenador.jpg)</option>
+            <option value="cat-masculino.jpg">Masculino (cat-masculino.jpg)</option>
+            <option value="cat-femenino.jpg">Femenino (cat-femenino.jpg)</option>
+            <option value="cat-unisex.jpg">Unisex (cat-unisex.jpg)</option>
+            <option value="hero.jpg">Hero (hero.jpg)</option>
+          </select>
+        </div>
+        <div class="admin-form-group">
+          <label for="catOrder" class="admin-label">Orden (1-99)</label>
+          <input type="number" id="catOrder" class="admin-input" value="1" min="1">
+        </div>
+        <div class="admin-form-group">
+          <label for="catStatus" class="admin-label">Estado</label>
+          <select id="catStatus" class="admin-select">
+            <option value="active">Activa</option>
+            <option value="inactive">Oculta</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+    <div class="admin-modal-footer">
+      <button class="admin-btn admin-btn-secondary" data-modal-close>Cancelar</button>
+      <button id="btnSaveCategory" class="admin-btn admin-btn-primary">Guardar Categoría</button>
+    </div>
+  </div>
+</div>
+
+<script src="../src/js/data.js"></script>
+<script src="js/admin-core.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  AdminCore.init('categorias', 'Gestión de Categorías');
+
+  const { DataStore, AuthService, getAssetPath } = window.BunkerData;
+
+  function renderCategories() {
+    const tbody = document.getElementById('catsTableBody');
+    const categories = DataStore.getAllCategories().sort((a, b) => (a.order || 99) - (b.order || 99));
+
+    tbody.innerHTML = categories.map(c => `
+      <tr>
+        <td>
+          <img src="${getAssetPath(c.imageFile || 'cat-arabes.jpg')}" alt="${c.name}" style="width:38px;height:38px;object-fit:cover;border-radius:4px;border:1px solid var(--admin-border);">
+        </td>
+        <td>
+          <strong style="color:var(--text-main);font-size:13px;">${c.name}</strong>
+        </td>
+        <td>
+          <code style="font-size:11px;color:var(--gold-primary);">${c.slug}</code>
+        </td>
+        <td>
+          ${c.badge ? `<span class="admin-badge" style="background:rgba(201,164,92,0.15);color:var(--gold-primary);font-size:10px;">${c.badge}</span>` : '<span style="color:var(--text-muted);font-size:11px;">—</span>'}
+        </td>
+        <td style="font-size:12px;color:var(--text-muted);max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${c.description || ''}">
+          ${c.description || 'Sin descripción'}
+        </td>
+        <td>
+          <span style="font-weight:700;color:var(--text-muted);">${c.order || 1}</span>
+        </td>
+        <td>
+          <span class="admin-badge ${c.status === 'active' ? 'admin-badge-active' : 'admin-badge-inactive'}">
+            ${c.status === 'active' ? '● Activa' : '○ Inactiva'}
+          </span>
+        </td>
+        <td style="text-align: right;">
+          <div style="display:flex;justify-content:flex-end;gap:6px;">
+            <button class="admin-btn admin-btn-secondary" style="padding:4px 10px;font-size:11px;" onclick="editCategory('${c.id}')">✏️ Editar</button>
+            <button class="admin-btn admin-btn-danger" style="padding:4px 8px;font-size:11px;" onclick="deleteCategory('${c.id}')">🗑️</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // Auto-slug
+  document.getElementById('catName').addEventListener('input', (e) => {
+    const isNew = !document.getElementById('catId').value;
+    if (isNew) {
+      document.getElementById('catSlug').value = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+  });
+
+  // Open Create
+  document.getElementById('btnNewCategory').addEventListener('click', () => {
+    document.getElementById('catId').value = '';
+    document.getElementById('catModalTitle').textContent = 'Nueva Categoría';
+    document.getElementById('catName').value = '';
+    document.getElementById('catSlug').value = '';
+    document.getElementById('catBadge').value = '';
+    document.getElementById('catDescription').value = '';
+    document.getElementById('catOrder').value = DataStore.getAllCategories().length + 1;
+    document.getElementById('catImage').value = 'cat-arabes.jpg';
+    document.getElementById('catStatus').value = 'active';
+    AdminCore.openModal('catModal');
+  });
+
+  // Edit
+  window.editCategory = (catId) => {
+    const categories = DataStore.getAllCategories();
+    const c = categories.find(x => x.id === catId);
+    if (!c) return;
+
+    document.getElementById('catId').value = c.id;
+    document.getElementById('catModalTitle').textContent = `Editar Categoría: ${c.name}`;
+    document.getElementById('catName').value = c.name;
+    document.getElementById('catSlug').value = c.slug;
+    document.getElementById('catBadge').value = c.badge || '';
+    document.getElementById('catDescription').value = c.description || '';
+    document.getElementById('catOrder').value = c.order || 1;
+    document.getElementById('catImage').value = c.imageFile || 'cat-arabes.jpg';
+    document.getElementById('catStatus').value = c.status || 'active';
+
+    AdminCore.openModal('catModal');
+  };
+
+  // Delete
+  window.deleteCategory = (catId) => {
+    const categories = DataStore.getAllCategories();
+    const c = categories.find(x => x.id === catId);
+    if (!c) return;
+
+    if (confirm(`¿Eliminar la categoría "${c.name}"?`)) {
+      const user = AuthService.getCurrentUser()?.name || 'Admin';
+      DataStore.deleteCategory(catId, user);
+      AdminToast.show(`Categoría "${c.name}" eliminada.`, 'info');
+      renderCategories();
+    }
+  };
+
+  // Save
+  document.getElementById('btnSaveCategory').addEventListener('click', () => {
+    const name = document.getElementById('catName').value.trim();
+    const slug = document.getElementById('catSlug').value.trim();
+    if (!name || !slug) {
+      AdminToast.show('Por favor completá el Nombre y Slug de la categoría', 'error');
+      return;
+    }
+
+    const catData = {
+      id: document.getElementById('catId').value || undefined,
+      name,
+      slug,
+      badge: document.getElementById('catBadge').value.trim(),
+      description: document.getElementById('catDescription').value.trim(),
+      order: parseInt(document.getElementById('catOrder').value, 10) || 1,
+      imageFile: document.getElementById('catImage').value,
+      status: document.getElementById('catStatus').value
+    };
+
+    const user = AuthService.getCurrentUser()?.name || 'Admin';
+    DataStore.saveCategory(catData, user);
+
+    AdminToast.show(`Categoría "${name}" guardada con éxito.`, 'success');
+    AdminCore.closeModal('catModal');
+    renderCategories();
+  });
+
+  renderCategories();
+});
+</script>
+
+</body>
+</html>

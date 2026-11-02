@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Carrito de Compras | Bunker Imports</title>
+  <meta name="description" content="Revisá los perfumes de tu carrito en Bunker Imports. Envío asegurado a todo el país y hasta 3 cuotas sin interés.">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+</head>
+<body>
+
+<!-- ─── ANNOUNCEMENT BAR ─────────────────────────────────── -->
+<div class="announcement-bar" role="banner" aria-label="Avisos">
+  <div class="announcement-track">
+    <div class="announcement-item">PERFUMES ÁRABES Y DE DISEÑADOR</div>
+    <div class="announcement-item">100% ORIGINALES · BATCH CODE VERIFICABLE</div>
+    <div class="announcement-item">HASTA 3 CUOTAS SIN INTERÉS</div>
+    <div class="announcement-item">ENVÍOS A TODO EL PAÍS</div>
+  </div>
+</div>
+
+<!-- ─── NAVBAR ───────────────────────────────────────────── -->
+<header id="navbar" class="navbar" role="banner">
+  <div class="navbar-inner">
+    <a href="../../index.html" class="navbar-logo" aria-label="Bunker Imports - Inicio">
+      <svg class="navbar-logo-svg" viewBox="0 0 160 56" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(2,2)">
+          <circle cx="24" cy="26" r="22" fill="none" stroke="#C9A45C" stroke-width="1.5"/>
+          <path d="M24 8 L35 13 L35 26 C35 32 29.5 38 24 41 C18.5 38 13 32 13 26 L13 13 Z" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+          <text x="20" y="32" font-family="Montserrat, sans-serif" font-weight="700" font-size="13" fill="#C9A45C">B</text>
+        </g>
+        <text x="55" y="22" font-family="Montserrat, sans-serif" font-weight="800" font-size="11" fill="#C9A45C" letter-spacing="3">BUNKER</text>
+        <text x="55" y="36" font-family="Montserrat, sans-serif" font-weight="300" font-size="8" fill="#A0A0A0" letter-spacing="5">IMPORTS</text>
+      </svg>
+    </a>
+
+    <nav class="navbar-nav" role="navigation">
+      <a href="../../index.html" class="nav-link">Inicio</a>
+      <a href="perfumes.html" class="nav-link">Perfumes</a>
+      <a href="marcas.html" class="nav-link">Marcas</a>
+      <a href="categoria.html?slug=arabes" class="nav-link">Árabes</a>
+      <a href="categoria.html?slug=disenador" class="nav-link">Diseñador</a>
+      <a href="ofertas.html" class="nav-link">Ofertas</a>
+      <a href="nosotros.html" class="nav-link">Nosotros</a>
+    </nav>
+
+    <div class="navbar-actions">
+      <button class="navbar-action-btn search-action" data-search-open title="Buscar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <a href="favoritos.html" class="navbar-action-btn" title="Favoritos">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="badge fav-count" style="display:none">0</span>
+      </a>
+      <button class="navbar-action-btn cart-action" data-cart-open title="Carrito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="badge cart-count" style="display:none">0</span>
+      </button>
+      <button id="hamburger" class="navbar-hamburger" aria-label="Menú">
+        <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ─── MOBILE NAV ────────────────────────────────────────── -->
+<nav id="mobileNav" class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <a href="../../index.html" class="mobile-nav-link">Inicio <span>→</span></a>
+    <a href="perfumes.html" class="mobile-nav-link">Perfumes <span>→</span></a>
+    <a href="marcas.html" class="mobile-nav-link">Marcas <span>→</span></a>
+    <a href="categoria.html?slug=arabes" class="mobile-nav-link">Árabes <span>→</span></a>
+    <a href="categoria.html?slug=disenador" class="mobile-nav-link">Diseñador <span>→</span></a>
+    <a href="ofertas.html" class="mobile-nav-link">Ofertas <span>→</span></a>
+    <a href="nosotros.html" class="mobile-nav-link">Nosotros <span>→</span></a>
+  </div>
+</nav>
+
+<!-- ─── SEARCH OVERLAY ────────────────────────────────────── -->
+<div id="searchOverlay" class="search-overlay">
+  <div class="search-header">
+    <div class="search-input-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" class="search-input" placeholder="¿Qué perfume estás buscando?">
+    </div>
+    <button class="search-close">Cerrar ✕</button>
+  </div>
+  <div id="searchResults" class="search-results"></div>
+</div>
+
+<!-- ─── CART DRAWER ───────────────────────────────────────── -->
+<div id="cartBackdrop" class="cart-backdrop"></div>
+<aside id="cartDrawer" class="cart-drawer">
+  <div class="cart-header">
+    <div class="cart-title">Mi Carrito <span id="cartCountBadge" class="cart-count-badge">0</span></div>
+    <button id="cartClose" class="cart-close">✕</button>
+  </div>
+  <div id="cartItems" class="cart-items"></div>
+  <div id="cartFooter" class="cart-footer"></div>
+</aside>
+
+<!-- ─── MAIN CART PAGE ────────────────────────────────────── -->
+<main id="main" role="main" style="padding: var(--space-xl) 0 var(--space-4xl);">
+  <div class="container">
+    <div class="breadcrumbs">
+      <a href="../../index.html">Inicio</a>
+      <span class="sep">/</span>
+      <span>Mi Carrito</span>
+    </div>
+
+    <div class="section-header" style="text-align:left;margin-bottom:var(--space-xl);">
+      <span class="section-label">Bolsa de compras</span>
+      <h1 class="section-title">Tu Carrito <strong>de Fragancias</strong></h1>
+    </div>
+
+    <!-- CART CONTAINER -->
+    <div id="cartPageContent" class="checkout-layout">
+
+      <!-- LEFT: ITEMS LIST -->
+      <div>
+        <!-- FREE SHIPPING BAR -->
+        <div id="pageShippingBar" style="background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-md);padding:16px;margin-bottom:20px;"></div>
+
+        <!-- ITEMS TABLE / LIST -->
+        <div id="pageCartItems" style="display:flex;flex-direction:column;gap:12px;"></div>
+
+        <!-- ACTIONS -->
+        <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <a href="perfumes.html" class="btn btn-ghost btn-sm">← Seguir explorando fragancias</a>
+          <button id="clearAllCartBtn" style="font-size:0.8rem;color:var(--red-error);background:none;border:none;cursor:pointer;">Vaciar carrito</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: ORDER SUMMARY -->
+      <div>
+        <div class="order-summary-panel">
+          <h2 class="checkout-section-title">Resumen de Compra</h2>
+
+          <!-- COUPON INPUT -->
+          <div style="margin-bottom:20px;">
+            <label class="form-label" for="couponCode">¿Tenés un cupón de descuento?</label>
+            <div style="display:flex;gap:8px;margin-top:4px;">
+              <input type="text" id="couponCode" class="form-input" placeholder="Ej: BUNKER10" style="flex:1;text-transform:uppercase;font-size:0.85rem;padding:8px 12px;">
+              <button id="applyCouponBtn" class="btn btn-outline btn-sm">Aplicar</button>
+            </div>
+            <div id="couponMsg" style="font-size:0.75rem;margin-top:6px;display:none;"></div>
+          </div>
+
+          <!-- SUMMARY BREAKDOWN -->
+          <div style="display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--black-border);padding-top:16px;font-size:0.9rem;">
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:var(--white-muted);">Subtotal productos</span>
+              <span id="summarySubtotal" style="font-weight:600;">$0</span>
+            </div>
+
+            <div id="rowDiscount" style="display:none;justify-content:space-between;color:var(--gold-light);">
+              <span>Descuento cupón (<span id="discountTag"></span>)</span>
+              <span id="summaryDiscount" style="font-weight:600;">-$0</span>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;">
+              <span style="color:var(--white-muted);">Envío a todo el país</span>
+              <span id="summaryShipping" style="font-weight:600;color:var(--green-success);">A calcular</span>
+            </div>
+
+            <div style="border-top:1px solid var(--black-border);padding-top:12px;margin-top:4px;display:flex;justify-content:space-between;align-items:baseline;">
+              <span style="font-size:1.1rem;font-weight:700;">Total</span>
+              <span id="summaryTotal" style="font-size:1.6rem;font-weight:800;color:var(--gold-primary);">$0</span>
+            </div>
+
+            <div style="background:rgba(201,164,92,0.08);border:1px solid rgba(201,164,92,0.2);padding:10px;border-radius:var(--radius-sm);text-align:center;font-size:0.8rem;color:var(--gold-light);line-height:1.4;">
+              💳 <strong>Hasta 3 cuotas sin interés</strong> de <span id="summaryInstallments">$0</span><br>
+              <span style="color:var(--green-success);font-weight:700;">10% OFF</span> pagando por transferencia: <span id="summaryTransfer">$0</span>
+            </div>
+          </div>
+
+          <!-- PROCEED BUTTONS -->
+          <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px;">
+            <a href="checkout.html" class="btn btn-primary btn-lg w-full" style="padding:16px;">
+              <span>🔒</span> Iniciar Compra Segura
+            </a>
+            <a id="btnWhatsAppCart" href="#" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg w-full" style="padding:16px;">
+              <span>💬</span> Finalizar Pedido por WhatsApp
+            </a>
+          </div>
+
+          <div style="margin-top:16px;display:flex;justify-content:center;gap:16px;font-size:0.75rem;color:var(--white-faint);">
+            <span>🛡️ Compra 100% Segura</span>
+            <span>📦 Envíos con Seguro</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EMPTY CART STATE -->
+    <div id="cartEmptyState" class="hidden" style="text-align:center;padding:80px 24px;background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-lg);max-width:600px;margin:0 auto;">
+      <div style="font-size:4rem;margin-bottom:20px;opacity:0.6;">🛒</div>
+      <h2 style="font-family:var(--font-heading);font-size:1.4rem;color:var(--white-warm);margin-bottom:12px;">Tu carrito de compras está vacío</h2>
+      <p style="font-size:0.9rem;color:var(--white-subtle);margin-bottom:28px;">Descubrí las fragancias más deseadas de Dubai y de los grandes diseñadores internacionales.</p>
+      <a href="perfumes.html" class="btn btn-primary btn-lg">Explorar Perfumes</a>
+    </div>
+
+  </div>
+</main>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo-wrap">
+          <svg width="130" height="42" viewBox="0 0 160 56" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(2,2)">
+              <circle cx="24" cy="26" r="22" fill="none" stroke="#C9A45C" stroke-width="1.5"/>
+              <path d="M24 8 L35 13 L35 26 C35 32 29.5 38 24 41 C18.5 38 13 32 13 26 L13 13 Z" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+              <text x="20" y="32" font-family="Montserrat, sans-serif" font-weight="700" font-size="13" fill="#C9A45C">B</text>
+            </g>
+            <text x="55" y="22" font-family="Montserrat, sans-serif" font-weight="800" font-size="11" fill="#C9A45C" letter-spacing="3">BUNKER</text>
+            <text x="55" y="36" font-family="Montserrat, sans-serif" font-weight="300" font-size="8" fill="#A0A0A0" letter-spacing="5">IMPORTS</text>
+          </svg>
+        </div>
+        <p class="footer-tagline">Perfumes árabes y de diseñador 100% originales garantizados con batch code verificable.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Fragancias</div>
+        <div class="footer-links">
+          <a href="perfumes.html" class="footer-link">Todos los perfumes</a>
+          <a href="categoria.html?slug=arabes" class="footer-link">Perfumes Árabes</a>
+          <a href="categoria.html?slug=disenador" class="footer-link">Perfumes de Diseñador</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Marcas</div>
+        <div class="footer-links">
+          <a href="marca.html?slug=lattafa" class="footer-link">Lattafa</a>
+          <a href="marca.html?slug=armaf" class="footer-link">Armaf</a>
+          <a href="marca.html?slug=afnan" class="footer-link">Afnan</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Ayuda</div>
+        <div class="footer-links">
+          <a href="faq.html" class="footer-link">Preguntas Frecuentes</a>
+          <a href="nosotros.html" class="footer-link">Garantía de Originalidad</a>
+          <a href="contacto.html" class="footer-link">Contacto</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Garantía</div>
+        <p style="font-size:0.8rem;color:var(--white-subtle);">Todos los productos se entregan sellados en celofán original con número de lote para verificar.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2024 Bunker Imports. Perfumería Premium · 100% Originales.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── FLOATING WHATSAPP & BACK TO TOP ───────────────────── -->
+<a id="whatsappFloat" href="#" class="whatsapp-float" target="_blank" rel="noopener">
+  <span class="whatsapp-float-icon">💬</span>
+  <span class="whatsapp-float-text">¿Dudas?<br><strong>WhatsApp</strong></span>
+</a>
+<button id="backToTop" class="back-to-top" aria-label="Volver arriba">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18,15 12,9 6,15"/></svg>
+</button>
+
+<!-- ─── SCRIPTS ───────────────────────────────────────────── -->
+<script src="../js/data.js"></script>
+<script src="../js/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const { DataStore, CONFIG } = window.BunkerData;
+  let appliedCoupon = null;
+
+  // WhatsApp float
+  document.getElementById('whatsappFloat').href = DataStore.getWhatsAppLink();
+
+  function renderPageCart() {
+    const items = Cart.getItems();
+    const layout = document.getElementById('cartPageContent');
+    const empty = document.getElementById('cartEmptyState');
+    const itemsContainer = document.getElementById('pageCartItems');
+    const shippingBar = document.getElementById('pageShippingBar');
+
+    if (items.length === 0) {
+      layout.classList.add('hidden');
+      empty.classList.remove('hidden');
+      return;
+    }
+
+    layout.classList.remove('hidden');
+    empty.classList.add('hidden');
+
+    const subtotal = Cart.getSubtotal();
+    const threshold = CONFIG.freeShippingThreshold || 120000;
+    const missing = Math.max(0, threshold - subtotal);
+    const progress = Math.min(100, Math.round((subtotal / threshold) * 100));
+
+    // Shipping bar
+    shippingBar.innerHTML = `
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:6px;">
+        <span style="color:var(--white-warm);">
+          ${missing === 0 ? '🎉 <strong>¡Felicidades! Tenés ENVÍO GRATIS a todo el país</strong>' : `Te faltan <strong>$${missing.toLocaleString('es-AR')}</strong> para <strong>Envío Gratis</strong>`}
+        </span>
+        <span style="font-weight:700;color:var(--gold-primary);">${progress}%</span>
+      </div>
+      <div style="width:100%;height:6px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+        <div style="width:${progress}%;height:100%;background:var(--grad-gold);border-radius:99px;transition:width 0.4s ease;"></div>
+      </div>
+    `;
+
+    // Items list
+    itemsContainer.innerHTML = items.map(item => `
+      <div style="background:var(--black-card);border:1px solid var(--black-border);border-radius:var(--radius-md);padding:16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+        <img src="${resolveAssetUrl(item.imageFile)}" alt="${item.name}" style="width:72px;height:72px;object-fit:cover;border-radius:var(--radius-sm);background:var(--black-elevated);border:1px solid var(--black-border);">
+        <div style="flex:1;min-width:180px;">
+          <div style="font-size:0.75rem;color:var(--gold-primary);text-transform:uppercase;font-weight:700;">${item.brandName}</div>
+          <div style="font-size:1rem;font-weight:600;color:var(--white-warm);">${item.name}</div>
+          <div style="font-size:0.75rem;color:var(--white-subtle);">${item.size || '100ml'}</div>
+        </div>
+        <div style="font-size:0.95rem;font-weight:700;color:var(--white-warm);min-width:90px;">
+          $${(item.price * item.qty).toLocaleString('es-AR')}
+        </div>
+        <div class="cart-item-qty" style="margin:0;">
+          <button class="qty-btn" onclick="Cart.updateQty('${item.key}', -1); renderPageCart();">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="Cart.updateQty('${item.key}', 1); renderPageCart();">+</button>
+        </div>
+        <button style="color:var(--white-faint);cursor:pointer;font-size:1.1rem;background:none;border:none;padding:8px;" title="Eliminar" onclick="Cart.removeItem('${item.key}'); renderPageCart();">✕</button>
+      </div>
+    `).join('');
+
+    // Summary calculations
+    let discountAmount = 0;
+    if (appliedCoupon) {
+      discountAmount = Math.round(subtotal * (appliedCoupon.discountPercent / 100));
+      document.getElementById('rowDiscount').style.display = 'flex';
+      document.getElementById('discountTag').textContent = `${appliedCoupon.code} (-${appliedCoupon.discountPercent}%)`;
+      document.getElementById('summaryDiscount').textContent = `-$${discountAmount.toLocaleString('es-AR')}`;
+    } else {
+      document.getElementById('rowDiscount').style.display = 'none';
+    }
+
+    const shippingCost = missing === 0 ? 0 : 4500;
+    document.getElementById('summarySubtotal').textContent = `$${subtotal.toLocaleString('es-AR')}`;
+    document.getElementById('summaryShipping').innerHTML = shippingCost === 0 ? '<strong style="color:var(--green-success)">¡GRATIS!</strong>' : `$${shippingCost.toLocaleString('es-AR')}`;
+
+    const total = subtotal - discountAmount + shippingCost;
+    document.getElementById('summaryTotal').textContent = `$${total.toLocaleString('es-AR')}`;
+
+    const installmentsVal = Math.round(total / 3);
+    document.getElementById('summaryInstallments').textContent = `$${installmentsVal.toLocaleString('es-AR')}`;
+
+    const transferVal = Math.round(total * 0.9);
+    document.getElementById('summaryTransfer').textContent = `$${transferVal.toLocaleString('es-AR')}`;
+
+    // WhatsApp Direct button
+    const waItems = items.map(i => `• ${i.name} (${i.size || '100ml'}) x${i.qty} - $${(i.price * i.qty).toLocaleString('es-AR')}`).join('\n');
+    const waMsg = `Hola Bunker Imports! Quiero confirmar la compra de mi carrito:\n\n${waItems}\n\n*Total estimado:* $${total.toLocaleString('es-AR')}\n\n¿Me indican cómo proceder con el pago y envío?`;
+    document.getElementById('btnWhatsAppCart').href = `https://wa.me/5491155554321?text=${encodeURIComponent(waMsg)}`;
+  }
+
+  // Clear all button
+  document.getElementById('clearAllCartBtn').addEventListener('click', () => {
+    if (confirm('¿Seguro que querés vaciar tu carrito?')) {
+      Cart.clear();
+      renderPageCart();
+    }
+  });
+
+  // Apply Coupon
+  document.getElementById('applyCouponBtn').addEventListener('click', () => {
+    const code = document.getElementById('couponCode').value.trim().toUpperCase();
+    const msg = document.getElementById('couponMsg');
+    const valid = CONFIG.coupons && CONFIG.coupons[code];
+
+    if (valid) {
+      appliedCoupon = { code, discountPercent: valid.discountPercent };
+      msg.style.display = 'block';
+      msg.style.color = 'var(--green-success)';
+      msg.textContent = `✓ Cupón ${code} aplicado: ¡${valid.discountPercent}% de descuento!`;
+      Toast.show(`Cupón ${code} aplicado exitosamente`, 'success');
+      renderPageCart();
+    } else {
+      appliedCoupon = null;
+      msg.style.display = 'block';
+      msg.style.color = 'var(--red-error)';
+      msg.textContent = 'Cupón inválido o expirado. Probá con BUNKER10';
+      Toast.show('Cupón no válido', 'error');
+      renderPageCart();
+    }
+  });
+
+  // Initial render
+  renderPageCart();
+  document.addEventListener('cart:changed', renderPageCart);
+});
+</script>
+
+</body>
+</html>
