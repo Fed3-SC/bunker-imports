@@ -63,7 +63,7 @@ const productRepository = {
   },
 
   async updateById(id, data) {
-    return Product.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+    return Product.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
   },
 
   async deleteById(id) {
@@ -76,7 +76,7 @@ const productRepository = {
     return Product.findByIdAndUpdate(
       id,
       { stock: newStock, status },
-      { new: true }
+      { returnDocument: 'after' }
     );
   },
 
@@ -86,7 +86,7 @@ const productRepository = {
       Product.findByIdAndUpdate(
         item.product,
         { $inc: { stock: -item.qty } },
-        { new: true }
+        { returnDocument: 'after' }
       ).then(product => {
         if (product && product.stock <= 0) {
           product.status = 'soldout';
@@ -104,7 +104,7 @@ const productRepository = {
       Product.findByIdAndUpdate(
         item.product,
         { $inc: { stock: item.qty } },
-        { new: true }
+        { returnDocument: 'after' }
       ).then(product => {
         if (product && product.stock > 0 && product.status === 'soldout') {
           product.status = 'active';

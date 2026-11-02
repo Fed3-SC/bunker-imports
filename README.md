@@ -1,291 +1,397 @@
-# BUNKER IMPORTS — Backend & Plataforma Full Stack
-## Perfumería Árabe y de Diseñador 100% Originales
-
-Plataforma web Full Stack para **BUNKER IMPORTS**, tienda online argentina especializada en fragancias árabes (Lattafa, Armaf, Afnan, Rasasi) y de diseñador (Giorgio Armani, Valentino, Victoria's Secret).
-
-El proyecto integra una arquitectura Backend en Node.js, Express y MongoDB (Mongoose) con el frontend comercial y panel administrativo preexistentes, cumpliendo los requisitos técnicos de las seis pre-entregas del curso de Programación Backend.
+# BUNKER IMPORTS — Plataforma E-Commerce & Backend API
+> Tienda online argentina especializada en perfumería árabe y fragancias de diseñador 100% originales.
 
 ---
 
-## 📑 Tabla de Contenidos
+## 1. Presentación de Bunker Imports
 
-1. [Tecnologías Utilizadas](#-tecnolog%C3%ADas-utilizadas)
-2. [Arquitectura por Capas](#-arquitectura-por-capas)
-3. [Estructura del Proyecto](#-estructura-del-proyecto)
-4. [Requisitos e Instalación](#-requisitos-e-instalaci%C3%B3n)
-5. [Variables de Entorno](#-variables-de-entorno)
-6. [Comandos de Ejecución](#-comandos-de-ejecuci%C3%B3n)
-7. [Documentación de los 6 Módulos](#-documentaci%C3%B3n-de-los-6-m%C3%B3dulos)
-   - [Módulo 1: Arquitectura por Capas y Entorno](#m%C3%B3dulo-1-arquitectura-por-capas-y-configuraci%C3%B3n-de-entorno)
-   - [Módulo 2: Mocking y Carga de Datos Sintéticos](#m%C3%B3dulo-2-mocking-y-carga-de-datos-de-prueba)
-   - [Módulo 3: Manejo Profesional y Centralizado de Errores](#m%C3%B3dulo-3-manejo-profesional-de-errores)
-   - [Módulo 4: Logging y Monitoreo con Winston](#m%C3%B3dulo-4-logging-y-monitoreo-con-winston)
-   - [Módulo 5: Documentación de API con Swagger / OpenAPI](#m%C3%B3dulo-5-documentaci%C3%B3n-con-swagger--openapi)
-   - [Módulo 6: Tests Funcionales con Mocha, Chai y Supertest](#m%C3%B3dulo-6-testing-funcional-automatizado)
-8. [Integración Frontend y Panel de Administración](#-integraci%C3%B3n-frontend-y-panel-administrativo)
-9. [Credenciales Administrativas de Prueba](#-credenciales-administrativas-de-prueba)
+**Bunker Imports** es un emprendimiento comercial dedicado a la importación y comercialización de fragancias exclusivas en Argentina. Su catálogo se enfoca fuertemente en perfumería árabe de alta gama (marcas líderes como Lattafa, Armaf, Afnan, Rasasi) combinada con clásicos consagrados de diseñador internacional (Giorgio Armani, Valentino, Victoria's Secret, entre otros).
+
+El proyecto nació para responder a la necesidad de contar con una plataforma web completa, confiable y moderna que permita exhibir productos, gestionar inventarios con precisión de stock, procesar pedidos en línea con validaciones del lado del servidor y brindar una experiencia de compra fluida tanto a los clientes finales como al equipo de administración y logística.
 
 ---
 
-## 🛠 Tecnologías Utilizadas
+## 2. Descripción del Proyecto
 
-- **Entorno de Ejecución:** Node.js (v18+)
-- **Framework Web:** Express 5
-- **Base de Datos:** MongoDB & Mongoose ODM
-- **Base de Datos en Memoria (Testing & Dev):** `mongodb-memory-server`
-- **Autenticación & Seguridad:** JWT (`jsonwebtoken`), `bcryptjs`, `helmet`, `cors`, `express-rate-limit`
-- **Documentación OpenAPI:** `swagger-ui-express`, `swagger-jsdoc`
-- **Generación de Datos Ficticios:** `@faker-js/faker`
-- **Sistema de Logs:** `winston`, `winston-daily-rotate-file`
-- **Testing Automatizado:** `mocha`, `chai`, `supertest`, `cross-env`
+Este repositorio contiene la plataforma Full Stack completa de **Bunker Imports**, combinando:
+
+1. **Backend REST API:** Desarrollado con Node.js, Express 5 y MongoDB a través de Mongoose ODM, estructurado bajo una arquitectura por capas desacoplada y escalable.
+2. **Frontend Comercial:** Sitio web responsivo orientado al consumidor final con catálogo filtrable por familias olfativas y marcas, detalle de productos, pirámide olfativa, carrito interactivo y proceso de checkout integrado.
+3. **Panel Administrativo:** Interfaz privada para la gestión del catálogo, control de stock e inventario, administración de pedidos, estados de entrega y asignación de repartidores.
+
+El backend resuelve toda la lógica de negocio crítica: autenticación segura con JWT y roles, validación de stock y cálculos de precios exclusivamente en servidor, manejo centralizado de excepciones mediante diccionario de errores, logging estructurado con rotación diaria de archivos, generación de datos sintéticos con mocks y una suite completa de pruebas funcionales automatizadas.
 
 ---
 
-## 🏛 Arquitectura por Capas
+## 3. Tecnologías Utilizadas
 
-El backend implementa una arquitectura desacoplada y estricta en 5 capas:
-
-```text
-CLIENTE (Tienda Pública / Panel Admin / Postman / Swagger)
-   │
-   ▼
-[ROUTES]            → Enrutamiento Express, middlewares de auth y validación inicial
-   │
-   ▼
-[CONTROLLERS]       → Recibe req/res, extrae datos y delega al servicio (sin tocar Mongoose)
-   │
-   ▼
-[SERVICES]          → Reglas de negocio (cálculo de totales, stock, validaciones, JWT)
-   │
-   ▼
-[REPOSITORIES]      → Único acceso a la base de datos (queries, filtros, proyecciones Mongoose)
-   │
-   ▼
-[MODELS / MONGOOSE] → Esquemas, tipos, validadores y ganchos pre-save
-   │
-   ▼
-[MONGODB]
-```
-
-### ¿Por qué se separa Service de Repository?
-- **Responsabilidad Única:** El **Service** contiene las políticas comerciales de Bunker Imports (ej. aplicar 10% de descuento por transferencia, validar stock disponible antes de vender, coordinar la creación de una entrega logística cuando un pedido requiere envío).
-- **Abstracción de Datos:** El **Repository** se encarga exclusivamente de cómo se leen y escriben los datos en MongoDB (usando `populate`, proyecciones que excluyen campos sensibles como `costPrice` en clientes, filtros de paginación o búsqueda).
-- **Mantenibilidad:** Si en el futuro se reemplaza la base de datos o se agregan cachés en Redis, los servicios y la lógica de negocio permanecen inalterados.
+- **Entorno de Ejecución:** [Node.js](https://nodejs.org/) (versión 18 o superior).
+- **Framework Web:** [Express.js](https://expressjs.com/) (v5.x).
+- **Base de Datos Principal:** [MongoDB](https://www.mongodb.com/) con [Mongoose ODM](https://mongoosejs.com/) (v9.x).
+- **Base de Datos en Memoria:** `mongodb-memory-server` (utilizada para tests automatizados y como fallback transparente en desarrollo local).
+- **Autenticación y Criptografía:** `jsonwebtoken` (JWT), `bcryptjs` para hashing de contraseñas.
+- **Seguridad HTTP:** `helmet`, `cors`, `express-rate-limit`.
+- **Documentación de API:** `swagger-ui-express` y `swagger-jsdoc` (OpenAPI 3.0).
+- **Generación de Mocks:** `@faker-js/faker` para datos de prueba realistas.
+- **Sistema de Logging:** `winston` y `winston-daily-rotate-file`.
+- **Testing Automatizado:** `mocha`, `chai` (v4), `supertest` y `cross-env`.
+- **Frontend:** HTML5 semántico, CSS3 con variables personalizadas y JavaScript modular nativo.
 
 ---
 
-## 📂 Estructura del Proyecto
+## 4. Requisitos para Instalarlo
 
-```text
-BUNKER IMPORTS/
-├── admin/                      # Panel de administración web (HTML, CSS, JS)
-│   ├── index.html              # Dashboard analítico
-│   ├── productos.html          # Gestión de catálogo y stock
-│   ├── pedidos.html            # Gestión de órdenes y estados
-│   ├── inventario.html         # Movimientos de stock
-│   ├── login.html              # Login administrativo
-│   └── js/admin-core.js        # Script compartido del panel
-├── src/                        # Tienda online pública
-│   ├── css/styles.css          # Estilos premium (negro, dorado, violeta)
-│   ├── images/                 # Fotografías y banners de fragancias
-│   ├── js/
-│   │   ├── api.js              # Adaptador HTTP cliente (BunkerAPI)
-│   │   ├── data.js             # DataStore unificado e inicializadores
-│   │   └── app.js              # Carrito, modales, checkout y vistas
-│   └── pages/                  # Catálogo, carrito, checkout, login
-├── src-backend/                # Servidor Backend Node.js
-│   ├── config/
-│   │   ├── env.config.js       # Variables de entorno validadas
-│   │   ├── database.js         # Conexión Mongoose con fallback a memoria
-│   │   └── swagger.js          # Especificación OpenAPI 3.0
-│   ├── constants/              # Constantes congeladas (Object.freeze)
-│   │   └── index.js            # Roles, estados, métodos de pago y envío
-│   ├── errors/
-│   │   ├── CustomError.js      # Clase unificada de error
-│   │   └── error.dictionary.js # Diccionario centralizado de códigos y estados
-│   ├── logger/
-│   │   └── logger.js           # Logger Winston con 6 niveles y rotación
-│   ├── middlewares/
-│   │   ├── auth.middleware.js  # Verificación JWT y roles (ADMIN, EDITOR, COURIER)
-│   │   ├── error.middleware.js # Manejador global uniforme de errores
-│   │   └── not-found.middleware.js # Respuesta 404 estructurada
-│   ├── models/
-│   │   ├── user.model.js       # Esquema de usuarios con bcryptjs
-│   │   ├── product.model.js    # Esquema de perfumes (costPrice oculto)
-│   │   ├── order.model.js      # Esquema de pedidos con snapshot histórico
-│   │   └── delivery.model.js   # Esquema de logística y despachos
-│   ├── repositories/           # Capa de persistencia Mongoose
-│   ├── services/               # Lógica de negocio y reglas comerciales
-│   ├── controllers/            # Controladores HTTP desacoplados
-│   ├── routes/                 # Rutas REST agrupadas
-│   ├── scripts/                # Scripts de seed y creación de administradores
-│   └── app.js                  # Instancia Express (desacoplada del puerto)
-├── tests/                      # Suite de tests funcionales automatizados
-│   ├── setup.js                # Setup con MongoMemoryServer y limpieza
-│   ├── users.test.js           # Tests de autenticación y usuarios
-│   ├── products.test.js        # Tests de catálogo y privacidad de costos
-│   ├── orders.test.js          # Tests de pedidos, stock y descuentos
-│   ├── deliveries.test.js      # Tests de logística y repartidores
-│   ├── mocks.test.js           # Tests de generación sintética y seed
-│   ├── logger.test.js          # Tests de diagnóstico de logs
-│   └── swagger.test.js         # Tests de documentación OpenAPI
-├── server.js                   # Punto de entrada HTTP y arranque del servidor
-├── package.json
-├── .env.example
-├── .gitignore
-└── README.md
+Para clonar y ejecutar el proyecto en tu máquina local necesitás:
+
+- **Node.js:** v18.0.0 o superior (recomendado Node.js 20 LTS o 22 LTS).
+- **npm:** v9.0.0 o superior (incluido habitualmente con Node.js).
+- **Git:** Instalado en el sistema para clonar el repositorio.
+- **MongoDB (Opcional en desarrollo):** Podés utilizar un servidor local de MongoDB (`mongodb://localhost:27017`) o un clúster en la nube (MongoDB Atlas). Si no contás con MongoDB instalado localmente, el servidor detecta automáticamente el entorno de desarrollo y levanta una base de datos integrada en memoria, permitiéndote ejecutar el proyecto de inmediato.
+
+---
+
+## 5. Instrucciones de Instalación
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/Fed3-SC/bunker-imports.git
+   cd bunker-imports
+   ```
+
+2. **Instalar dependencias del proyecto:**
+   ```bash
+   npm install
+   ```
+
+3. **Crear el archivo de configuración `.env`:**
+   Copiá la plantilla de ejemplo `.env.example` en un nuevo archivo llamado `.env`:
+   ```bash
+   # En Windows PowerShell:
+   Copy-Item .env.example .env
+
+   # En Linux / macOS / Git Bash:
+   cp .env.example .env
+   ```
+
+4. **Poblar la base de datos inicial con catálogo y usuarios:**
+   ```bash
+   npm run seed
+   ```
+   *Este comando inserta el catálogo original de perfumes de Bunker Imports, crea el usuario administrador inicial y un repartidor de prueba.*
+
+---
+
+## 6. Configuración del Archivo `.env`
+
+El archivo `.env` permite definir las credenciales y configuraciones del entorno local sin exponer datos sensibles. Abrí el archivo `.env` recién creado y ajustá las variables según tu configuración:
+
+```env
+PORT=5000
+NODE_ENV=development
+MONGODB_URI=mongodb://127.0.0.1:27017/bunker_imports
+MONGODB_TEST_URI=mongodb://127.0.0.1:27017/bunker_imports_test
+JWT_SECRET=tu_clave_secreta_jwt_de_al_menos_32_caracteres_aleatorios
+JWT_EXPIRES_IN=8h
+TRANSFER_DISCOUNT_PERCENT=10
+FREE_SHIPPING_THRESHOLD=80000
+ADMIN_INITIAL_NAME=Admin Bunker
+ADMIN_INITIAL_EMAIL=admin@bunkerimports.com
+ADMIN_INITIAL_PASSWORD=Admin123!
 ```
 
 ---
 
-## 🚀 Requisitos e Instalación
+## 7. Variables de Entorno Necesarias
 
-### 1. Clonar el repositorio
-```bash
-git clone <URL_DEL_REPOSITORIO>
-cd "BUNKER IMPORTS"
-```
+A continuación se detalla el propósito de cada variable requerida por el backend:
 
-### 2. Instalar dependencias
-```bash
-npm install
-```
-
-### 3. Configurar variables de entorno
-Copiar el archivo de plantilla `.env.example` creando `.env`:
-```bash
-cp .env.example .env
-```
-
----
-
-## ⚙️ Variables de Entorno
-
-| Variable | Descripción | Valor por Defecto |
-| :--- | :--- | :--- |
-| `PORT` | Puerto de escucha del servidor HTTP | `5000` |
-| `NODE_ENV` | Entorno de ejecución (`development`, `production`, `test`) | `development` |
-| `MONGODB_URI` | Cadena de conexión principal a MongoDB | `mongodb://127.0.0.1:27017/bunker_imports` |
-| `MONGODB_TEST_URI` | Cadena de conexión para testing (si no se usa en memoria) | `mongodb://127.0.0.1:27017/bunker_imports_test` |
-| `JWT_SECRET` | Clave secreta para firmar tokens JWT | *Cadena segura obligatoria* |
-| `JWT_EXPIRES_IN` | Tiempo de expiración de sesión | `8h` |
-| `TRANSFER_DISCOUNT_PERCENT`| Porcentaje de descuento por pago con transferencia | `10` |
-| `FREE_SHIPPING_THRESHOLD` | Monto mínimo en ARS para envío gratuito | `80000` |
-| `ADMIN_INITIAL_EMAIL` | Email del usuario administrador inicial | `admin@bunkerimports.com` |
-| `ADMIN_INITIAL_PASSWORD` | Contraseña del usuario administrador inicial | `Admin123!` |
-
-> **Nota:** En caso de que no tengas MongoDB instalado localmente, el servidor detecta el entorno de desarrollo e inicia automáticamente una instancia de base de datos integrada en memoria, permitiéndote probar la aplicación inmediatamente sin bloqueos.
+| Variable | Tipo | Obligatoria | Valor por Defecto | Descripción |
+| :--- | :--- | :--- | :--- | :--- |
+| `PORT` | Numérico | Sí | `3000` / `5000` | Puerto en el que escuchará el servidor HTTP. |
+| `NODE_ENV` | String | Sí | `development` | Entorno de ejecución: `development`, `production` o `test`. |
+| `MONGODB_URI` | String (URI) | Sí | — | Cadena de conexión a la base de datos MongoDB principal. |
+| `MONGODB_TEST_URI` | String (URI) | No | `.../bunker_imports_test` | Cadena de conexión para la base de datos aislada de pruebas. |
+| `JWT_SECRET` | String | Sí | — | Clave secreta criptográfica utilizada para firmar y verificar tokens JWT. |
+| `JWT_EXPIRES_IN` | String | No | `8h` | Período de vigencia de las sesiones emitidas (ej: `8h`, `1d`, `7d`). |
+| `TRANSFER_DISCOUNT_PERCENT` | Numérico | No | `10` | Porcentaje de descuento aplicado automáticamente en checkout por transferencia bancaria. |
+| `FREE_SHIPPING_THRESHOLD` | Numérico | No | `80000` | Monto mínimo en ARS del subtotal a partir del cual el costo de envío es bonificado ($0). |
+| `ADMIN_INITIAL_NAME` | String | No | `Admin Bunker` | Nombre visible del administrador creado durante la inicialización (`seed`). |
+| `ADMIN_INITIAL_EMAIL` | String | No | `admin@bunkerimports.com` | Correo electrónico de acceso del administrador inicial. |
+| `ADMIN_INITIAL_PASSWORD` | String | No | `Admin123!` | Contraseña inicial para el login del administrador. |
 
 ---
 
-## 💻 Comandos de Ejecución
+## 8. Cómo Iniciar el Servidor
 
-### Iniciar en modo desarrollo
+El archivo `package.json` incluye scripts predefinidos para iniciar la aplicación:
+
+### Modo Desarrollo (con reinicio automático al guardar cambios):
 ```bash
 npm run dev
 ```
 
-### Iniciar en producción
+### Modo Producción:
 ```bash
 npm start
 ```
 
-### Ejecutar tests automatizados
+### Acceso a las interfaces:
+Una vez que el servidor esté activo, abrí tu navegador en:
+- **Tienda Pública (Catálogo y Compra):** [http://localhost:5000/index.html](http://localhost:5000/index.html)
+- **Panel Administrativo:** [http://localhost:5000/admin/index.html](http://localhost:5000/admin/index.html)
+- **Login Administrativo:** [http://localhost:5000/admin/login.html](http://localhost:5000/admin/login.html)
+- **Documentación Swagger / OpenAPI:** [http://localhost:5000/api/docs](http://localhost:5000/api/docs)
+- **Health Check de la API:** [http://localhost:5000/api/health](http://localhost:5000/api/health)
+
+---
+
+## 9. Arquitectura General
+
+El backend implementa un patrón estricto de **Arquitectura en 5 Capas**, garantizando una clara separación de responsabilidades y facilitando el mantenimiento y testing:
+
+```text
+                     ┌────────────────────────────────────────┐
+                     │ CLIENTE (Web / Admin / Swagger / Postman)│
+                     └───────────────────┬────────────────────┘
+                                         │  HTTP / JSON
+                                         ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ 1. RUTAS (Routes)                                                                │
+│    - Define endpoints HTTP y métodos (GET, POST, PUT, PATCH, DELETE).            │
+│    - Aplica middlewares: autenticación JWT, control de roles y rate limit.       │
+└────────────────────────────────────────┬─────────────────────────────────────────┘
+                                         ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ 2. CONTROLADORES (Controllers)                                                   │
+│    - Extrae parámetros de la petición (req.body, req.params, req.query).         │
+│    - Delega el trabajo a la capa de servicios.                                   │
+│    - Envía la respuesta HTTP estandarizada (sin tocar la base de datos).        │
+└────────────────────────────────────────┬─────────────────────────────────────────┘
+                                         ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ 3. SERVICIOS (Services)                                                          │
+│    - Contiene toda la lógica de negocio y validaciones comerciales.             │
+│    - Calcula subtotales, descuentos de transferencia y costo de envíos.          │
+│    - Verifica y actualiza stock de manera atómica.                              │
+│    - Dispara creación de entregas asociadas a pedidos que requieren despacho.   │
+│    - Emite y valida tokens JWT con expiración controlada.                        │
+└────────────────────────────────────────┬─────────────────────────────────────────┘
+                                         ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ 4. REPOSITORIOS (Repositories)                                                   │
+│    - Encapsula exclusivamente las consultas a la base de datos (queries Mongoose).│
+│    - Aplica populate de referencias cruzadas (pedidos con productos y usuarios). │
+│    - Maneja proyecciones para proteger campos sensibles (ej: costPrice).        │
+└────────────────────────────────────────┬─────────────────────────────────────────┘
+                                         ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ 5. MODELOS (Models) & BASE DE DATOS (Mongoose / MongoDB)                         │
+│    - Esquemas tipados con validaciones y valores por defecto.                   │
+│    - Hooks pre-save (hashing de contraseñas con bcryptjs).                       │
+│    - Índices únicos y optimizados (email de usuarios, códigos de pedido).        │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### ¿Por qué se separa Service de Repository?
+- **Independencia de la Base de Datos:** Los servicios no saben si los datos provienen de MongoDB, de una base SQL o de una caché en memoria; solo coordinan reglas de negocio.
+- **Reutilización:** Una misma consulta de repositorio puede ser aprovechada por múltiples servicios.
+- **Testeabilidad:** Facilita el aislamiento en pruebas unitarias y de integración.
+
+---
+
+## 10. Principales Funcionalidades
+
+### Catálogo y Tienda Online
+- **Catálogo Inteligente:** Filtros dinámicos por género (masculino, femenino, unisex), concentración (EDP, EDT, Parfum), origen (árabe o diseñador) y marcas.
+- **Ficha Técnica Detallada:** Presentación de volumen (ml), pirámide olfativa (notas de salida, corazón y fondo), estado de disponibilidad e imágenes optimizadas.
+- **Carrito de Compras:** Cálculo en tiempo real, persistencia en almacenamiento local y sincronización reactiva contra el backend.
+- **Checkout Seguro:**
+  - Validación de stock en servidor antes de procesar la compra.
+  - Aplicación automática del 10% de descuento al elegir pago por transferencia bancaria.
+  - Bonificación de costo de envío en compras superiores al umbral configurado ($80.000 ARS).
+  - Generación de código único de pedido alfanumérico (ej: `BNK-20261102-ABC1`).
+  - Creación automática de la orden de entrega asociada para despacho.
+
+### Autenticación y Autorización por Roles
+- **Registro de Clientes:** Cifrado seguro de contraseñas con `bcryptjs` (salt rounds: 10). Protección contra auto-asignación de privilegios administrativos en registro público.
+- **Login con JWT:** Emisión de tokens con expiración de 8 horas.
+- **Control de Acceso Basado en Roles (RBAC):**
+  - `USER`: Clientes estándar. Pueden ver su perfil y consultar sus propios pedidos.
+  - `ADMIN`: Administradores con control total sobre productos, costos, pedidos, clientes y despachos.
+  - `COURIER`: Repartidores de logística. Pueden actualizar el estado de las entregas que tienen asignadas.
+
+### Panel Administrativo
+- **Dashboard General:** Métricas en tiempo real de facturación, pedidos pendientes, total de productos y stock crítico.
+- **Gestión de Productos:** Alta, baja y modificación de perfumes, precios de venta y precios de costo.
+- **Control de Inventario:** Visualización de stock actual y actualización directa.
+- **Gestión de Pedidos:** Listado de órdenes, filtrado por estado (`pending`, `paid`, `shipped`, `delivered`, `cancelled`) y reposición automática de stock en caso de cancelación.
+- **Logística y Entregas:** Asignación de pedidos a repartidores (`COURIER`) y seguimiento de estados de despacho (`PENDING`, `IN_TRANSIT`, `DELIVERED`, `FAILED`).
+
+---
+
+## 11. Endpoints de la API
+
+La API REST expone los siguientes endpoints bajo el prefijo `/api`:
+
+### Autenticación y Usuarios (`/api/users`)
+| Método | Endpoint | Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/users/register` | Público | Registra un nuevo cliente (rol `USER`). |
+| `POST` | `/api/users/login` | Público | Autentica un usuario y retorna el token JWT. |
+| `GET` | `/api/users/me` | Autenticado | Devuelve los datos del perfil del usuario en sesión. |
+| `GET` | `/api/users` | Solo `ADMIN` | Lista todos los usuarios registrados. |
+| `GET` | `/api/users/:id` | Autenticado / `ADMIN` | Obtiene los datos de un usuario por su ID. |
+| `PATCH` | `/api/users/:id/role` | Solo `ADMIN` | Modifica el rol de un usuario (`USER`, `ADMIN`, `COURIER`). |
+
+### Catálogo de Productos (`/api/products`)
+| Método | Endpoint | Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/products` | Público | Lista los productos activos (oculta `costPrice`). Soporta filtros por marca, género y búsqueda. |
+| `GET` | `/api/products/admin` | Solo `ADMIN` | Lista todos los productos incluyendo precios de costo y productos agotados. |
+| `GET` | `/api/products/:id` | Público | Obtiene el detalle de un perfume por su ObjectId de MongoDB. |
+| `GET` | `/api/products/slug/:slug` | Público | Obtiene el detalle de un perfume por su slug amigable para URLs. |
+| `POST` | `/api/products` | Solo `ADMIN` | Crea un nuevo producto en el catálogo. |
+| `PUT` | `/api/products/:id` | Solo `ADMIN` | Actualiza los datos completos de un producto. |
+| `PATCH` | `/api/products/:id/stock` | Solo `ADMIN` | Actualiza exclusivamente el inventario de un producto. |
+| `DELETE` | `/api/products/:id` | Solo `ADMIN` | Elimina un producto del catálogo. |
+
+### Pedidos (`/api/orders`)
+| Método | Endpoint | Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/orders` | Público / Cliente | Crea un nuevo pedido, valida y reserva stock, calcula totales y registra la entrega. |
+| `GET` | `/api/orders` | Solo `ADMIN` | Lista todas las órdenes registradas en el sistema. |
+| `GET` | `/api/orders/:id` | Autenticado / `ADMIN` | Obtiene el detalle de un pedido por su ID. |
+| `GET` | `/api/orders/code/:code` | Público | Permite a un cliente rastrear su pedido utilizando su código alfanumérico. |
+| `PATCH` | `/api/orders/:id/status` | Solo `ADMIN` | Actualiza el estado del pedido. Si se pasa a `cancelled`, repone stock automáticamente. |
+
+### Entregas y Logística (`/api/deliveries`)
+| Método | Endpoint | Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/deliveries` | Solo `ADMIN` | Lista todas las órdenes de entrega y su estado de despacho. |
+| `GET` | `/api/deliveries/:id` | Autenticado | Consulta el estado detallado de una entrega específica. |
+| `POST` | `/api/deliveries` | Solo `ADMIN` | Crea una orden de entrega manual vinculada a un pedido existente. |
+| `PATCH` | `/api/deliveries/:id/courier` | Solo `ADMIN` | Asigna un repartidor (con rol `COURIER`) a la entrega. |
+| `PATCH` | `/api/deliveries/:id/status` | `ADMIN` / `COURIER` | Actualiza el estado logístico (`IN_TRANSIT`, `DELIVERED`, `FAILED`). |
+
+### Generador de Mocks (`/api/mocks`)
+| Método | Endpoint | Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/mocks/users?qty=10` | Público | Genera usuarios ficticios en memoria sin persistir. |
+| `GET` | `/api/mocks/couriers?qty=5` | Público | Genera repartidores simulados en memoria con rol `COURIER`. |
+| `GET` | `/api/mocks/orders?qty=10` | Público | Genera órdenes de compra simuladas en memoria. |
+| `GET` | `/api/mocks/deliveries?qty=5` | Público | Genera órdenes de entrega simuladas en memoria. |
+| `POST` | `/api/mocks/seed` | Solo Dev / Test | Inserta registros sintéticos relacionales directamente en la base de datos. |
+
+### Diagnóstico de Logging y Health
+| Método | Endpoint | Acceso | Descripción |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/health` | Público | Health check de la API (retorna estado de conexión y uptime). |
+| `GET` | `/api/logger/test` | Público | Emite registros de prueba en los 6 niveles jerárquicos de Winston. |
+
+---
+
+## 12. Acceso a Swagger
+
+La API cuenta con documentación interactiva generada con **Swagger / OpenAPI 3.0**:
+
+- **URL de la documentación:** [http://localhost:5000/api/docs](http://localhost:5000/api/docs)
+
+### Uso de la interfaz interactiva:
+1. Navegá a la URL indicada con el servidor en marcha.
+2. Podés inspeccionar cada endpoint, los parámetros admitidos y los esquemas de respuesta JSON esperados.
+3. **Autenticación en Swagger:**
+   - Hacé una petición al endpoint `POST /api/users/login` con tus credenciales administrativas.
+   - Copiá el token JWT recibido en la respuesta.
+   - Hacé clic en el botón verde **Authorize** (arriba a la derecha en Swagger).
+   - Pegá el token en el campo `Value` (sin necesidad de escribir "Bearer ") y hacé clic en **Authorize**.
+   - A partir de ese momento, podrás ejecutar peticiones protegidas directamente desde Swagger.
+
+---
+
+## 13. Sistema de Mocks
+
+El módulo de mocks utiliza la librería `@faker-js/faker` y permite generar grandes volúmenes de datos sintéticos realistas con nombres hispanos, direcciones locales, teléfonos y montos consistentes:
+
+- **Generación en Memoria (Lectura inmediata):**
+  - Permite evaluar el formato de respuesta sin escribir en la base de datos ni alterar datos reales.
+  - Parámetro de consulta `qty` configurable (mínimo: 1, máximo: 100).
+  - Validación de cantidad: si se pasa un número negativo, cero o un texto no numérico, el sistema responde con error `400 INVALID_MOCK_QUANTITY`.
+- **Carga de Datos de Prueba en Base de Datos (`POST /api/mocks/seed`):**
+  - Permite poblar masivamente la base con usuarios, couriers, pedidos y entregas vinculadas.
+  - Por seguridad, este endpoint está bloqueado automáticamente en entornos de producción (`NODE_ENV=production`).
+
+---
+
+## 14. Sistema de Logging
+
+El logging de la aplicación está implementado con **Winston** y sigue buenas prácticas de observabilidad:
+
+### Niveles de Registro Personalizados:
+Implementa 6 niveles jerárquicos ordenados por severidad:
+1. `fatal` (0) — Errores críticos que impiden la continuidad del servicio.
+2. `error` (1) — Errores de ejecución en peticiones o servicios.
+3. `warning` (2) — Advertencias operativas (ej: stock bajo, desconexiones recuperadas).
+4. `info` (3) — Información de ciclo de vida (inicio del servidor, conexión a BD).
+5. `http` (4) — Registro de peticiones entrantes.
+6. `debug` (5) — Información detallada para depuración en desarrollo.
+
+### Comportamiento según Entorno:
+- **Desarrollo (`development`):** Muestra mensajes coloreados por consola con marcas de tiempo legibles y nivel `debug` habilitado. Además, escribe en archivos locales.
+- **Testing (`test`):** Consola silenciada para no ensuciar la salida de los tests de Mocha.
+- **Producción (`production`):** Registra eventos desde nivel `info` en adelante, con salida estructurada en formato JSON para herramientas de monitoreo.
+
+### Rotación Diaria de Archivos (`logs/`):
+- `logs/error-YYYY-MM-DD.log`: Almacena exclusivamente advertencias y errores (`warning`, `error`, `fatal`), con rotación diaria y retención de 14 días.
+- `logs/combined-YYYY-MM-DD.log`: Almacena el historial completo de eventos, con tamaño máximo de 20 MB por archivo y retención de 7 días.
+
+---
+
+## 15. Cómo Ejecutar los Tests
+
+El proyecto cuenta con una suite completa de **41 tests funcionales automatizados** desarrollados con **Mocha**, **Chai** y **Supertest**:
+
+### Ejecución de los tests:
 ```bash
 npm test
 ```
 
-### Ejecutar tests en modo observador (watch)
+### Ejecución en modo observador (re-ejecuta al modificar archivos de test):
 ```bash
 npm run test:watch
 ```
 
-### Poblar la base de datos con el catálogo original de Bunker Imports
-```bash
-npm run seed
-```
-
-### Crear o restablecer el usuario administrador y repartidor inicial
-```bash
-npm run seed:admin
-```
-
----
-
-## 📦 Documentación de los 6 Módulos
-
-### Módulo 1: Arquitectura por Capas y Configuración de Entorno
-- **Configuración centralizada (`src-backend/config/env.config.js`):** Valida al arranque la presencia de variables obligatorias (`PORT`, `MONGODB_URI`, `NODE_ENV`, `JWT_SECRET`), abortando con mensaje claro si falta alguna. Ningún módulo externo accede directamente a `process.env`.
-- **Constantes congeladas (`src-backend/constants/index.js`):** Uso de `Object.freeze()` para roles (`ADMIN`, `USER`, `EDITOR`, `COURIER`), estados de pedidos, entregas, métodos de pago y envío.
-- **Seguridad en Modelos:** La contraseña se hashea con `bcryptjs` en el hook `pre('save')` y se excluye de las consultas (`select: false`). El precio de costo (`costPrice`) está protegido y nunca se devuelve en rutas públicas.
-
-### Módulo 2: Mocking y Carga de Datos de Prueba
-- **Ruta base:** `/api/mocks`
-- **Herramienta:** `@faker-js/faker`
-- **Endpoints de generación en memoria (sin persistir):**
-  - `GET /api/mocks/users?qty=5`
-  - `GET /api/mocks/couriers?qty=5`
-  - `GET /api/mocks/orders?qty=5`
-  - `GET /api/mocks/deliveries?qty=5`
-- **Endpoint de inserción en base de datos:**
-  - `POST /api/mocks/seed`: Admite en el cuerpo JSON `{ "users": 5, "couriers": 2, "orders": 5, "deliveries": 3 }`. Mantiene relaciones consistentes entre entidades reales y está deshabilitado en producción por seguridad.
-- **Validaciones:** Cantidad obligatoria entre 1 y 100, rechazo de valores negativos, cero o strings no numéricos con código `INVALID_MOCK_QUANTITY`.
-
-### Módulo 3: Manejo Profesional de Errores
-- **Diccionario (`src-backend/errors/error.dictionary.js`):** Centraliza códigos internos, mensajes en español y status HTTP (400, 401, 403, 404, 409, 500).
-- **Clase `CustomError` (`src-backend/errors/CustomError.js`):** Permite lanzar errores con `throw new CustomError('PRODUCT_NOT_FOUND')`.
-- **Middleware Global (`src-backend/middlewares/error.middleware.js`):** Captura todas las excepciones y responde con formato JSON uniforme:
-```json
-{
-  "status": "error",
-  "code": "INSUFFICIENT_STOCK",
-  "message": "No hay stock suficiente para uno o más productos del pedido."
-}
-```
-- Transforma automáticamente errores de Mongoose (`ValidationError`, `CastError`, duplicados de índice 11000) y oculta el stack trace en producción.
-
-### Módulo 4: Logging y Monitoreo con Winston
-- **Configuración (`src-backend/logger/logger.js`):** Implementa 6 niveles jerárquicos: `debug`, `http`, `info`, `warning`, `error`, `fatal`.
-- **Diferenciación por entorno:** En desarrollo muestra formato colorido en consola con timestamps. En producción reduce volumen y registra en archivos.
-- **Persistencia y rotación:**
-  - `logs/error-YYYY-MM-DD.log`: Solamente errores (`error`, `fatal`).
-  - `logs/combined-YYYY-MM-DD.log`: Historial general.
-  - Rotación diaria con límite de tamaño de 20MB y retención de 14 días.
-- **Endpoint de diagnóstico:** `GET /api/logger/test` emite un registro de prueba en cada uno de los 6 niveles para verificar el funcionamiento del logger.
-
-### Módulo 5: Documentación con Swagger / OpenAPI
-- **Ruta de acceso:** [http://localhost:5000/api/docs](http://localhost:5000/api/docs)
-- **Especificación OpenAPI 3.0:** Describe esquemas reutilizables (`User`, `Product`, `Order`, `OrderItem`, `Delivery`, `SuccessResponse`, `ErrorResponse`).
-- **Autenticación en Swagger:** Configuración con Bearer JWT (`BearerAuth`) que permite autorizar peticiones directamente desde la interfaz web de Swagger con el botón **Authorize**.
-- **Tags organizados:** Users, Products, Orders, Deliveries, Mocks, Logger.
-
-### Módulo 6: Testing Funcional Automatizado
-- **Frameworks:** Mocha, Chai (v4) y Supertest.
-- **Aislamiento Total:** Utiliza `mongodb-memory-server` levantando una base de datos efímera en memoria. Cada test limpia las colecciones en el hook `afterEach()`.
-- **Cobertura:** 41 tests funcionales automáticos cubriendo casos de éxito, validaciones y rechazos de permisos.
-- **Idempotencia:** La suite se puede ejecutar consecutivamente tantas veces como se desee sin requerir limpieza manual.
+### Características de la suite:
+- **Aislamiento Total con Base en Memoria:** Los tests utilizan `mongodb-memory-server`. No tocan la base de datos de desarrollo ni requieren tener un servidor de MongoDB encendido.
+- **Limpieza Automática:** Tras cada prueba individual (`afterEach`), se limpian las colecciones de prueba para asegurar independencia total entre casos.
+- **Idempotencia:** La suite se puede ejecutar consecutivamente tantas veces como se desee con resultados 100% predecibles y sin efectos colaterales.
+- **Cobertura de la Suite:**
+  - `tests/users.test.js`: Registro de clientes, prevención de duplicados, hashing de contraseñas, login con JWT, validación de credenciales inválidas, consulta de perfil y control de accesos administrativos.
+  - `tests/products.test.js`: Catálogo público sin costos, visibilidad de `costPrice` para rol `ADMIN`, consultas por ID y por slug, creación de productos y rechazo de precios o stocks inválidos.
+  - `tests/orders.test.js`: Creación de pedidos con cálculo automático de totales en servidor, verificación de stock insuficiente, rechazo de pedidos vacíos o cantidades negativas, búsqueda por código y reposición automática de stock tras cancelación.
+  - `tests/deliveries.test.js`: Creación de entregas vinculadas a pedidos, asignación de repartidores con rol `COURIER`, rechazo si el usuario asignado no es repartidor y transición de estados logísticos.
+  - `tests/mocks.test.js`: Endpoints en memoria de usuarios, repartidores, pedidos y entregas, validaciones de límite y el endpoint de inserción en base de datos.
+  - `tests/logger.test.js`: Diagnóstico de los 6 niveles en `/api/logger/test` y captura de rutas inexistentes (404).
+  - `tests/swagger.test.js`: Disponibilidad de la interfaz Swagger UI y health check de la API.
 
 ---
 
-## 🌐 Integración Frontend y Panel Administrativo
+## 16. Credenciales de Prueba
 
-Se creó la capa cliente `src/js/api.js` (`window.BunkerAPI`), la cual:
-1. **Sincroniza el Catálogo:** Al cargar cualquier página, consulta `GET /api/products` desde MongoDB y actualiza reactivamente el `DataStore` local.
-2. **Autenticación Real:** El panel administrativo (`admin/login.html`) y el login de clientes (`src/pages/login.html`) se comunican con `/api/users/login`, almacenando el token JWT recibido. Se eliminaron contraseñas en texto plano hardcodeadas.
-3. **Persistencia de Checkout:** Cuando un cliente finaliza una compra, el pedido se valida en el servidor (descontando stock y aplicando el 10% de descuento bancario) y se guarda directamente en la colección `orders` de MongoDB.
+Para probar el sistema completo tras ejecutar `npm run seed`:
 
----
-
-## 🔑 Credenciales Administrativas de Prueba
-
-Para acceder al Panel Administrativo tras ejecutar `npm run seed`:
-
-- **URL:** [http://localhost:5000/admin/login.html](http://localhost:5000/admin/login.html)
+### Usuario Administrador (Acceso al panel y operaciones protegidas)
+- **URL de Login:** [http://localhost:5000/admin/login.html](http://localhost:5000/admin/login.html)
 - **Email:** `admin@bunkerimports.com`
 - **Contraseña:** `Admin123!`
 - **Rol:** `ADMIN`
 
-Usuario Repartidor de prueba:
+### Usuario Repartidor (Logística y despachos)
 - **Email:** `courier@bunkerimports.com`
 - **Contraseña:** `Courier123!`
 - **Rol:** `COURIER`
+
+---
+
+## 17. Licencia y Créditos
+
+Proyecto desarrollado como trabajo integrador de Backend para la plataforma **BUNKER IMPORTS**. Todos los derechos reservados.

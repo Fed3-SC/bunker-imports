@@ -31,7 +31,7 @@ const userRepository = {
 
   // Actualizar usuario
   async updateById(id, data) {
-    return User.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+    return User.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
   },
 
   // Eliminar usuario

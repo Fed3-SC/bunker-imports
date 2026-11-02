@@ -28,7 +28,7 @@ const deliveryRepository = {
   },
 
   async updateById(id, data) {
-    return Delivery.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+    return Delivery.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
   },
 
   async count() {

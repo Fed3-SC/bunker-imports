@@ -31,7 +31,7 @@ const orderRepository = {
   },
 
   async updateById(id, data) {
-    return Order.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+    return Order.findByIdAndUpdate(id, data, { returnDocument: 'after', runValidators: true });
   },
 
   async count() {
